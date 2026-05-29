@@ -33,6 +33,36 @@
             min-height: 100vh;
         }
 
+        /* ── Gradient Background (ilk açılış) ── */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1030 25%, #0d1b2a 50%, #1a0a1e 75%, #0a0a1a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            transition: opacity 1.5s ease;
+        }
+
+        .gradient-bg.fade-out {
+            opacity: 0;
+        }
+
+        .gradient-bg.fade-in {
+            opacity: 1;
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 50%; }
+            25%  { background-position: 100% 0%; }
+            50%  { background-position: 100% 100%; }
+            75%  { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* ── Background Video ── */
         .video-bg {
             position: fixed;
@@ -44,6 +74,12 @@
             z-index: -2;
             filter: brightness(0.3) contrast(1.2);
             pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .video-bg.visible {
+            opacity: 1;
         }
 
         /* ── Intro Screen ── */
@@ -53,10 +89,6 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* Yarı saydam koyu overlay — arkaplan videosu görünür */
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -65,6 +97,19 @@
             transition: opacity 1.2s ease, visibility 1.2s ease;
             padding: 20px;
             text-align: center;
+        }
+
+        /* Aşama 1: Gradient arkada, buton görünür */
+        #intro-screen.phase-start {
+            background: transparent;
+            cursor: default;
+        }
+
+        /* Aşama 2: Video arkada, yazılar görünür */
+        #intro-screen.phase-greeting {
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             cursor: pointer;
         }
 
@@ -74,24 +119,79 @@
             pointer-events: none;
         }
 
-        .intro-skip-hint {
-            position: absolute;
-            bottom: 40px;
-            color: #888;
-            font-size: 0.85rem;
-            animation: fadeInUp 1.5s forwards 3.5s;
+        /* ── Sistemi Başlat Butonu ── */
+        .launch-btn-wrap {
+            animation: fadeInUp 2s forwards 0.3s;
             opacity: 0;
-            letter-spacing: 1px;
-            text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+            transform: translateY(30px);
         }
 
+        .launch-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 18px 50px;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .launch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .launch-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .launch-btn:hover::before {
+            left: 100%;
+        }
+
+        .launch-btn:active {
+            transform: scale(0.96);
+        }
+
+        .launch-btn.hide {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            transition: all 0.6s ease;
+        }
+
+        /* ── Intro Logo / Simge ── */
+        .intro-logo {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: fadeInUp 2s forwards 0.1s;
+            opacity: 0;
+            transform: translateY(30px);
+            filter: drop-shadow(0 0 30px rgba(255,255,255,0.2));
+        }
+
+        /* ── Intro Text ── */
         .intro-text {
             font-size: 3.5rem;
             font-weight: 200;
             letter-spacing: 4px;
-            animation: fadeInUp 1.5s forwards 0.5s;
-            opacity: 0;
-            transform: translateY(20px);
             text-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 80px rgba(0, 0, 0, 0.6);
         }
 
@@ -99,20 +199,36 @@
             font-size: 2rem;
             color: var(--text-muted);
             margin-top: 15px;
-            animation: fadeInUp 1.5s forwards 2s;
-            opacity: 0;
-            transform: translateY(20px);
             text-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
         }
 
         .intro-time {
             margin-top: 25px;
             color: #999;
-            animation: fadeInUp 1.5s forwards 3.5s;
-            opacity: 0;
             font-size: 1.2rem;
             text-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
         }
+
+        .intro-skip-hint {
+            position: absolute;
+            bottom: 40px;
+            color: #888;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Greeting animasyonu */
+        .fade-in-up {
+            animation: fadeInUp 1.5s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .delay-1 { animation-delay: 0s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.9s; }
 
         @keyframes fadeInUp {
             to {
@@ -127,17 +243,26 @@
             }
         }
 
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
         /* ── Navigation ── */
         nav {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-top: 40px;
-            animation: fadeIn 1.5s forwards 4.5s;
             opacity: 0;
             z-index: 10;
             position: relative;
             padding: 0 20px;
+            transition: opacity 1s ease;
+        }
+
+        nav.visible {
+            opacity: 1;
         }
 
         .tab-btn {
@@ -165,8 +290,12 @@
             max-width: 1200px;
             margin: 40px auto 60px;
             padding: 0 20px;
-            animation: fadeIn 1.5s forwards 5s;
             opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        main.visible {
+            opacity: 1;
         }
 
         .tab-content {
@@ -480,6 +609,10 @@
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
+            .intro-logo {
+                font-size: 2.5rem;
+            }
+
             .intro-text {
                 font-size: 2rem;
                 letter-spacing: 2px;
@@ -492,6 +625,12 @@
             .intro-skip-hint {
                 bottom: 30px;
                 font-size: 0.75rem;
+            }
+
+            .launch-btn {
+                padding: 14px 36px;
+                font-size: 1rem;
+                letter-spacing: 2px;
             }
 
             nav {
@@ -561,21 +700,36 @@
 </head>
 <body>
 
-    <!-- Background Video -->
-    <video class="video-bg" autoplay loop muted playsinline webkit-playsinline>
+    <!-- Gradient Arka Plan -->
+    <div class="gradient-bg" id="gradientBg"></div>
+
+    <!-- Arka Plan Videosu (başlangıçta gizli, paused) -->
+    <video class="video-bg" id="bgVideo" loop muted playsinline webkit-playsinline>
         <source src="arkaplan.mp4" type="video/mp4">
     </video>
 
     <!-- Intro Splash Screen -->
-    <div id="intro-screen" aria-label="Welcome screen - click or press Escape to skip">
-        <div class="intro-text">MERHABA, NURULLAH.</div>
-        <div class="intro-sub" id="dynamicGreeting">Sistem Başlatılıyor.</div>
-        <div class="intro-time" id="introTime">00:00</div>
-        <div class="intro-skip-hint">Dokun veya ESC ile geç ▸</div>
+    <div id="intro-screen" class="phase-start" aria-label="Welcome screen">
+
+        <!-- Aşama 1: Başlat Butonu -->
+        <div id="launchPhase">
+            <div class="intro-logo">◈</div>
+            <div class="launch-btn-wrap">
+                <button class="launch-btn" id="launchBtn">Sistemi Başlat</button>
+            </div>
+        </div>
+
+        <!-- Aşama 2: Karşılama Yazıları (başlangıçta gizli) -->
+        <div id="greetingPhase" style="display:none;">
+            <div class="intro-text fade-in-up delay-1">MERHABA, NURULLAH.</div>
+            <div class="intro-sub fade-in-up delay-2" id="dynamicGreeting">Sistem Başlatılıyor.</div>
+            <div class="intro-time fade-in-up delay-3" id="introTime">00:00</div>
+            <div class="intro-skip-hint fade-in-up delay-4">Dokun veya ESC ile geç ▸</div>
+        </div>
     </div>
 
     <!-- Navigation -->
-    <nav aria-label="Main navigation">
+    <nav id="mainNav" aria-label="Main navigation">
         <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
         <button class="tab-btn" data-tab="journal">Günlük</button>
         <button class="tab-btn" data-tab="notes">Notlar</button>
@@ -583,7 +737,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main>
+    <main id="mainContent">
         <!-- Dashboard -->
         <section id="dashboard" class="tab-content active">
             <div class="glass-panel">
@@ -685,13 +839,23 @@
         'use strict';
 
         // ─────────────────────────────────────
-        // 1. INTRO SCREEN
+        // DOM Referansları
         // ─────────────────────────────────────
-        const introScreen = document.getElementById('intro-screen');
-        const dynamicGreeting = document.getElementById('dynamicGreeting');
-        const introTime = document.getElementById('introTime');
-        let introTimer = null;
+        var bgVideo         = document.getElementById('bgVideo');
+        var gradientBg      = document.getElementById('gradientBg');
+        var introScreen     = document.getElementById('intro-screen');
+        var launchPhase     = document.getElementById('launchPhase');
+        var greetingPhase   = document.getElementById('greetingPhase');
+        var launchBtn       = document.getElementById('launchBtn');
+        var dynamicGreeting = document.getElementById('dynamicGreeting');
+        var introTime       = document.getElementById('introTime');
+        var mainNav         = document.getElementById('mainNav');
+        var mainContent     = document.getElementById('mainContent');
+        var introTimer      = null;
 
+        // ─────────────────────────────────────
+        // Yardımcı Fonksiyonlar
+        // ─────────────────────────────────────
         function getGreeting(hour) {
             if (hour >= 5 && hour < 12) return 'Günaydın.';
             if (hour >= 12 && hour < 18) return 'İyi günler.';
@@ -703,31 +867,100 @@
             return String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
         }
 
+        // ─────────────────────────────────────
+        // 1. İNTRO AKIŞI
+        // ─────────────────────────────────────
+
+        // Video bittiğinde → önce gradient'e dön, sonra videoyu başa sarıp tekrar oynat
+        bgVideo.addEventListener('ended', function () {
+            // Gradient'i göster, videoyu gizle
+            gradientBg.classList.add('fade-in');
+            bgVideo.classList.remove('visible');
+
+            // 1.5 saniye sonra videoyu başa sarıp tekrar başlat
+            setTimeout(function () {
+                bgVideo.currentTime = 0;
+                bgVideo.play().then(function () {
+                    gradientBg.classList.remove('fade-in');
+                    gradientBg.classList.add('fade-out');
+                    bgVideo.classList.add('visible');
+                }).catch(function () {});
+            }, 2000);
+        });
+
+        // "Sistemi Başlat" butonuna tıklandı
+        function onLaunchClick() {
+            // Butonu gizle
+            launchBtn.classList.add('hide');
+
+            // Videoyu başlat
+            bgVideo.play().then(function () {
+                // Video görünür olsun
+                bgVideo.classList.add('visible');
+
+                // Gradient'i soldur
+                setTimeout(function () {
+                    gradientBg.classList.add('fade-out');
+                }, 300);
+
+                // 4 saniye bekle → karşılama yazılarını göster
+                setTimeout(function () {
+                    showGreeting();
+                }, 4000);
+
+            }).catch(function (err) {
+                console.error('Video oynatma hatası:', err);
+                // Video oynatılamazsa direkt geç
+                showGreeting();
+            });
+        }
+
+        // Karşılama yazılarını göster
+        function showGreeting() {
+            var now = new Date();
+
+            // Faz geçişi: gradient arka plan → video arka plan
+            introScreen.classList.remove('phase-start');
+            introScreen.classList.add('phase-greeting');
+
+            // Launch fazını gizle, greeting fazını göster
+            launchPhase.style.display = 'none';
+            greetingPhase.style.display = '';
+
+            // Saat ve selamlama
+            dynamicGreeting.textContent = getGreeting(now.getHours());
+            introTime.textContent = formatTime(now);
+
+            // 3 saniye sonra ana panele geç
+            introTimer = setTimeout(dismissIntro, 3500);
+
+            // Tıkla veya ESC ile geç
+            introScreen.addEventListener('click', dismissIntro);
+            document.addEventListener('keydown', skipHandler);
+        }
+
+        // Intro'yu kapat, ana paneli aç
         function dismissIntro() {
             if (introTimer) {
                 clearTimeout(introTimer);
                 introTimer = null;
             }
+
+            document.removeEventListener('keydown', skipHandler);
+            introScreen.removeEventListener('click', dismissIntro);
             introScreen.classList.add('hidden');
+
+            // Nav ve main'i görünür yap
+            setTimeout(function () {
+                mainNav.classList.add('visible');
+                mainContent.classList.add('visible');
+            }, 300);
         }
 
-        function initIntro() {
-            var now = new Date();
-            dynamicGreeting.textContent = getGreeting(now.getHours());
-            introTime.textContent = formatTime(now);
-
-            // Auto-dismiss after 4.5 seconds
-            introTimer = setTimeout(dismissIntro, 4500);
-
-            // Click to skip
-            introScreen.addEventListener('click', dismissIntro);
-
-            // Escape key to skip
-            document.addEventListener('keydown', function skipHandler(e) {
-                if (e.key === 'Escape' && !introScreen.classList.contains('hidden')) {
-                    dismissIntro();
-                }
-            });
+        function skipHandler(e) {
+            if (e.key === 'Escape') {
+                dismissIntro();
+            }
         }
 
         // ─────────────────────────────────────
@@ -822,13 +1055,11 @@
 
                 var data = doc.data();
 
-                // Todos
                 if (Array.isArray(data.todos)) {
                     state.todos = data.todos;
                     renderTodos();
                 }
 
-                // Journals (with legacy migration)
                 if (Array.isArray(data.journals)) {
                     state.journals = data.journals;
                 } else if (data.journal && typeof data.journal === 'string' && data.journal.trim() !== '') {
@@ -840,7 +1071,6 @@
                 }
                 renderJournalList();
 
-                // Notes (with legacy migration)
                 if (Array.isArray(data.notes)) {
                     state.notes = data.notes;
                 } else if (data.notes && typeof data.notes === 'string' && data.notes.trim() !== '') {
@@ -863,10 +1093,10 @@
         // ─────────────────────────────────────
         // 7. JOURNAL OPERATIONS
         // ─────────────────────────────────────
-        var journalListEl = document.getElementById('journalList');
-        var journalEditor = document.getElementById('journalEditor');
-        var journalTitleInput = document.getElementById('journalTitle');
-        var journalTextInput = document.getElementById('journalText');
+        var journalListEl   = document.getElementById('journalList');
+        var journalEditor   = document.getElementById('journalEditor');
+        var journalTitleInp = document.getElementById('journalTitle');
+        var journalTextInp  = document.getElementById('journalText');
 
         function renderJournalList() {
             journalListEl.innerHTML = '';
@@ -899,9 +1129,7 @@
                 li.appendChild(titleSpan);
                 li.appendChild(delBtn);
 
-                li.addEventListener('click', function () {
-                    selectJournal(j.id);
-                });
+                li.addEventListener('click', function () { selectJournal(j.id); });
                 li.addEventListener('keydown', function (e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -932,8 +1160,8 @@
             var journal = state.journals.find(function (j) { return j.id === id; });
             if (journal) {
                 journalEditor.style.display = 'flex';
-                journalTitleInput.value = journal.title;
-                journalTextInput.value = journal.content;
+                journalTitleInp.value = journal.title;
+                journalTextInp.value = journal.content;
                 renderJournalList();
             }
         }
@@ -941,8 +1169,8 @@
         function updateActiveJournal() {
             var journal = state.journals.find(function (j) { return j.id === state.activeJournalId; });
             if (!journal) return;
-            journal.title = journalTitleInput.value;
-            journal.content = journalTextInput.value;
+            journal.title = journalTitleInp.value;
+            journal.content = journalTextInp.value;
             saveToCloud('journals', state.journals, 'journalStatus');
 
             var activeItem = journalListEl.querySelector('.active .title-text');
@@ -965,10 +1193,10 @@
         // ─────────────────────────────────────
         // 8. NOTES OPERATIONS
         // ─────────────────────────────────────
-        var notesListEl = document.getElementById('notesList');
-        var notesEditor = document.getElementById('notesEditor');
-        var notesTitleInput = document.getElementById('notesTitle');
-        var notesTextInput = document.getElementById('notesText');
+        var notesListEl   = document.getElementById('notesList');
+        var notesEditor   = document.getElementById('notesEditor');
+        var notesTitleInp = document.getElementById('notesTitle');
+        var notesTextInp  = document.getElementById('notesText');
 
         function renderNotesList() {
             notesListEl.innerHTML = '';
@@ -1001,9 +1229,7 @@
                 li.appendChild(titleSpan);
                 li.appendChild(delBtn);
 
-                li.addEventListener('click', function () {
-                    selectNote(n.id);
-                });
+                li.addEventListener('click', function () { selectNote(n.id); });
                 li.addEventListener('keydown', function (e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -1033,8 +1259,8 @@
             var note = state.notes.find(function (n) { return n.id === id; });
             if (note) {
                 notesEditor.style.display = 'flex';
-                notesTitleInput.value = note.title;
-                notesTextInput.value = note.content;
+                notesTitleInp.value = note.title;
+                notesTextInp.value = note.content;
                 renderNotesList();
             }
         }
@@ -1042,8 +1268,8 @@
         function updateActiveNote() {
             var note = state.notes.find(function (n) { return n.id === state.activeNoteId; });
             if (!note) return;
-            note.title = notesTitleInput.value;
-            note.content = notesTextInput.value;
+            note.title = notesTitleInp.value;
+            note.content = notesTextInp.value;
             saveToCloud('notes', state.notes, 'notesStatus');
 
             var activeItem = notesListEl.querySelector('.active .title-text');
@@ -1066,7 +1292,7 @@
         // ─────────────────────────────────────
         // 9. TODO OPERATIONS
         // ─────────────────────────────────────
-        var todoInput = document.getElementById('todoInput');
+        var todoInput  = document.getElementById('todoInput');
         var todoListEl = document.getElementById('todoList');
         var addTodoBtn = document.getElementById('addTodoBtn');
 
@@ -1141,6 +1367,9 @@
         // 10. EVENT BINDINGS
         // ─────────────────────────────────────
         function bindEvents() {
+            // Launch button
+            launchBtn.addEventListener('click', onLaunchClick);
+
             // Todo input: Enter key
             todoInput.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
@@ -1149,18 +1378,14 @@
                 }
             });
 
-            // Todo add button
             addTodoBtn.addEventListener('click', addTodo);
 
-            // Journal editor inputs
-            journalTitleInput.addEventListener('input', updateActiveJournal);
-            journalTextInput.addEventListener('input', updateActiveJournal);
+            journalTitleInp.addEventListener('input', updateActiveJournal);
+            journalTextInp.addEventListener('input', updateActiveJournal);
 
-            // Notes editor inputs
-            notesTitleInput.addEventListener('input', updateActiveNote);
-            notesTextInput.addEventListener('input', updateActiveNote);
+            notesTitleInp.addEventListener('input', updateActiveNote);
+            notesTextInp.addEventListener('input', updateActiveNote);
 
-            // New journal / note buttons
             document.getElementById('newJournalBtn').addEventListener('click', createNewJournal);
             document.getElementById('newNoteBtn').addEventListener('click', createNewNote);
         }
@@ -1169,13 +1394,14 @@
         // 11. INITIALIZATION
         // ─────────────────────────────────────
         function init() {
-            initIntro();
+            // Başlangıçta gradient görünür, video gizli (opacity:0)
+            gradientBg.classList.add('fade-in');
+
             initTabs();
             bindEvents();
             loadFromCloud();
         }
 
-        // Run on DOM ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
