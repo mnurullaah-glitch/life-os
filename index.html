@@ -316,12 +316,13 @@ textarea::placeholder{color:var(--muted);}
   position:fixed; z-index:9998;
   display:flex; flex-direction:column; align-items:center; gap:8px;
   pointer-events:none;
-  /* başlangıç pozisyonu: sağ alt */
   bottom:24px; right:24px;
   opacity:0;
-  transition: opacity .7s ease, bottom 1.2s cubic-bezier(.23,1,.32,1), right 1.2s cubic-bezier(.23,1,.32,1), left 1.2s cubic-bezier(.23,1,.32,1), top 1.2s cubic-bezier(.23,1,.32,1);
+  transition: opacity .7s ease, bottom 1s cubic-bezier(.23,1,.32,1), right 1s cubic-bezier(.23,1,.32,1), left 1s cubic-bezier(.23,1,.32,1), top 1s cubic-bezier(.23,1,.32,1);
+  user-select:none;
 }
 #bot.on{ opacity:1; pointer-events:auto; }
+#bot.dragging{ transition: opacity .7s ease !important; cursor:grabbing; }
 #bot-bubble{
   background:rgba(14,8,38,.96);
   border:1px solid rgba(124,106,255,.55);
@@ -336,7 +337,7 @@ textarea::placeholder{color:var(--muted);}
 }
 #bot-bubble.pop{ opacity:1; transform:scale(1) translateY(0); }
 #bot-svg{
-  width:66px; height:66px; cursor:pointer;
+  width:66px; height:66px; cursor:grab;
   filter:drop-shadow(0 0 16px rgba(124,106,255,.6));
   animation:botFloat 2.8s ease-in-out infinite;
 }
@@ -608,11 +609,11 @@ textarea::placeholder{color:var(--muted);}
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
             <span class="vibe-widget-title">Keyfini Getir</span>
-            <span class="vibe-widget-sub">♪ Arc En Ciel</span>
+            <span class="vibe-widget-sub">♪ This Is L'Arc~en~Ciel</span>
           </div>
           <!-- L'Arc~en~Ciel - AWAKE albümü -->
           <iframe
-            src="https://open.spotify.com/embed/album/2nkto6YNI4rUYTLqEwWJ3e?utm_source=generator&theme=0"
+            src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO3bx7am?utm_source=generator&theme=0"
             allow="encrypted-media" allowfullscreen>
           </iframe>
         </div>
@@ -814,8 +815,77 @@ function startBot(){
   botLoop();
 }
 
+/* ── DRAG ── */
+(function(){
+  var isDragging=false, startX=0, startY=0, origLeft=0, origTop=0, hasMoved=false;
+
+  function getPos(){
+    var r=bot.getBoundingClientRect();
+    return {left:r.left, top:r.top};
+  }
+
+  function startDrag(cx,cy){
+    isDragging=true; hasMoved=false;
+    bot.classList.add('dragging');
+    /* pozisyonu fixed left/top'a çevir */
+    var r=bot.getBoundingClientRect();
+    bot.style.left=r.left+'px'; bot.style.top=r.top+'px';
+    bot.style.right='auto'; bot.style.bottom='auto';
+    startX=cx; startY=cy;
+    origLeft=r.left; origTop=r.top;
+  }
+
+  function moveDrag(cx,cy){
+    if(!isDragging) return;
+    var dx=cx-startX, dy=cy-startY;
+    if(Math.abs(dx)>4||Math.abs(dy)>4) hasMoved=true;
+    bot.style.left=(origLeft+dx)+'px';
+    bot.style.top=(origTop+dy)+'px';
+  }
+
+  function endDrag(){
+    if(!isDragging) return;
+    isDragging=false;
+    bot.classList.remove('dragging');
+    /* sınır kontrolü */
+    var r=bot.getBoundingClientRect();
+    var maxX=window.innerWidth-r.width-8;
+    var maxY=window.innerHeight-r.height-8;
+    var nx=Math.max(8,Math.min(maxX,r.left));
+    var ny=Math.max(8,Math.min(maxY,r.top));
+    bot.style.left=nx+'px'; bot.style.top=ny+'px';
+  }
+
+  /* Mouse */
+  botSvg.addEventListener('mousedown',function(e){
+    e.preventDefault();
+    startDrag(e.clientX,e.clientY);
+  });
+  document.addEventListener('mousemove',function(e){moveDrag(e.clientX,e.clientY);});
+  document.addEventListener('mouseup',function(e){
+    if(isDragging&&!hasMoved) botSay(null,3000);
+    endDrag();
+  });
+
+  /* Touch */
+  botSvg.addEventListener('touchstart',function(e){
+    var t=e.touches[0];
+    startDrag(t.clientX,t.clientY);
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!isDragging) return;
+    e.preventDefault();
+    var t=e.touches[0];
+    moveDrag(t.clientX,t.clientY);
+  },{passive:false});
+  document.addEventListener('touchend',function(){
+    if(isDragging&&!hasMoved) botSay(null,3000);
+    endDrag();
+  });
+})();
+
 /* Robota tıklayınca mesaj */
-botSvg.addEventListener('click',function(){botSay(null,3000);});
+botSvg.addEventListener('click',function(){if(!hasMoved) botSay(null,3000);});
 
 /* Tab değiştirince konuş + yer değiştir */
 document.querySelectorAll('.tab-btn').forEach(function(b){
@@ -1170,5 +1240,5 @@ loadFromCloud();
 
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0386e4b696e1b42',t:'MTc4MDA4ODQ0OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a038789e3b8316f8',t:'MTc4MDA4ODg3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
