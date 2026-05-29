@@ -34,15 +34,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 /* INTRO */
 #intro-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center;transition:opacity 1.2s ease,visibility 1.2s ease;}
-#intro-screen.phase-greeting{background:rgba(4,4,15,.6);backdrop-filter:blur(12px);cursor:pointer;}
+#intro-screen.phase-greeting{
+    background:radial-gradient(ellipse at 50% 40%,rgba(30,10,60,.5) 0%,rgba(4,4,15,.75) 100%);
+    backdrop-filter:blur(16px);cursor:pointer;
+}
 #intro-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
 .waveform-logo{display:flex;align-items:center;justify-content:center;gap:5px;height:80px;margin-bottom:32px;animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .2s;opacity:0;transform:translateY(40px);}
 .waveform-logo .bar{width:4px;border-radius:4px;background:linear-gradient(180deg,#c46dff 0%,#7c6aff 50%,#4fd1ff 100%);box-shadow:0 0 16px rgba(124,106,255,.6);animation:waveBounce 1.4s ease-in-out infinite;}
 .bar:nth-child(1){height:14px;animation-delay:0s}.bar:nth-child(2){height:26px;animation-delay:.08s}.bar:nth-child(3){height:42px;animation-delay:.16s}.bar:nth-child(4){height:56px;animation-delay:.24s}.bar:nth-child(5){height:68px;animation-delay:.32s}.bar:nth-child(6){height:56px;animation-delay:.40s}.bar:nth-child(7){height:42px;animation-delay:.48s}.bar:nth-child(8){height:26px;animation-delay:.56s}.bar:nth-child(9){height:14px;animation-delay:.64s}
 @keyframes waveBounce{0%,100%{transform:scaleY(1)}25%{transform:scaleY(.35)}50%{transform:scaleY(1.4)}75%{transform:scaleY(.55)}}
-.glow-ring{position:absolute;width:180px;height:180px;border-radius:50%;border:1px solid rgba(124,106,255,.3);box-shadow:0 0 40px rgba(124,106,255,.15),inset 0 0 40px rgba(124,106,255,.05);animation:ringPulse 3s ease-in-out infinite,riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .1s;opacity:0;transform:translateY(40px);pointer-events:none;}
-.glow-ring::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(196,109,255,.12);animation:ringPulse 3s ease-in-out .8s infinite;}
-@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.12);opacity:.2}}
+50%{transform:scale(1.12);opacity:.2}}
 .launch-btn-wrap{animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .4s;opacity:0;transform:translateY(40px);}
 .launch-btn{position:relative;overflow:hidden;padding:17px 56px;border-radius:60px;border:1px solid rgba(124,106,255,.45);font-size:1.05rem;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#fff;cursor:pointer;background:linear-gradient(135deg,rgba(124,106,255,.18) 0%,rgba(196,109,255,.14) 50%,rgba(79,209,255,.12) 100%);backdrop-filter:blur(12px);box-shadow:0 0 40px rgba(124,106,255,.2),inset 0 1px 0 rgba(255,255,255,.08);transition:all .5s cubic-bezier(.23,1,.32,1);font-family:inherit;}
 .launch-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transition:left .6s ease;}
@@ -50,12 +51,27 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .launch-btn:hover::before{left:100%}
 .launch-btn:active{transform:scale(.96)}
 .launch-btn.hide{opacity:0;transform:translateY(-30px) scale(.9);pointer-events:none;transition:all .6s cubic-bezier(.23,1,.32,1);}
-.intro-text{font-size:3.8rem;font-weight:200;letter-spacing:8px;background:linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.intro-sub{font-size:1.6rem;color:var(--muted);margin-top:16px;font-weight:300;letter-spacing:2px;}
-.intro-time{margin-top:24px;font-size:1.1rem;color:rgba(255,255,255,.25);letter-spacing:4px;}
-.intro-skip-hint{position:absolute;bottom:40px;color:rgba(255,255,255,.2);font-size:.8rem;letter-spacing:2px;}
-.fade-in-up{animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards;opacity:0;transform:translateY(24px);}
-.delay-1{animation-delay:0s}.delay-2{animation-delay:.25s}.delay-3{animation-delay:.5s}.delay-4{animation-delay:.75s}
+.intro-text{
+    font-size:4rem;font-weight:100;letter-spacing:12px;
+    background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.6) 40%,#c46dff 70%,#7c6aff 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    text-shadow:none;
+}
+.intro-sub{font-size:1.4rem;color:rgba(255,255,255,.35);margin-top:20px;font-weight:200;letter-spacing:6px;text-transform:uppercase;}
+.intro-time{margin-top:30px;font-size:1rem;color:rgba(255,255,255,.18);letter-spacing:8px;font-weight:300;}
+.intro-skip-hint{
+    position:absolute;bottom:36px;
+    color:rgba(255,255,255,.15);font-size:.72rem;letter-spacing:3px;
+    animation:riseUp 2s cubic-bezier(.23,1,.32,1) forwards 3s;
+    opacity:0;transform:translateY(10px);
+}
+.fade-in-up{animation:cinemaFade 2.2s cubic-bezier(.23,1,.32,1) forwards;opacity:0;transform:translateY(40px);}
+.delay-1{animation-delay:.3s}.delay-2{animation-delay:1.2s}.delay-3{animation-delay:2s}.delay-4{animation-delay:2.8s}
+@keyframes cinemaFade{
+    0%{opacity:0;transform:translateY(40px) scale(.97);filter:blur(8px);}
+    60%{filter:blur(0);}
+    100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}
+}
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
 /* TOP BAR */
@@ -375,6 +391,28 @@ textarea::placeholder{color:var(--muted);}
 @media(max-width:480px){.tab-btn{padding:6px 10px;font-size:.68rem;letter-spacing:0;}}
 </style>
 </head>
+
+<!-- ══ PASSWORD SCREEN ══ -->
+<div id="pass-screen">
+    <div class="pass-box">
+        <div class="pass-logo"><span>CLOUD OS</span></div>
+        <div class="pass-nick">Mereorian</div>
+        <div class="pass-input-wrap">
+            <input type="password" class="pass-input" id="passInput"
+                placeholder="••••••••" autocomplete="current-password"
+                maxlength="20">
+            <button class="pass-toggle" id="passToggle" tabindex="-1">👁</button>
+        </div>
+        <div class="pass-error" id="passError">Yanlış şifre. Tekrar dene.</div>
+        <button class="pass-btn" id="passBtn">Giriş Yap</button>
+        <label class="pass-remember">
+            <input type="checkbox" id="passRemember" checked>
+            Bu cihazda beni hatırla
+        </label>
+        <div class="pass-hint">Sisteme erişmek için şifre gereklidir.</div>
+    </div>
+</div>
+
 <body>
 
 <div class="aurora">
@@ -417,7 +455,6 @@ textarea::placeholder{color:var(--muted);}
 <!-- INTRO -->
 <div id="intro-screen" class="phase-start">
   <div id="launchPhase">
-    <div class="glow-ring"></div>
     <div class="waveform-logo">
       <div class="bar"></div><div class="bar"></div><div class="bar"></div>
       <div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -874,7 +911,7 @@ launchBtn.addEventListener('click',function(){
     p.then(function(){
       bgVideo.classList.add('visible');
       setTimeout(function(){bgVideo.classList.remove('visible');setTimeout(function(){bgVideo.pause();bgVideo.currentTime=0;},2100);},5000);
-      setTimeout(showGreeting,3500);
+      setTimeout(showGreeting,4500);
     }).catch(showGreeting);
   } else showGreeting();
 });
@@ -887,9 +924,15 @@ function showGreeting(){
   greetingPhase.style.display='';
   document.getElementById('dynamicGreeting').textContent=getGreeting(now.getHours())+'.';
   document.getElementById('introTime').textContent=fmt(now);
-  introTimer=setTimeout(dismissIntro,3200);
+  /* 6 saniye bekle — ama ESC/Space/Click ile hemen geç */
+  introTimer=setTimeout(dismissIntro,6000);
   introScreen.addEventListener('click',dismissIntro);
-  document.addEventListener('keydown',function sk(e){if(e.key==='Escape'){dismissIntro();document.removeEventListener('keydown',sk);}});
+  document.addEventListener('keydown',function sk(e){
+      if(e.key==='Escape'||e.key===' '||e.key==='Enter'){
+          dismissIntro();
+          document.removeEventListener('keydown',sk);
+      }
+  });
 }
 function dismissIntro(){
   if(introTimer){clearTimeout(introTimer);introTimer=null;}
@@ -1205,9 +1248,65 @@ vibeNoteEl.addEventListener('input',function(){
   },900);
 });
 
+
+/* ══ PASSWORD SYSTEM ══ */
+var CORRECT_HASH = '6b8f3c2e9a1d4e7f5c2b8a3d6e9f1c4b'; /* SHA basit yerine sabit token */
+var CORRECT_PASS = '42489424';
+var STORAGE_KEY  = 'nos_auth_mereorian';
+
+function checkAuth(){
+    return localStorage.getItem(STORAGE_KEY) === 'granted';
+}
+function grantAuth(remember){
+    if(remember) localStorage.setItem(STORAGE_KEY,'granted');
+}
+
+var passScreen   = document.getElementById('pass-screen');
+var passInput    = document.getElementById('passInput');
+var passBtn      = document.getElementById('passBtn');
+var passError    = document.getElementById('passError');
+var passRemember = document.getElementById('passRemember');
+var passToggle   = document.getElementById('passToggle');
+
+function attemptLogin(){
+    if(passInput.value === CORRECT_PASS){
+        grantAuth(passRemember.checked);
+        passScreen.classList.add('gone');
+        /* Şifre doğru → intro başlasın */
+        setTimeout(function(){ passScreen.style.display='none'; },800);
+    } else {
+        passError.classList.add('show');
+        passInput.classList.add('error');
+        setTimeout(function(){
+            passInput.classList.remove('error');
+            passError.classList.remove('show');
+            passInput.value='';
+            passInput.focus();
+        },1600);
+    }
+}
+
+if(checkAuth()){
+    /* Hatırlanan kullanıcı → direkt geç */
+    passScreen.style.display='none';
+} else {
+    /* Şifre ekranını göster */
+    passInput.focus();
+    passBtn.addEventListener('click', attemptLogin);
+    passInput.addEventListener('keydown',function(e){if(e.key==='Enter') attemptLogin();});
+    passToggle.addEventListener('click',function(){
+        var t=passInput.type==='password'?'text':'password';
+        passInput.type=t;
+        this.textContent=t==='password'?'👁':'🙈';
+    });
+}
+
+/* ══ SINEMATIC INTRO — ESC veya SPACE ile atla ══ */
+/* showGreeting override: daha uzun bekle ama ESC/Space/Click ile anında geç */
+
 loadFromCloud();
 
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0389fee7bdbf2ed',t:'MTc4MDA5MDQ4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
