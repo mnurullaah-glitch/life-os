@@ -192,3 +192,295 @@
             <div class="glass-panel">
                 <div class="panel-title">Fikirler & Gözlemler Deposu</div>
                 <div class="split-container">
+                    <div class="sidebar-panel">
+                        <button class="add-btn" onclick="createNewNote()">+ Yeni Not Oluştur</button>
+                        <ul id="notesList" class="archive-list"></ul>
+                    </div>
+                    <div class="editor-panel" id="notesEditor" style="display:none;">
+                        <input type="text" id="notesTitle" class="title-input" placeholder="Not Başlığı Gir..." oninput="updateActiveNote()">
+                        <textarea id="notesText" placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..." oninput="updateActiveNote()"></textarea>
+                        <div class="status" id="notesStatus">Bulut Senkronizasyonu Aktif ☁️</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="media" class="tab-content">
+            <div class="glass-panel" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <iframe height="300" src="https://www.youtube.com/embed/f3A81s8wKpw" style="border:none; width:100%; border-radius: 10px;"></iframe>
+                <iframe height="300" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0" style="border:none; width:100%; border-radius: 10px;"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. ZAMAN AYARLARI ---
+        window.onload = () => {
+            const now = new Date();
+            const hour = now.getHours();
+            let greetingMsg = "İyi geceler.";
+            if (hour >= 5 && hour < 12) greetingMsg = "Günaydın.";
+            else if (hour >= 12 && hour < 18) greetingMsg = "İyi günler.";
+            else if (hour >= 18 && hour < 22) greetingMsg = "İyi akşamlar.";
+
+            document.getElementById('dynamicGreeting').textContent = greetingMsg;
+            document.getElementById('introTime').textContent = `${String(hour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        };
+
+        // --- 2. SİNEMATİK BAŞLAMA MOTORU (VİDEO OYNATMA KALDIRILDI) ---
+        function startSystem() {
+            // Butonu gizle
+            document.getElementById('start-btn').style.display = 'none';
+
+            // Sahneler Akmaya Başlar:
+            // 2. Saniye: Nurullah Yazısı Gelir (Süreyi biraz kısalttım akıcı olması için)
+            setTimeout(() => {
+                const el = document.getElementById('introText');
+                el.style.display = 'block';
+                el.style.animation = 'fadeIn 2s forwards';
+            }, 1000);
+
+            // 3.5. Saniye: Dinamik Karşılama Mesajı Gelir
+            setTimeout(() => {
+                const el = document.getElementById('dynamicGreeting');
+                el.style.display = 'block';
+                el.style.animation = 'fadeIn 2s forwards';
+            }, 2500);
+
+            // 5. Saniye: Saat Gelir
+            setTimeout(() => {
+                const el = document.getElementById('introTime');
+                el.style.display = 'block';
+                el.style.animation = 'fadeIn 2s forwards';
+            }, 4000);
+
+            // 7. Saniye: Intro ekranı komple solar, arayüz açılır
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.opacity = '0';
+                
+                // Ana Navigasyon ve İçeriği görünür kıl
+                const nav = document.getElementById('mainNav');
+                const main = document.getElementById('mainContent');
+                nav.style.opacity = '1';
+                main.style.opacity = '1';
+                
+                // Tamamen yok et
+                setTimeout(() => { document.getElementById('intro-screen').style.display = 'none'; }, 1500);
+            }, 6500);
+        }
+
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // --- 3. FIREBASE ENTEGRASYONU ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
+            authDomain: "dashboard-ab880.firebaseapp.com",
+            projectId: "dashboard-ab880",
+            storageBucket: "dashboard-ab880.firebasestorage.app",
+            messagingSenderId: "1014186585487",
+            appId: "1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa",
+            measurementId: "G-8NSGQBPVBF"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const userDocRef = db.collection('users').doc('nurullah');
+
+        let todos = [];
+        let journals = [];
+        let notes = [];
+        let activeJournalId = null;
+        let activeNoteId = null;
+
+        // VERİ ÇEKME VE KÖPRÜ (MIGRATION)
+        userDocRef.get().then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                if(data.todos) { todos = data.todos; renderTodos(); }
+                
+                // Günlük Köprüsü
+                if(data.journals) { 
+                    journals = data.journals; 
+                } else if(data.journal && typeof data.journal === 'string' && data.journal.trim() !== "") {
+                    journals = [{ id: "legacy-j", title: "Eski Sistemden Aktarılan Günlük", content: data.journal }];
+                }
+                renderJournalList();
+
+                // Notlar Köprüsü
+                if(data.notes) { 
+                    if(Array.isArray(data.notes)) {
+                        notes = data.notes;
+                    } else if(typeof data.notes === 'string' && data.notes.trim() !== "") {
+                        notes = [{ id: "legacy-n", title: "Eski Sistemden Aktarılan Notlar", content: data.notes }];
+                    }
+                }
+                renderNotesList();
+            }
+            document.getElementById('todoStatus').textContent = "Buluta Bağlı ☁️";
+        }).catch(error => { console.log("Veri hatası:", error); });
+
+        // BULUTA BULUT KAYDETME (0.8 SANİYE GECİKMELİ REAKSİYON)
+        let saveTimeout;
+        function saveToCloud(field, value, statusId) {
+            const statusEl = document.getElementById(statusId);
+            statusEl.textContent = 'Kaydediliyor...';
+            statusEl.style.color = 'white';
+
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                userDocRef.set({ [field]: value }, { merge: true })
+                .then(() => {
+                    statusEl.textContent = 'Senkronize Edildi ✓';
+                    statusEl.style.color = '#00D15E';
+                }).catch(() => {
+                    statusEl.textContent = 'Hata: Veri gönderilemedi!';
+                    statusEl.style.color = '#ff4444';
+                });
+            }, 800);
+        }
+
+        // --- 4. GÜNLÜK MODÜLÜ ---
+        function renderJournalList() {
+            const listEl = document.getElementById('journalList');
+            listEl.innerHTML = '';
+            journals.forEach(j => {
+                const li = document.createElement('li');
+                li.className = `archive-item ${j.id === activeJournalId ? 'active' : ''}`;
+                li.onclick = (e) => { if(e.target.tagName !== 'BUTTON') selectJournal(j.id); };
+                li.innerHTML = `
+                    <span class="title-text">${j.title || 'Başlıksız Günlük'}</span>
+                    <button class="item-delete" onclick="deleteJournal('${j.id}')">✕</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function createNewJournal() {
+            const today = new Date().toLocaleDateString('tr-TR');
+            const newJournal = { id: Date.now().toString(), title: today + " - Günlük", content: "" };
+            journals.unshift(newJournal);
+            activeJournalId = newJournal.id;
+            renderJournalList();
+            selectJournal(newJournal.id);
+            saveToCloud('journals', journals, 'journalStatus');
+        }
+
+        function selectJournal(id) {
+            activeJournalId = id;
+            const journal = journals.find(j => j.id === id);
+            if(journal) {
+                document.getElementById('journalEditor').style.display = 'flex';
+                document.getElementById('journalTitle').value = journal.title;
+                document.getElementById('journalText').value = journal.content;
+                renderJournalList();
+            }
+        }
+
+        function updateActiveJournal() {
+            const journal = journals.find(j => j.id === activeJournalId);
+            if(journal) {
+                journal.title = document.getElementById('journalTitle').value;
+                journal.content = document.getElementById('journalText').value;
+                saveToCloud('journals', journals, 'journalStatus');
+                const activeItem = document.querySelector('#journalList .active .title-text');
+                if(activeItem) activeItem.textContent = journal.title || 'Başlıksız Günlük';
+            }
+        }
+
+        function deleteJournal(id) {
+            journals = journals.filter(j => j.id !== id);
+            if(activeJournalId === id) document.getElementById('journalEditor').style.display = 'none';
+            renderJournalList();
+            saveToCloud('journals', journals, 'journalStatus');
+        }
+
+        // --- 5. NOTLAR MODÜLÜ ---
+        function renderNotesList() {
+            const listEl = document.getElementById('notesList');
+            listEl.innerHTML = '';
+            notes.forEach(n => {
+                const li = document.createElement('li');
+                li.className = `archive-item ${n.id === activeNoteId ? 'active' : ''}`;
+                li.onclick = (e) => { if(e.target.tagName !== 'BUTTON') selectNote(n.id); };
+                li.innerHTML = `
+                    <span class="title-text">${n.title || 'Başlıksız Not'}</span>
+                    <button class="item-delete" onclick="deleteNote('${n.id}')">✕</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function createNewNote() {
+            const newNote = { id: Date.now().toString(), title: "Yeni Strateji / Fikir", content: "" };
+            notes.unshift(newNote);
+            activeNoteId = newNote.id;
+            renderNotesList();
+            selectNote(newNote.id);
+            saveToCloud('notes', notes, 'notesStatus');
+        }
+
+        function selectNote(id) {
+            activeNoteId = id;
+            const note = notes.find(n => n.id === id);
+            if(note) {
+                document.getElementById('notesEditor').style.display = 'flex';
+                document.getElementById('notesTitle').value = note.title;
+                document.getElementById('notesText').value = note.content;
+                renderNotesList();
+            }
+        }
+
+        function updateActiveNote() {
+            const note = notes.find(n => n.id === activeNoteId);
+            if(note) {
+                note.title = document.getElementById('notesTitle').value;
+                note.content = document.getElementById('notesText').value;
+                saveToCloud('notes', notes, 'notesStatus');
+                const activeItem = document.querySelector('#notesList .active .title-text');
+                if(activeItem) activeItem.textContent = note.title || 'Başlıksız Not';
+            }
+        }
+
+        function deleteNote(id) {
+            notes = notes.filter(n => n.id !== id);
+            if(activeNoteId === id) document.getElementById('notesEditor').style.display = 'none';
+            renderNotesList();
+            saveToCloud('notes', notes, 'notesStatus');
+        }
+
+        // --- 6. TO-DO MODÜLÜ ---
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+
+        function saveTodosToCloud() { saveToCloud('todos', todos, 'todoStatus'); renderTodos(); }
+        function renderTodos() {
+            todoList.innerHTML = '';
+            todos.forEach((todo, index) => {
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                li.innerHTML = `
+                    <label>
+                        <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${index})">
+                        <span>${todo.text}</span>
+                    </label>
+                    <button class="delete-btn" onclick="deleteTodo(${index})">✕</button>
+                `;
+                todoList.appendChild(li);
+            });
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text !== '') { todos.push({ text: text, completed: false }); todoInput.value = ''; saveTodosToCloud(); }
+        }
+        function handleEnter(e) { if (e.key === 'Enter') addTodo(); }
+        function toggleTodo(index) { todos[index].completed = !todos[index].completed; saveTodosToCloud(); }
+        function deleteTodo(index) { todos.splice(index, 1); saveTodosToCloud(); }
+    </script>
+</body>
+</html>
