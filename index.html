@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NURULLAH // CLOUD OS</title>
-    
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -15,210 +15,746 @@
             --accent: #ffffff;
             --glass-bg: rgba(10, 10, 10, 0.75);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --danger: #ff4444;
+            --success: #00D15E;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background-color: #000; color: var(--text-main); overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
 
+        body {
+            background-color: #000;
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ── Background Video ── */
         .video-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            object-fit: cover; z-index: -2; filter: brightness(0.3) contrast(1.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(0.3) contrast(1.2);
             pointer-events: none;
         }
 
+        /* ── Intro Screen ── */
         #intro-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; transition: opacity 1.5s; padding: 20px; text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* Yarı saydam koyu overlay — arkaplan videosu görünür */
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
         }
-        .intro-text { font-size: 3.5rem; font-weight: 200; letter-spacing: 4px; animation: fadeIn 2s forwards 0.5s; opacity: 0; }
-        .intro-sub { font-size: 2rem; color: var(--text-muted); margin-top: 15px; animation: fadeIn 2s forwards 2s; opacity: 0; }
-        .intro-time { margin-top: 25px; color: #777; animation: fadeIn 2s forwards 3.5s; opacity: 0; font-size: 1.2rem;}
-        
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
+        #intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .intro-skip-hint {
+            position: absolute;
+            bottom: 40px;
+            color: #888;
+            font-size: 0.85rem;
+            animation: fadeInUp 1.5s forwards 3.5s;
+            opacity: 0;
+            letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+        }
+
+        .intro-text {
+            font-size: 3.5rem;
+            font-weight: 200;
+            letter-spacing: 4px;
+            animation: fadeInUp 1.5s forwards 0.5s;
+            opacity: 0;
+            transform: translateY(20px);
+            text-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .intro-sub {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            animation: fadeInUp 1.5s forwards 2s;
+            opacity: 0;
+            transform: translateY(20px);
+            text-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .intro-time {
+            margin-top: 25px;
+            color: #999;
+            animation: fadeInUp 1.5s forwards 3.5s;
+            opacity: 0;
+            font-size: 1.2rem;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ── Navigation ── */
         nav {
-            display: flex; gap: 15px; justify-content: center; margin-top: 40px;
-            animation: fadeIn 2s forwards 5s; opacity: 0; z-index: 10; position: relative; padding: 0 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            animation: fadeIn 1.5s forwards 4.5s;
+            opacity: 0;
+            z-index: 10;
+            position: relative;
+            padding: 0 20px;
         }
+
         .tab-btn {
-            background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--glass-border);
-            padding: 12px 25px; border-radius: 30px; font-size: 1rem; cursor: pointer; transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-        .tab-btn.active, .tab-btn:hover { background: rgba(255,255,255,0.2); color: white; }
 
-        main { max-width: 1200px; margin: 40px auto; padding: 0 20px; animation: fadeIn 2s forwards 5.5s; opacity: 0; }
-        .tab-content { display: none; animation: fadeIn 0.4s; }
-        .tab-content.active { display: block; }
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.35);
+        }
 
+        /* ── Main Content ── */
+        main {
+            max-width: 1200px;
+            margin: 40px auto 60px;
+            padding: 0 20px;
+            animation: fadeIn 1.5s forwards 5s;
+            opacity: 0;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ── Glass Panel ── */
         .glass-panel {
-            background: var(--glass-bg); backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px;
-            margin-bottom: 30px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
-        .panel-title { font-size: 1.2rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
 
-        /* ARŞİV DÜZENİ */
-        .split-container { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
-        .sidebar-panel { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--glass-border); padding-right: 15px; max-height: 500px; overflow-y: auto; }
-        .editor-panel { display: flex; flex-direction: column; gap: 15px; }
-
-        .add-btn { background: rgba(255,255,255,0.1); color: white; border: 1px dashed var(--glass-border); padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; text-align: center; width: 100%; margin-bottom: 10px; }
-        .add-btn:hover { background: rgba(255,255,255,0.2); }
-
-        .archive-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .archive-item { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .archive-item:hover, .archive-item.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
-        .archive-item .title-text { font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 80%; }
-        .archive-item .item-delete { color: #ff4444; background: none; border: none; cursor: pointer; opacity: 0.4; transition: 0.2s; }
-        .archive-item:hover .item-delete { opacity: 1; }
-
-        textarea, input[type="text"] {
-            width: 100%; background: rgba(255, 255, 255, 0.02); color: white;
-            border: 1px solid var(--glass-border); border-radius: 10px; padding: 15px;
-            font-size: 1.1rem; outline: none; transition: 0.3s;
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
         }
-        .title-input { font-size: 1.4rem; font-weight: 600; letter-spacing: 0.5px; }
-        textarea { height: 380px; resize: none; line-height: 1.6; }
-        textarea:focus, input[type="text"]:focus { border-color: rgba(255,255,255,0.3); }
-        
-        .status { font-size: 0.85rem; color: #00D15E; margin-top: 10px; text-align: right; }
 
-        /* TO-DO LIST */
-        .todo-input-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn { background: white; color: black; border: none; padding: 0 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
-        .btn:active { transform: scale(0.95); }
-        .todo-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .todo-item label { display: flex; align-items: center; cursor: pointer; width: 100%; }
-        .todo-item input[type="checkbox"] { appearance: none; width: 20px; height: 20px; border: 2px solid var(--text-muted); border-radius: 4px; margin-right: 15px; cursor: pointer; position: relative; flex-shrink: 0; }
-        .todo-item input[type="checkbox"]:checked { background-color: var(--accent); border-color: var(--accent); }
-        .todo-item input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: black; font-size: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; }
-        .todo-item input[type="checkbox"]:checked + span { color: var(--text-muted); text-decoration: line-through; }
-        .delete-btn { background: none; border: none; color: #ff4444; font-size: 1.2rem; cursor: pointer; opacity: 0.5; padding-left: 10px;}
-        .todo-item:hover .delete-btn { opacity: 1; }
+        /* ── Split Layout (Journal & Notes) ── */
+        .split-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
 
-        /* MOBİL UYUM */
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-right: 1px solid var(--glass-border);
+            padding-right: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .editor-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .add-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border: 1px dashed var(--glass-border);
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .add-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ── Archive List ── */
+        .archive-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .archive-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 14px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            gap: 10px;
+        }
+
+        .archive-item:hover,
+        .archive-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .archive-item .title-text {
+            font-size: 0.95rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .archive-item .item-delete {
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-size: 1rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .archive-item:hover .item-delete {
+            opacity: 1;
+        }
+
+        .archive-item .item-delete:hover {
+            background: rgba(255, 68, 68, 0.15);
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* ── Form Elements ── */
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s ease, background 0.3s ease;
+            resize: vertical;
+        }
+
+        .title-input {
+            font-size: 1.4rem !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 14px 18px !important;
+        }
+
+        textarea {
+            height: 380px;
+            resize: none;
+            line-height: 1.7;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Status Indicator ── */
+        .status {
+            font-size: 0.85rem;
+            color: var(--success);
+            margin-top: 10px;
+            text-align: right;
+            transition: color 0.3s ease;
+        }
+
+        /* ── To-Do Section ── */
+        .todo-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: white;
+            color: black;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease, opacity 0.2s ease;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s ease;
+        }
+
+        .todo-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .todo-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            flex: 1;
+            min-width: 0;
+            gap: 15px;
+        }
+
+        .todo-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .todo-item input[type="checkbox"]:checked {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .todo-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: black;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+
+        .todo-item input[type="checkbox"]:checked+span {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: opacity 0.2s ease, background 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .todo-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 68, 68, 0.15);
+        }
+
+        /* ── Media Panel ── */
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .media-grid iframe {
+            border: none;
+            width: 100%;
+            border-radius: 12px;
+            height: 300px;
+        }
+
+        /* ── Responsive ── */
         @media (max-width: 768px) {
-            .intro-text { font-size: 2.2rem; letter-spacing: 2px; }
-            .intro-sub { font-size: 1.4rem; }
-            nav { flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-            .tab-btn { flex: 1 1 calc(50% - 10px); padding: 10px; font-size: 0.9rem; text-align: center; }
-            main { margin: 20px auto; padding: 0 15px; }
-            .glass-panel { padding: 20px; margin-bottom: 20px; }
-            .split-container { grid-template-columns: 1fr; }
-            .sidebar-panel { border-right: none; border-bottom: 1px solid var(--glass-border); padding-right: 0; padding-bottom: 15px; max-height: 200px; }
-            .todo-input-container { flex-direction: column; }
-            .btn { padding: 15px; width: 100%; }
-            #media .glass-panel { grid-template-columns: 1fr !important; }
-            iframe { height: 220px; }
-            textarea { height: 300px; font-size: 1rem; }
+            .intro-text {
+                font-size: 2rem;
+                letter-spacing: 2px;
+            }
+
+            .intro-sub {
+                font-size: 1.2rem;
+            }
+
+            .intro-skip-hint {
+                bottom: 30px;
+                font-size: 0.75rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 20px;
+            }
+
+            .tab-btn {
+                flex: 1 1 calc(50% - 8px);
+                padding: 10px 14px;
+                font-size: 0.85rem;
+                text-align: center;
+                border-radius: 25px;
+            }
+
+            main {
+                margin: 20px auto 40px;
+                padding: 0 12px;
+            }
+
+            .glass-panel {
+                padding: 20px 16px;
+                margin-bottom: 20px;
+                border-radius: 16px;
+            }
+
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding-right: 0;
+                padding-bottom: 15px;
+                max-height: 200px;
+            }
+
+            .todo-input-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 14px;
+                width: 100%;
+            }
+
+            .media-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .media-grid iframe {
+                height: 220px;
+            }
+
+            textarea {
+                height: 300px;
+                font-size: 1rem;
+            }
+
+            .title-input {
+                font-size: 1.2rem !important;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Background Video -->
     <video class="video-bg" autoplay loop muted playsinline webkit-playsinline>
         <source src="arkaplan.mp4" type="video/mp4">
     </video>
 
-    <div id="intro-screen">
+    <!-- Intro Splash Screen -->
+    <div id="intro-screen" aria-label="Welcome screen - click or press Escape to skip">
         <div class="intro-text">MERHABA, NURULLAH.</div>
         <div class="intro-sub" id="dynamicGreeting">Sistem Başlatılıyor.</div>
         <div class="intro-time" id="introTime">00:00</div>
+        <div class="intro-skip-hint">Dokun veya ESC ile geç ▸</div>
     </div>
 
-    <nav>
-        <button class="tab-btn active" onclick="openTab(event, 'dashboard')">Dashboard</button>
-        <button class="tab-btn" onclick="openTab(event, 'journal')">Günlük</button>
-        <button class="tab-btn" onclick="openTab(event, 'notes')">Notlar</button>
-        <button class="tab-btn" onclick="openTab(event, 'media')">Medya</button>
+    <!-- Navigation -->
+    <nav aria-label="Main navigation">
+        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="journal">Günlük</button>
+        <button class="tab-btn" data-tab="notes">Notlar</button>
+        <button class="tab-btn" data-tab="media">Medya</button>
     </nav>
 
+    <!-- Main Content -->
     <main>
+        <!-- Dashboard -->
         <section id="dashboard" class="tab-content active">
             <div class="glass-panel">
-                <div class="panel-title">Aksiyon Planı & To-Do</div>
-                <div class="todo-input-container">
-                    <input type="text" id="todoInput" placeholder="Görev ekle ve Enter'a bas..." onkeypress="handleEnter(event)">
-                    <button class="btn" onclick="addTodo()">Ekle</button>
-                </div>
-                <ul id="todoList" style="list-style: none;"></ul>
+                <h2 class="panel-title">Aksiyon Planı &amp; To-Do</h2>
+                <form class="todo-input-container" onsubmit="return false;">
+                    <input
+                        type="text"
+                        id="todoInput"
+                        placeholder="Görev ekle ve Enter'a bas..."
+                        aria-label="Add new task"
+                        autocomplete="off"
+                    >
+                    <button class="btn" type="button" id="addTodoBtn">Ekle</button>
+                </form>
+                <ul id="todoList" style="list-style: none;" aria-label="Task list"></ul>
                 <div class="status" id="todoStatus">Sistem Bekleniyor...</div>
             </div>
         </section>
 
+        <!-- Journal -->
         <section id="journal" class="tab-content">
             <div class="glass-panel">
-                <div class="panel-title">Kişisel Günlük Arşivi</div>
+                <h2 class="panel-title">Kişisel Günlük Arşivi</h2>
                 <div class="split-container">
                     <div class="sidebar-panel">
-                        <button class="add-btn" onclick="createNewJournal()">+ Yeni Günlük Sayfası</button>
-                        <ul id="journalList" class="archive-list"></ul>
+                        <button class="add-btn" id="newJournalBtn">+ Yeni Günlük Sayfası</button>
+                        <ul id="journalList" class="archive-list" aria-label="Journal entries"></ul>
                     </div>
                     <div class="editor-panel" id="journalEditor" style="display:none;">
-                        <input type="text" id="journalTitle" class="title-input" placeholder="Tarih / Başlık Yaz..." oninput="updateActiveJournal()">
-                        <textarea id="journalText" placeholder="Bugün neler yaşandı?..." oninput="updateActiveJournal()"></textarea>
+                        <input
+                            type="text"
+                            id="journalTitle"
+                            class="title-input"
+                            placeholder="Tarih / Başlık Yaz..."
+                            aria-label="Journal title"
+                        >
+                        <textarea
+                            id="journalText"
+                            placeholder="Bugün neler yaşandı?..."
+                            aria-label="Journal content"
+                        ></textarea>
                         <div class="status" id="journalStatus">Bulut Senkronizasyonu Aktif ☁️</div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Notes -->
         <section id="notes" class="tab-content">
             <div class="glass-panel">
-                <div class="panel-title">Fikirler & Gözlemler Deposu</div>
+                <h2 class="panel-title">Fikirler &amp; Gözlemler Deposu</h2>
                 <div class="split-container">
                     <div class="sidebar-panel">
-                        <button class="add-btn" onclick="createNewNote()">+ Yeni Not Oluştur</button>
-                        <ul id="notesList" class="archive-list"></ul>
+                        <button class="add-btn" id="newNoteBtn">+ Yeni Not Oluştur</button>
+                        <ul id="notesList" class="archive-list" aria-label="Note entries"></ul>
                     </div>
                     <div class="editor-panel" id="notesEditor" style="display:none;">
-                        <input type="text" id="notesTitle" class="title-input" placeholder="Not Başlığı Gir..." oninput="updateActiveNote()">
-                        <textarea id="notesText" placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..." oninput="updateActiveNote()"></textarea>
+                        <input
+                            type="text"
+                            id="notesTitle"
+                            class="title-input"
+                            placeholder="Not Başlığı Gir..."
+                            aria-label="Note title"
+                        >
+                        <textarea
+                            id="notesText"
+                            placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..."
+                            aria-label="Note content"
+                        ></textarea>
                         <div class="status" id="notesStatus">Bulut Senkronizasyonu Aktif ☁️</div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Media -->
         <section id="media" class="tab-content">
-            <div class="glass-panel" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <iframe height="300" src="https://www.youtube.com/embed/f3A81s8wKpw" style="border:none; width:100%; border-radius: 10px;"></iframe>
-                <iframe height="300" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0" style="border:none; width:100%; border-radius: 10px;"></iframe>
+            <div class="glass-panel">
+                <h2 class="panel-title">Medya</h2>
+                <div class="media-grid">
+                    <iframe
+                        src="https://www.youtube.com/embed/f3A81s8wKpw"
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                    <iframe
+                        src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&amp;theme=0"
+                        title="Spotify playlist"
+                        allow="encrypted-media"
+                    ></iframe>
+                </div>
             </div>
         </section>
     </main>
 
     <script>
-        // --- 1. SAAT VE INTRO ---
-        window.onload = () => {
-            const now = new Date();
-            const hour = now.getHours();
-            let greetingMsg = "İyi geceler.";
-            if (hour >= 5 && hour < 12) greetingMsg = "Günaydın.";
-            else if (hour >= 12 && hour < 18) greetingMsg = "İyi günler.";
-            else if (hour >= 18 && hour < 22) greetingMsg = "İyi akşamlar.";
+    (function () {
+        'use strict';
 
-            document.getElementById('dynamicGreeting').textContent = greetingMsg;
-            document.getElementById('introTime').textContent = `${String(hour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-            
-            setTimeout(() => {
-                const intro = document.getElementById('intro-screen');
-                intro.style.opacity = '0';
-                setTimeout(() => intro.style.display = 'none', 1500);
-            }, 4500);
-        };
+        // ─────────────────────────────────────
+        // 1. INTRO SCREEN
+        // ─────────────────────────────────────
+        const introScreen = document.getElementById('intro-screen');
+        const dynamicGreeting = document.getElementById('dynamicGreeting');
+        const introTime = document.getElementById('introTime');
+        let introTimer = null;
 
-        function openTab(evt, tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            evt.currentTarget.classList.add('active');
+        function getGreeting(hour) {
+            if (hour >= 5 && hour < 12) return 'Günaydın.';
+            if (hour >= 12 && hour < 18) return 'İyi günler.';
+            if (hour >= 18 && hour < 22) return 'İyi akşamlar.';
+            return 'İyi geceler.';
         }
 
-        // --- 2. FIREBASE KONFİGÜRASYONU ---
-        const firebaseConfig = {
+        function formatTime(date) {
+            return String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+        }
+
+        function dismissIntro() {
+            if (introTimer) {
+                clearTimeout(introTimer);
+                introTimer = null;
+            }
+            introScreen.classList.add('hidden');
+        }
+
+        function initIntro() {
+            var now = new Date();
+            dynamicGreeting.textContent = getGreeting(now.getHours());
+            introTime.textContent = formatTime(now);
+
+            // Auto-dismiss after 4.5 seconds
+            introTimer = setTimeout(dismissIntro, 4500);
+
+            // Click to skip
+            introScreen.addEventListener('click', dismissIntro);
+
+            // Escape key to skip
+            document.addEventListener('keydown', function skipHandler(e) {
+                if (e.key === 'Escape' && !introScreen.classList.contains('hidden')) {
+                    dismissIntro();
+                }
+            });
+        }
+
+        // ─────────────────────────────────────
+        // 2. TAB NAVIGATION
+        // ─────────────────────────────────────
+        function initTabs() {
+            var tabButtons = document.querySelectorAll('.tab-btn');
+            var tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var tabName = this.getAttribute('data-tab');
+
+                    tabButtons.forEach(function (b) { b.classList.remove('active'); });
+                    tabContents.forEach(function (t) { t.classList.remove('active'); });
+
+                    this.classList.add('active');
+                    var target = document.getElementById(tabName);
+                    if (target) target.classList.add('active');
+                });
+            });
+        }
+
+        // ─────────────────────────────────────
+        // 3. FIREBASE CONFIGURATION
+        // ─────────────────────────────────────
+        var firebaseConfig = {
             apiKey: "AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
             authDomain: "dashboard-ab880.firebaseapp.com",
             projectId: "dashboard-ab880",
@@ -229,199 +765,424 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const userDocRef = db.collection('users').doc('nurullah');
+        var db = firebase.firestore();
+        var userDocRef = db.collection('users').doc('nurullah');
 
-        let todos = [];
-        let journals = [];
-        let notes = [];
-        let activeJournalId = null;
-        let activeNoteId = null;
+        // ─────────────────────────────────────
+        // 4. APPLICATION STATE
+        // ─────────────────────────────────────
+        var state = {
+            todos: [],
+            journals: [],
+            notes: [],
+            activeJournalId: null,
+            activeNoteId: null
+        };
 
-        // --- 3. BULUTTAN VERİ ÇEKME VE ESKİ VERİLERİ KURTARMA ---
-        userDocRef.get().then((doc) => {
-            if (doc.exists) {
-                const data = doc.data();
-                if(data.todos) { todos = data.todos; renderTodos(); }
-                
-                // --- Günlük Veri Köprüsü ---
-                if(data.journals) { 
-                    journals = data.journals; 
-                } else if(data.journal && typeof data.journal === 'string' && data.journal.trim() !== "") {
-                    journals = [{ id: "legacy-j", title: "Eski Sistemden Aktarılan Günlük", content: data.journal }];
-                }
-                renderJournalList();
+        // ─────────────────────────────────────
+        // 5. CLOUD SYNC (debounced)
+        // ─────────────────────────────────────
+        var saveTimeout = null;
 
-                // --- Notlar Veri Köprüsü ---
-                if(data.notes) { 
-                    if(Array.isArray(data.notes)) {
-                        notes = data.notes;
-                    } else if(typeof data.notes === 'string' && data.notes.trim() !== "") {
-                        notes = [{ id: "legacy-n", title: "Eski Sistemden Aktarılan Notlar", content: data.notes }];
-                    }
-                }
-                renderNotesList();
-            }
-            document.getElementById('todoStatus').textContent = "Buluta Bağlı ☁️";
-        }).catch(error => { console.log("Veri çekme hatası:", error); });
-
-        // --- BULUTA KAYDETME (0.8 SANİYE GECİKMELİ REAKSİYON) ---
-        let saveTimeout;
         function saveToCloud(field, value, statusId) {
-            const statusEl = document.getElementById(statusId);
+            var statusEl = document.getElementById(statusId);
+            if (!statusEl) return;
+
             statusEl.textContent = 'Kaydediliyor...';
             statusEl.style.color = 'white';
 
             clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                userDocRef.set({ [field]: value }, { merge: true })
-                .then(() => {
-                    statusEl.textContent = 'Senkronize Edildi ✓';
-                    statusEl.style.color = '#00D15E';
-                }).catch(() => {
-                    statusEl.textContent = 'Hata: Veri gönderilemedi!';
-                    statusEl.style.color = '#ff4444';
-                });
-            }, 800); // 800ms bekleme süresi
+            saveTimeout = setTimeout(function () {
+                var payload = {};
+                payload[field] = value;
+                userDocRef.set(payload, { merge: true })
+                    .then(function () {
+                        statusEl.textContent = 'Senkronize Edildi ✓';
+                        statusEl.style.color = '#00D15E';
+                    })
+                    .catch(function (err) {
+                        console.error('Sync error:', err);
+                        statusEl.textContent = 'Hata: Veri gönderilemedi!';
+                        statusEl.style.color = '#ff4444';
+                    });
+            }, 800);
         }
 
-        // --- 4. GÜNLÜK İŞLEMLERİ ---
+        // ─────────────────────────────────────
+        // 6. DATA LOADING FROM FIRESTORE
+        // ─────────────────────────────────────
+        function loadFromCloud() {
+            var todoStatusEl = document.getElementById('todoStatus');
+
+            userDocRef.get().then(function (doc) {
+                if (!doc.exists) {
+                    todoStatusEl.textContent = 'Buluta Bağlı ☁️ (yeni kullanıcı)';
+                    return;
+                }
+
+                var data = doc.data();
+
+                // Todos
+                if (Array.isArray(data.todos)) {
+                    state.todos = data.todos;
+                    renderTodos();
+                }
+
+                // Journals (with legacy migration)
+                if (Array.isArray(data.journals)) {
+                    state.journals = data.journals;
+                } else if (data.journal && typeof data.journal === 'string' && data.journal.trim() !== '') {
+                    state.journals = [{
+                        id: 'legacy-j',
+                        title: 'Eski Sistemden Aktarılan Günlük',
+                        content: data.journal
+                    }];
+                }
+                renderJournalList();
+
+                // Notes (with legacy migration)
+                if (Array.isArray(data.notes)) {
+                    state.notes = data.notes;
+                } else if (data.notes && typeof data.notes === 'string' && data.notes.trim() !== '') {
+                    state.notes = [{
+                        id: 'legacy-n',
+                        title: 'Eski Sistemden Aktarılan Notlar',
+                        content: data.notes
+                    }];
+                }
+                renderNotesList();
+
+                todoStatusEl.textContent = 'Buluta Bağlı ☁️';
+            }).catch(function (err) {
+                console.error('Veri çekme hatası:', err);
+                todoStatusEl.textContent = 'Bağlantı hatası — çevrimdışı mod';
+                todoStatusEl.style.color = '#ffaa00';
+            });
+        }
+
+        // ─────────────────────────────────────
+        // 7. JOURNAL OPERATIONS
+        // ─────────────────────────────────────
+        var journalListEl = document.getElementById('journalList');
+        var journalEditor = document.getElementById('journalEditor');
+        var journalTitleInput = document.getElementById('journalTitle');
+        var journalTextInput = document.getElementById('journalText');
+
         function renderJournalList() {
-            const listEl = document.getElementById('journalList');
-            listEl.innerHTML = '';
-            journals.forEach(j => {
-                const li = document.createElement('li');
-                li.className = `archive-item ${j.id === activeJournalId ? 'active' : ''}`;
-                li.onclick = (e) => { if(e.target.tagName !== 'BUTTON') selectJournal(j.id); };
-                li.innerHTML = `
-                    <span class="title-text">${j.title || 'Başlıksız Günlük'}</span>
-                    <button class="item-delete" onclick="deleteJournal('${j.id}')">✕</button>
-                `;
-                listEl.appendChild(li);
+            journalListEl.innerHTML = '';
+
+            if (state.journals.length === 0) {
+                journalListEl.innerHTML =
+                    '<li class="empty-state"><span class="empty-state-icon">📓</span>Henüz günlük yok.<br>Yeni bir sayfa oluşturun.</li>';
+                return;
+            }
+
+            state.journals.forEach(function (j) {
+                var li = document.createElement('li');
+                li.className = 'archive-item' + (j.id === state.activeJournalId ? ' active' : '');
+                li.setAttribute('role', 'button');
+                li.setAttribute('tabindex', '0');
+
+                var titleSpan = document.createElement('span');
+                titleSpan.className = 'title-text';
+                titleSpan.textContent = j.title || 'Başlıksız Günlük';
+
+                var delBtn = document.createElement('button');
+                delBtn.className = 'item-delete';
+                delBtn.textContent = '✕';
+                delBtn.setAttribute('aria-label', 'Delete journal');
+                delBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    deleteJournal(j.id);
+                });
+
+                li.appendChild(titleSpan);
+                li.appendChild(delBtn);
+
+                li.addEventListener('click', function () {
+                    selectJournal(j.id);
+                });
+                li.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectJournal(j.id);
+                    }
+                });
+
+                journalListEl.appendChild(li);
             });
         }
 
         function createNewJournal() {
-            const today = new Date().toLocaleDateString('tr-TR');
-            const newJournal = { id: Date.now().toString(), title: today + " - Günlük", content: "" };
-            journals.unshift(newJournal);
-            activeJournalId = newJournal.id;
+            var today = new Date().toLocaleDateString('tr-TR');
+            var newJournal = {
+                id: Date.now().toString(),
+                title: today + ' - Günlük',
+                content: ''
+            };
+            state.journals.unshift(newJournal);
+            state.activeJournalId = newJournal.id;
             renderJournalList();
             selectJournal(newJournal.id);
-            saveToCloud('journals', journals, 'journalStatus');
+            saveToCloud('journals', state.journals, 'journalStatus');
         }
 
         function selectJournal(id) {
-            activeJournalId = id;
-            const journal = journals.find(j => j.id === id);
-            if(journal) {
-                document.getElementById('journalEditor').style.display = 'flex';
-                document.getElementById('journalTitle').value = journal.title;
-                document.getElementById('journalText').value = journal.content;
+            state.activeJournalId = id;
+            var journal = state.journals.find(function (j) { return j.id === id; });
+            if (journal) {
+                journalEditor.style.display = 'flex';
+                journalTitleInput.value = journal.title;
+                journalTextInput.value = journal.content;
                 renderJournalList();
             }
         }
 
         function updateActiveJournal() {
-            const journal = journals.find(j => j.id === activeJournalId);
-            if(journal) {
-                journal.title = document.getElementById('journalTitle').value;
-                journal.content = document.getElementById('journalText').value;
-                saveToCloud('journals', journals, 'journalStatus');
-                const activeItem = document.querySelector('#journalList .active .title-text');
-                if(activeItem) activeItem.textContent = journal.title || 'Başlıksız Günlük';
+            var journal = state.journals.find(function (j) { return j.id === state.activeJournalId; });
+            if (!journal) return;
+            journal.title = journalTitleInput.value;
+            journal.content = journalTextInput.value;
+            saveToCloud('journals', state.journals, 'journalStatus');
+
+            var activeItem = journalListEl.querySelector('.active .title-text');
+            if (activeItem) {
+                activeItem.textContent = journal.title || 'Başlıksız Günlük';
             }
         }
 
         function deleteJournal(id) {
-            journals = journals.filter(j => j.id !== id);
-            if(activeJournalId === id) document.getElementById('journalEditor').style.display = 'none';
+            if (!confirm('Bu günlük sayfasını silmek istediğinize emin misiniz?')) return;
+            state.journals = state.journals.filter(function (j) { return j.id !== id; });
+            if (state.activeJournalId === id) {
+                state.activeJournalId = null;
+                journalEditor.style.display = 'none';
+            }
             renderJournalList();
-            saveToCloud('journals', journals, 'journalStatus');
+            saveToCloud('journals', state.journals, 'journalStatus');
         }
 
-        // --- 5. NOT İŞLEMLERİ ---
+        // ─────────────────────────────────────
+        // 8. NOTES OPERATIONS
+        // ─────────────────────────────────────
+        var notesListEl = document.getElementById('notesList');
+        var notesEditor = document.getElementById('notesEditor');
+        var notesTitleInput = document.getElementById('notesTitle');
+        var notesTextInput = document.getElementById('notesText');
+
         function renderNotesList() {
-            const listEl = document.getElementById('notesList');
-            listEl.innerHTML = '';
-            notes.forEach(n => {
-                const li = document.createElement('li');
-                li.className = `archive-item ${n.id === activeNoteId ? 'active' : ''}`;
-                li.onclick = (e) => { if(e.target.tagName !== 'BUTTON') selectNote(n.id); };
-                li.innerHTML = `
-                    <span class="title-text">${n.title || 'Başlıksız Not'}</span>
-                    <button class="item-delete" onclick="deleteNote('${n.id}')">✕</button>
-                `;
-                listEl.appendChild(li);
+            notesListEl.innerHTML = '';
+
+            if (state.notes.length === 0) {
+                notesListEl.innerHTML =
+                    '<li class="empty-state"><span class="empty-state-icon">📝</span>Henüz not yok.<br>Bir not oluşturun.</li>';
+                return;
+            }
+
+            state.notes.forEach(function (n) {
+                var li = document.createElement('li');
+                li.className = 'archive-item' + (n.id === state.activeNoteId ? ' active' : '');
+                li.setAttribute('role', 'button');
+                li.setAttribute('tabindex', '0');
+
+                var titleSpan = document.createElement('span');
+                titleSpan.className = 'title-text';
+                titleSpan.textContent = n.title || 'Başlıksız Not';
+
+                var delBtn = document.createElement('button');
+                delBtn.className = 'item-delete';
+                delBtn.textContent = '✕';
+                delBtn.setAttribute('aria-label', 'Delete note');
+                delBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    deleteNote(n.id);
+                });
+
+                li.appendChild(titleSpan);
+                li.appendChild(delBtn);
+
+                li.addEventListener('click', function () {
+                    selectNote(n.id);
+                });
+                li.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectNote(n.id);
+                    }
+                });
+
+                notesListEl.appendChild(li);
             });
         }
 
         function createNewNote() {
-            const newNote = { id: Date.now().toString(), title: "Yeni Strateji / Fikir", content: "" };
-            notes.unshift(newNote);
-            activeNoteId = newNote.id;
+            var newNote = {
+                id: Date.now().toString(),
+                title: 'Yeni Strateji / Fikir',
+                content: ''
+            };
+            state.notes.unshift(newNote);
+            state.activeNoteId = newNote.id;
             renderNotesList();
             selectNote(newNote.id);
-            saveToCloud('notes', notes, 'notesStatus');
+            saveToCloud('notes', state.notes, 'notesStatus');
         }
 
         function selectNote(id) {
-            activeNoteId = id;
-            const note = notes.find(n => n.id === id);
-            if(note) {
-                document.getElementById('notesEditor').style.display = 'flex';
-                document.getElementById('notesTitle').value = note.title;
-                document.getElementById('notesText').value = note.content;
+            state.activeNoteId = id;
+            var note = state.notes.find(function (n) { return n.id === id; });
+            if (note) {
+                notesEditor.style.display = 'flex';
+                notesTitleInput.value = note.title;
+                notesTextInput.value = note.content;
                 renderNotesList();
             }
         }
 
         function updateActiveNote() {
-            const note = notes.find(n => n.id === activeNoteId);
-            if(note) {
-                note.title = document.getElementById('notesTitle').value;
-                note.content = document.getElementById('notesText').value;
-                saveToCloud('notes', notes, 'notesStatus');
-                const activeItem = document.querySelector('#notesList .active .title-text');
-                if(activeItem) activeItem.textContent = note.title || 'Başlıksız Not';
+            var note = state.notes.find(function (n) { return n.id === state.activeNoteId; });
+            if (!note) return;
+            note.title = notesTitleInput.value;
+            note.content = notesTextInput.value;
+            saveToCloud('notes', state.notes, 'notesStatus');
+
+            var activeItem = notesListEl.querySelector('.active .title-text');
+            if (activeItem) {
+                activeItem.textContent = note.title || 'Başlıksız Not';
             }
         }
 
         function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
-            if(activeNoteId === id) document.getElementById('notesEditor').style.display = 'none';
+            if (!confirm('Bu notu silmek istediğinize emin misiniz?')) return;
+            state.notes = state.notes.filter(function (n) { return n.id !== id; });
+            if (state.activeNoteId === id) {
+                state.activeNoteId = null;
+                notesEditor.style.display = 'none';
+            }
             renderNotesList();
-            saveToCloud('notes', notes, 'notesStatus');
+            saveToCloud('notes', state.notes, 'notesStatus');
         }
 
-        // --- 6. TO-DO İŞLEMLERİ ---
-        const todoInput = document.getElementById('todoInput');
-        const todoList = document.getElementById('todoList');
+        // ─────────────────────────────────────
+        // 9. TODO OPERATIONS
+        // ─────────────────────────────────────
+        var todoInput = document.getElementById('todoInput');
+        var todoListEl = document.getElementById('todoList');
+        var addTodoBtn = document.getElementById('addTodoBtn');
 
-        function saveTodosToCloud() { saveToCloud('todos', todos, 'todoStatus'); renderTodos(); }
         function renderTodos() {
-            todoList.innerHTML = '';
-            todos.forEach((todo, index) => {
-                const li = document.createElement('li');
+            todoListEl.innerHTML = '';
+
+            if (state.todos.length === 0) {
+                todoListEl.innerHTML =
+                    '<li class="empty-state"><span class="empty-state-icon">✅</span>Henüz görev yok.<br>Yukarıdan bir görev ekleyin.</li>';
+                return;
+            }
+
+            state.todos.forEach(function (todo, index) {
+                var li = document.createElement('li');
                 li.className = 'todo-item';
-                li.innerHTML = `
-                    <label>
-                        <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${index})">
-                        <span>${todo.text}</span>
-                    </label>
-                    <button class="delete-btn" onclick="deleteTodo(${index})">✕</button>
-                `;
-                todoList.appendChild(li);
+
+                var label = document.createElement('label');
+                var checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = todo.completed;
+                checkbox.addEventListener('change', function () {
+                    toggleTodo(index);
+                });
+
+                var span = document.createElement('span');
+                span.textContent = todo.text;
+
+                label.appendChild(checkbox);
+                label.appendChild(span);
+
+                var delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.textContent = '✕';
+                delBtn.setAttribute('aria-label', 'Delete task');
+                delBtn.addEventListener('click', function () {
+                    deleteTodo(index);
+                });
+
+                li.appendChild(label);
+                li.appendChild(delBtn);
+                todoListEl.appendChild(li);
             });
         }
 
-        function addTodo() {
-            const text = todoInput.value.trim();
-            if (text !== '') { todos.push({ text: text, completed: false }); todoInput.value = ''; saveTodosToCloud(); }
+        function saveTodos() {
+            saveToCloud('todos', state.todos, 'todoStatus');
         }
-        function handleEnter(e) { if (e.key === 'Enter') addTodo(); }
-        function toggleTodo(index) { todos[index].completed = !todos[index].completed; saveTodosToCloud(); }
-        function deleteTodo(index) { todos.splice(index, 1); saveTodosToCloud(); }
+
+        function addTodo() {
+            var text = todoInput.value.trim();
+            if (text === '') return;
+
+            state.todos.push({ text: text, completed: false });
+            todoInput.value = '';
+            renderTodos();
+            saveTodos();
+            todoInput.focus();
+        }
+
+        function toggleTodo(index) {
+            state.todos[index].completed = !state.todos[index].completed;
+            saveTodos();
+        }
+
+        function deleteTodo(index) {
+            state.todos.splice(index, 1);
+            renderTodos();
+            saveTodos();
+        }
+
+        // ─────────────────────────────────────
+        // 10. EVENT BINDINGS
+        // ─────────────────────────────────────
+        function bindEvents() {
+            // Todo input: Enter key
+            todoInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTodo();
+                }
+            });
+
+            // Todo add button
+            addTodoBtn.addEventListener('click', addTodo);
+
+            // Journal editor inputs
+            journalTitleInput.addEventListener('input', updateActiveJournal);
+            journalTextInput.addEventListener('input', updateActiveJournal);
+
+            // Notes editor inputs
+            notesTitleInput.addEventListener('input', updateActiveNote);
+            notesTextInput.addEventListener('input', updateActiveNote);
+
+            // New journal / note buttons
+            document.getElementById('newJournalBtn').addEventListener('click', createNewJournal);
+            document.getElementById('newNoteBtn').addEventListener('click', createNewNote);
+        }
+
+        // ─────────────────────────────────────
+        // 11. INITIALIZATION
+        // ─────────────────────────────────────
+        function init() {
+            initIntro();
+            initTabs();
+            bindEvents();
+            loadFromCloud();
+        }
+
+        // Run on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+    })();
     </script>
 </body>
 </html>
