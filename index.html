@@ -20,6 +20,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background-color: #000; color: var(--text-main); overflow-x: hidden; }
 
+        <div id="login-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#000; z-index:99999; display:flex; justify-content:center; align-items:center;">
+    <div style="text-align:center;">
+        <h2 style="margin-bottom:20px; font-weight:200;">SİSTEME ERİŞİM</h2>
+        <input type="password" id="password-input" placeholder="Şifre" style="padding:10px; border-radius:5px; border:1px solid #333; background:#111; color:#fff; text-align:center;">
+        <button onclick="checkPassword()" style="padding:10px 20px; cursor:pointer;">GİRİŞ</button>
+    </div>
+</div>
+
         /* VİDEO ARKA PLAN */
         .video-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -187,6 +195,15 @@
     </main>
 
     <script>
+
+        function checkPassword() {
+    const input = document.getElementById('password-input').value;
+    if (input === "42489424") { // BURAYA KENDİ ŞİFRENİ YAZ
+        document.getElementById('login-overlay').style.display = 'none';
+    } else {
+        alert("Hatalı Şifre!");
+    }
+}
         // --- 1. SİNEMATİK AÇILIŞ SENARYOSU (JS İLE ZAMANLANMIŞ) ---
         window.onload = () => {
             const now = new Date();
