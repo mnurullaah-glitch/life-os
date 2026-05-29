@@ -26,20 +26,24 @@
             pointer-events: none;
         }
 
+        /* İNTRO EKRANI - SİYAH PERDE KALDIRILDI */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; z-index: 9999; display: flex; flex-direction: column;
+            background-color: transparent; /* Şeffaf yapıldı, video ilk andan itibaren görünecek */
+            z-index: 9999; display: flex; flex-direction: column;
             justify-content: center; align-items: center; transition: opacity 1.5s; padding: 20px; text-align: center;
         }
-        .intro-text { font-size: 3.5rem; font-weight: 200; letter-spacing: 4px; animation: fadeIn 2s forwards 0.5s; opacity: 0; }
-        .intro-sub { font-size: 2rem; color: var(--text-muted); margin-top: 15px; animation: fadeIn 2s forwards 2s; opacity: 0; }
-        .intro-time { margin-top: 25px; color: #777; animation: fadeIn 2s forwards 3.5s; opacity: 0; font-size: 1.2rem;}
+        
+        /* ZAMANLAMALAR SİNEMATİK KURGUYA GÖRE DEĞİŞTİRİLDİ */
+        .intro-text { font-size: 3.5rem; font-weight: 200; letter-spacing: 4px; animation: fadeIn 2s forwards 4s; opacity: 0; }
+        .intro-sub { font-size: 2rem; color: var(--text-muted); margin-top: 15px; animation: fadeIn 2s forwards 5.5s; opacity: 0; }
+        .intro-time { margin-top: 25px; color: #777; animation: fadeIn 2s forwards 7s; opacity: 0; font-size: 1.2rem;}
         
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
         nav {
             display: flex; gap: 15px; justify-content: center; margin-top: 40px;
-            animation: fadeIn 2s forwards 5s; opacity: 0; z-index: 10; position: relative; padding: 0 20px;
+            animation: fadeIn 2s forwards 9s; opacity: 0; z-index: 10; position: relative; padding: 0 20px;
         }
         .tab-btn {
             background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--glass-border);
@@ -48,7 +52,7 @@
         }
         .tab-btn.active, .tab-btn:hover { background: rgba(255,255,255,0.2); color: white; }
 
-        main { max-width: 1200px; margin: 40px auto; padding: 0 20px; animation: fadeIn 2s forwards 5.5s; opacity: 0; }
+        main { max-width: 1200px; margin: 40px auto; padding: 0 20px; animation: fadeIn 2s forwards 9.5s; opacity: 0; }
         .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
 
@@ -191,7 +195,7 @@
     </main>
 
     <script>
-        // --- 1. SAAT VE INTRO ---
+        // --- 1. SAAT VE İNTRO (SÜRELER UZATILDI) ---
         window.onload = () => {
             const now = new Date();
             const hour = now.getHours();
@@ -203,11 +207,12 @@
             document.getElementById('dynamicGreeting').textContent = greetingMsg;
             document.getElementById('introTime').textContent = `${String(hour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             
+            // Ekranın kaybolma süresi 8.5 saniyeye çıkarıldı
             setTimeout(() => {
                 const intro = document.getElementById('intro-screen');
                 intro.style.opacity = '0';
                 setTimeout(() => intro.style.display = 'none', 1500);
-            }, 4500);
+            }, 8500);
         };
 
         function openTab(evt, tabName) {
@@ -244,7 +249,6 @@
                 const data = doc.data();
                 if(data.todos) { todos = data.todos; renderTodos(); }
                 
-                // --- Günlük Veri Köprüsü ---
                 if(data.journals) { 
                     journals = data.journals; 
                 } else if(data.journal && typeof data.journal === 'string' && data.journal.trim() !== "") {
@@ -252,7 +256,6 @@
                 }
                 renderJournalList();
 
-                // --- Notlar Veri Köprüsü ---
                 if(data.notes) { 
                     if(Array.isArray(data.notes)) {
                         notes = data.notes;
@@ -265,7 +268,7 @@
             document.getElementById('todoStatus').textContent = "Buluta Bağlı ☁️";
         }).catch(error => { console.log("Veri çekme hatası:", error); });
 
-        // --- BULUTA KAYDETME (0.8 SANİYE GECİKMELİ REAKSİYON) ---
+        // --- BULUTA KAYDETME ---
         let saveTimeout;
         function saveToCloud(field, value, statusId) {
             const statusEl = document.getElementById(statusId);
@@ -282,7 +285,7 @@
                     statusEl.textContent = 'Hata: Veri gönderilemedi!';
                     statusEl.style.color = '#ff4444';
                 });
-            }, 800); // 800ms bekleme süresi
+            }, 800);
         }
 
         // --- 4. GÜNLÜK İŞLEMLERİ ---
