@@ -4,1131 +4,1208 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NURULLAH // CLOUD OS</title>
-
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap');
+
         :root {
-            --text-main: #ffffff;
-            --text-muted: #aaaaaa;
-            --accent: #ffffff;
-            --glass-bg: rgba(10, 10, 10, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --danger: #ff4444;
-            --success: #00D15E;
-            --glow: rgba(255, 255, 255, 0.08);
+            --bg:        #04040f;
+            --surface:   rgba(255,255,255,0.03);
+            --border:    rgba(255,255,255,0.07);
+            --border-hi: rgba(255,255,255,0.18);
+            --text:      #f0f0f8;
+            --muted:     rgba(255,255,255,0.38);
+            --accent1:   #7c6aff;
+            --accent2:   #c46dff;
+            --accent3:   #4fd1ff;
+            --success:   #22d3a0;
+            --danger:    #ff5566;
+            --glow1:     rgba(124,106,255,0.35);
+            --glow2:     rgba(196,109,255,0.25);
+            --glow3:     rgba(79,209,255,0.20);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
         body {
-            background-color: #000;
-            color: var(--text-main);
-            overflow-x: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
         /* ── Scrollbar ── */
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(124,106,255,0.3); border-radius: 4px; }
 
         /* ══════════════════════════════════════
-           GRADIENT BACKGROUND (açılış)
-           ══════════════════════════════════════ */
-        .gradient-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -3;
-            background: linear-gradient(160deg, #050510 0%, #0c0c20 20%, #0a1228 40%, #100a1c 60%, #060610 80%, #0a0a18 100%);
-            background-size: 300% 300%;
-            animation: gradientShift 15s ease infinite;
-            transition: opacity 1.8s ease;
+           AURORA BACKGROUND
+        ══════════════════════════════════════ */
+        .aurora {
+            position: fixed; inset: 0; z-index: -3; overflow: hidden;
+            background: radial-gradient(ellipse at 50% 50%, #07071a 0%, #04040f 100%);
         }
-        .gradient-bg.fade-out { opacity: 0; }
-        .gradient-bg.fade-in  { opacity: 1; }
-
-        @keyframes gradientShift {
-            0%   { background-position: 0% 50%; }
-            33%  { background-position: 100% 30%; }
-            66%  { background-position: 50% 100%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Gizli partikül hissi için ince noktalar */
-        .gradient-bg::after {
-            content: '';
+        .aurora-blob {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image:
-                radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.15), transparent),
-                radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.12), transparent),
-                radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.10), transparent),
-                radial-gradient(2px 2px at 85% 15%, rgba(255,255,255,0.08), transparent),
-                radial-gradient(1px 1px at 60% 45%, rgba(255,255,255,0.10), transparent),
-                radial-gradient(1px 1px at 25% 70%, rgba(255,255,255,0.06), transparent),
-                radial-gradient(2px 2px at 10% 50%, rgba(255,255,255,0.04), transparent),
-                radial-gradient(1px 1px at 90% 85%, rgba(255,255,255,0.08), transparent);
-            pointer-events: none;
-            animation: twinkle 6s ease-in-out infinite alternate;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: auroraDrift 20s ease-in-out infinite alternate;
+            opacity: 0;
+            transition: opacity 2s ease;
         }
-        @keyframes twinkle {
-            0%   { opacity: 0.4; }
-            100% { opacity: 1; }
+        .aurora-blob.visible { opacity: 1; }
+        .aurora-blob:nth-child(1) {
+            width: 600px; height: 500px;
+            top: -150px; left: -100px;
+            background: radial-gradient(circle, rgba(124,106,255,0.22) 0%, transparent 70%);
+            animation-duration: 18s;
+        }
+        .aurora-blob:nth-child(2) {
+            width: 500px; height: 450px;
+            top: -100px; right: -120px;
+            background: radial-gradient(circle, rgba(196,109,255,0.18) 0%, transparent 70%);
+            animation-duration: 22s; animation-delay: -5s;
+        }
+        .aurora-blob:nth-child(3) {
+            width: 700px; height: 400px;
+            bottom: -100px; left: 20%;
+            background: radial-gradient(circle, rgba(79,209,255,0.14) 0%, transparent 70%);
+            animation-duration: 25s; animation-delay: -10s;
+        }
+        .aurora-blob:nth-child(4) {
+            width: 300px; height: 300px;
+            top: 40%; right: 10%;
+            background: radial-gradient(circle, rgba(124,106,255,0.12) 0%, transparent 70%);
+            animation-duration: 15s; animation-delay: -8s;
+        }
+        @keyframes auroraDrift {
+            0%   { transform: translate(0,0) scale(1); }
+            33%  { transform: translate(40px,-30px) scale(1.05); }
+            66%  { transform: translate(-30px,20px) scale(0.97); }
+            100% { transform: translate(20px,40px) scale(1.03); }
         }
 
-        /* ══════════════════════════════════════
-           BACKGROUND VIDEO
-           ══════════════════════════════════════ */
-        .video-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            object-fit: cover;
-            z-index: -2;
-            filter: brightness(0.35) contrast(1.15) saturate(0.8);
+        /* Noise texture overlay */
+        .aurora::after {
+            content:'';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+            opacity: 0.4;
             pointer-events: none;
-            opacity: 0;
-            transition: opacity 1.8s ease;
+        }
+
+        /* ── Video bg ── */
+        .video-bg {
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: -2;
+            filter: brightness(0.28) contrast(1.1) saturate(0.7);
+            pointer-events: none; opacity: 0;
+            transition: opacity 2s ease;
         }
         .video-bg.visible { opacity: 1; }
 
         /* ══════════════════════════════════════
-           INTRO SCREEN
-           ══════════════════════════════════════ */
-        #intro-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1.2s ease, visibility 1.2s ease;
-            padding: 20px;
-            text-align: center;
-        }
-        #intro-screen.phase-start    { background: transparent; cursor: default; }
-        #intro-screen.phase-greeting {
-            background: rgba(0, 0, 0, 0.40);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            cursor: pointer;
-        }
-        #intro-screen.hidden {
-            opacity: 0; visibility: hidden; pointer-events: none;
-        }
-
-        /* ── Waveform Logo (Siri tarzı) ── */
-        .waveform-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            height: 80px;
-            margin-bottom: 20px;
-            animation: fadeInUp 2s forwards 0.1s;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        .waveform-logo .bar {
-            width: 5px;
-            border-radius: 3px;
-            background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.4) 100%);
-            box-shadow: 0 0 12px rgba(255,255,255,0.25);
-            animation: waveBounce 1.2s ease-in-out infinite;
-        }
-        .waveform-logo .bar:nth-child(1)  { height: 18px; animation-delay: 0.00s; }
-        .waveform-logo .bar:nth-child(2)  { height: 32px; animation-delay: 0.08s; }
-        .waveform-logo .bar:nth-child(3)  { height: 48px; animation-delay: 0.16s; }
-        .waveform-logo .bar:nth-child(4)  { height: 60px; animation-delay: 0.24s; }
-        .waveform-logo .bar:nth-child(5)  { height: 70px; animation-delay: 0.32s; }
-        .waveform-logo .bar:nth-child(6)  { height: 60px; animation-delay: 0.40s; }
-        .waveform-logo .bar:nth-child(7)  { height: 48px; animation-delay: 0.48s; }
-        .waveform-logo .bar:nth-child(8)  { height: 32px; animation-delay: 0.56s; }
-        .waveform-logo .bar:nth-child(9)  { height: 18px; animation-delay: 0.64s; }
-
-        @keyframes waveBounce {
-            0%, 100% { transform: scaleY(1); }
-            25%  { transform: scaleY(0.4); }
-            50%  { transform: scaleY(1.3); }
-            75%  { transform: scaleY(0.6); }
-        }
-
-        /* ── Glow Ring ── */
-        .glow-ring {
-            position: absolute;
-            width: 140px; height: 140px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.15);
-            animation: glowPulse 2.5s ease-in-out infinite, fadeInUp 2s forwards 0.1s;
-            opacity: 0;
-            transform: translateY(30px);
-            pointer-events: none;
-        }
-        .glow-ring::after {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.06);
-            animation: glowPulse 2.5s ease-in-out 0.5s infinite;
-        }
-        @keyframes glowPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50%      { transform: scale(1.15); opacity: 0.15; }
-        }
-
-        /* ── Launch Button ── */
-        .launch-btn-wrap {
-            animation: fadeInUp 2s forwards 0.3s;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        .launch-btn {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 16px 48px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 400;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(
-                135deg,
-                rgba(255,255,255,0.06) 0%,
-                rgba(255,255,255,0.02) 50%,
-                rgba(255,255,255,0.08) 100%
-            );
-        }
-        .launch-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .launch-btn:hover {
-            background: rgba(255, 255, 255, 0.14);
-            border-color: rgba(255, 255, 255, 0.45);
-            box-shadow:
-                0 0 50px rgba(255, 255, 255, 0.06),
-                0 0 100px rgba(255, 255, 255, 0.03),
-                inset 0 0 30px rgba(255,255,255,0.02);
-            transform: translateY(-3px);
-            letter-spacing: 5px;
-        }
-        .launch-btn:hover::before { opacity: 1; }
-        .launch-btn:active { transform: scale(0.95); }
-        .launch-btn.hide {
-            opacity: 0;
-            transform: translateY(-20px) scale(0.95);
-            pointer-events: none;
-            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        /* ── Greeting Phase ── */
-        .intro-text {
-            font-size: 3.5rem;
-            font-weight: 200;
-            letter-spacing: 5px;
-            text-shadow: 0 0 60px rgba(0,0,0,0.9), 0 0 120px rgba(0,0,0,0.5);
-        }
-        .intro-sub {
-            font-size: 2rem;
-            color: var(--text-muted);
-            margin-top: 15px;
-            text-shadow: 0 0 40px rgba(0,0,0,0.8);
-        }
-        .intro-time {
-            margin-top: 25px;
-            color: #999;
-            font-size: 1.2rem;
-            text-shadow: 0 0 25px rgba(0,0,0,0.7);
-        }
-        .intro-skip-hint {
-            position: absolute;
-            bottom: 40px;
-            color: #666;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(0,0,0,0.8);
-        }
-        .fade-in-up {
-            animation: fadeInUp 1.5s forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .delay-1 { animation-delay: 0s; }
-        .delay-2 { animation-delay: 0.3s; }
-        .delay-3 { animation-delay: 0.6s; }
-        .delay-4 { animation-delay: 0.9s; }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
+           GRID LINES
+        ══════════════════════════════════════ */
+        .grid-lines {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.025;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+            background-size: 80px 80px;
         }
 
         /* ══════════════════════════════════════
-           NAVIGATION
-           ══════════════════════════════════════ */
-        nav {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 40px;
-            opacity: 0;
-            z-index: 10;
-            position: relative;
-            padding: 0 20px;
-            transition: opacity 1s ease 0.2s;
+           INTRO SCREEN
+        ══════════════════════════════════════ */
+        #intro-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 20px; text-align: center;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
         }
-        nav.visible { opacity: 1; }
-
-        .tab-btn {
-            background: rgba(255, 255, 255, 0.04);
-            color: rgba(255,255,255,0.55);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 26px;
-            border-radius: 40px;
-            font-size: 0.95rem;
-            font-weight: 500;
+        #intro-screen.phase-greeting {
+            background: rgba(4,4,15,0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            letter-spacing: 0.5px;
-            position: relative;
         }
-        .tab-btn::after {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 40px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+        #intro-screen.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+
+        /* Waveform */
+        .waveform-logo {
+            display: flex; align-items: center; justify-content: center;
+            gap: 5px; height: 80px; margin-bottom: 32px;
+            animation: riseUp 1.4s cubic-bezier(0.23,1,0.32,1) forwards 0.2s;
+            opacity: 0; transform: translateY(40px);
+        }
+        .waveform-logo .bar {
+            width: 4px; border-radius: 4px;
+            background: linear-gradient(180deg, #c46dff 0%, #7c6aff 50%, #4fd1ff 100%);
+            box-shadow: 0 0 16px rgba(124,106,255,0.6);
+            animation: waveBounce 1.4s ease-in-out infinite;
+        }
+        .bar:nth-child(1){height:14px;animation-delay:0s}
+        .bar:nth-child(2){height:26px;animation-delay:.08s}
+        .bar:nth-child(3){height:42px;animation-delay:.16s}
+        .bar:nth-child(4){height:56px;animation-delay:.24s}
+        .bar:nth-child(5){height:68px;animation-delay:.32s}
+        .bar:nth-child(6){height:56px;animation-delay:.40s}
+        .bar:nth-child(7){height:42px;animation-delay:.48s}
+        .bar:nth-child(8){height:26px;animation-delay:.56s}
+        .bar:nth-child(9){height:14px;animation-delay:.64s}
+
+        @keyframes waveBounce {
+            0%,100%{transform:scaleY(1)}
+            25%{transform:scaleY(0.35)}
+            50%{transform:scaleY(1.4)}
+            75%{transform:scaleY(0.55)}
+        }
+
+        /* Glow ring */
+        .glow-ring {
+            position:absolute; width:180px; height:180px; border-radius:50%;
+            border:1px solid rgba(124,106,255,0.3);
+            box-shadow: 0 0 40px rgba(124,106,255,0.15), inset 0 0 40px rgba(124,106,255,0.05);
+            animation: ringPulse 3s ease-in-out infinite, riseUp 1.4s cubic-bezier(0.23,1,0.32,1) forwards 0.1s;
+            opacity:0; transform:translateY(40px); pointer-events:none;
+        }
+        .glow-ring::after {
+            content:''; position:absolute; inset:-12px; border-radius:50%;
+            border:1px solid rgba(196,109,255,0.12);
+            animation: ringPulse 3s ease-in-out 0.8s infinite;
+        }
+        @keyframes ringPulse {
+            0%,100%{transform:scale(1);opacity:.6}
+            50%{transform:scale(1.12);opacity:.2}
+        }
+
+        /* Launch Button */
+        .launch-btn-wrap {
+            animation: riseUp 1.4s cubic-bezier(0.23,1,0.32,1) forwards 0.4s;
+            opacity:0; transform:translateY(40px);
+        }
+        .launch-btn {
+            position:relative; overflow:hidden;
+            padding: 17px 56px;
+            border-radius: 60px;
+            border: 1px solid rgba(124,106,255,0.45);
+            font-size: 1.05rem; font-weight: 500;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: #fff; cursor: pointer;
+            background: linear-gradient(135deg, rgba(124,106,255,0.18) 0%, rgba(196,109,255,0.14) 50%, rgba(79,209,255,0.12) 100%);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 40px rgba(124,106,255,0.2), 0 0 80px rgba(124,106,255,0.08), inset 0 1px 0 rgba(255,255,255,0.08);
+            transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+        }
+        .launch-btn::before {
+            content:''; position:absolute;
+            top:0; left:-100%; width:100%; height:100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+            transition: left 0.6s ease;
+        }
+        .launch-btn:hover { 
+            border-color: rgba(196,109,255,0.7);
+            box-shadow: 0 0 60px rgba(124,106,255,0.35), 0 0 120px rgba(124,106,255,0.15), inset 0 1px 0 rgba(255,255,255,0.12);
+            transform: translateY(-3px); letter-spacing: 5px;
+        }
+        .launch-btn:hover::before { left: 100%; }
+        .launch-btn:active { transform: scale(0.96); }
+        .launch-btn.hide { opacity:0; transform:translateY(-30px) scale(0.9); pointer-events:none; transition:all 0.6s cubic-bezier(0.23,1,0.32,1); }
+
+        /* Greeting */
+        .intro-text {
+            font-size: 3.8rem; font-weight: 200; letter-spacing: 8px;
+            background: linear-gradient(135deg, #fff 0%, #c46dff 50%, #7c6aff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .intro-sub { font-size: 1.6rem; color: var(--muted); margin-top: 16px; font-weight: 300; letter-spacing: 2px; }
+        .intro-time { margin-top: 24px; font-size: 1.1rem; color: rgba(255,255,255,0.25); letter-spacing: 4px; }
+        .intro-skip-hint {
+            position: absolute; bottom: 40px;
+            color: rgba(255,255,255,0.2); font-size: 0.8rem; letter-spacing: 2px;
+        }
+        .fade-in-up { animation: riseUp 1.4s cubic-bezier(0.23,1,0.32,1) forwards; opacity:0; transform:translateY(24px); }
+        .delay-1{animation-delay:0s}.delay-2{animation-delay:.25s}.delay-3{animation-delay:.5s}.delay-4{animation-delay:.75s}
+
+        @keyframes riseUp { to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeIn  { to { opacity:1; } }
+
+        /* ══════════════════════════════════════
+           TOP BAR & NAVIGATION
+        ══════════════════════════════════════ */
+        .top-bar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px;
+            height: 64px;
+            background: rgba(4,4,15,0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
             opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
+            transition: opacity 0.8s ease 0.1s;
         }
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
+        .top-bar.visible { opacity: 1; }
+
+        .top-logo {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 4px;
+            color: rgba(255,255,255,0.5); text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px;
         }
-        .tab-btn:hover::after { opacity: 1; }
+        .top-logo-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            box-shadow: 0 0 12px var(--glow1);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+            0%,100%{box-shadow:0 0 12px var(--glow1)}
+            50%{box-shadow:0 0 24px var(--glow1), 0 0 48px rgba(124,106,255,0.15)}
+        }
+
+        nav {
+            display: flex; gap: 4px; align-items: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 5px;
+        }
+        .tab-btn {
+            position: relative; overflow: hidden;
+            padding: 8px 22px;
+            border-radius: 32px; border: none;
+            font-size: 0.85rem; font-weight: 500;
+            color: var(--muted); cursor: pointer;
+            background: transparent;
+            transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+            letter-spacing: 0.3px;
+        }
+        .tab-btn::before {
+            content: ''; position: absolute; inset: 0; border-radius: 32px;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            opacity: 0; transition: opacity 0.35s ease;
+        }
+        .tab-btn span { position: relative; z-index: 1; }
+        .tab-btn:hover { color: rgba(255,255,255,0.75); }
+        .tab-btn:hover::before { opacity: 0.12; }
         .tab-btn.active {
-            background: rgba(255, 255, 255, 0.15);
             color: #fff;
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 25px rgba(255,255,255,0.06);
+            box-shadow: 0 0 20px rgba(124,106,255,0.25);
+        }
+        .tab-btn.active::before { opacity: 1; }
+
+        .top-time {
+            font-size: 0.75rem; font-weight: 400; letter-spacing: 3px;
+            color: var(--muted); font-variant-numeric: tabular-nums;
         }
 
         /* ══════════════════════════════════════
            MAIN CONTENT
-           ══════════════════════════════════════ */
+        ══════════════════════════════════════ */
         main {
-            max-width: 1200px;
-            margin: 40px auto 60px;
-            padding: 0 20px;
+            max-width: 1160px;
+            margin: 36px auto 80px;
+            padding: 0 24px;
             opacity: 0;
-            transition: opacity 1s ease 0.4s;
+            transition: opacity 0.8s ease 0.3s;
         }
         main.visible { opacity: 1; }
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: block; }
+
+        .tab-content { display: none; }
+        .tab-content.active {
+            display: block;
+            animation: tabSlide 0.45s cubic-bezier(0.23,1,0.32,1);
+        }
+        @keyframes tabSlide {
+            from { opacity:0; transform:translateY(16px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
 
         /* ── Glass Panel ── */
         .glass-panel {
-            background: rgba(12, 12, 18, 0.72);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 32px;
-            margin-bottom: 28px;
-            box-shadow:
-                0 8px 40px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255,255,255,0.03);
-            transition: border-color 0.4s ease;
+            background: rgba(255,255,255,0.025);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+            position: relative; overflow: hidden;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
         }
-        .glass-panel:hover {
-            border-color: rgba(255,255,255,0.14);
+        .glass-panel::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(124,106,255,0.5), rgba(196,109,255,0.5), rgba(79,209,255,0.3), transparent);
+            opacity: 0; transition: opacity 0.4s ease;
         }
+        .glass-panel:hover { border-color: rgba(255,255,255,0.11); box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06); }
+        .glass-panel:hover::before { opacity: 1; }
 
-        .panel-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.4);
+        .panel-header {
+            display: flex; align-items: center; gap: 12px;
             margin-bottom: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 14px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
         }
-
-        /* ── Split Layout ── */
-        .split-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 20px;
-        }
-        .sidebar-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border-right: 1px solid rgba(255,255,255,0.06);
-            padding-right: 15px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .editor-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* ── Add Button ── */
-        .add-btn {
-            background: rgba(255, 255, 255, 0.04);
-            color: rgba(255,255,255,0.7);
-            border: 1px dashed rgba(255, 255, 255, 0.12);
-            padding: 14px;
-            border-radius: 14px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-align: center;
-            width: 100%;
-            margin-bottom: 10px;
+        .panel-icon {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
             font-size: 0.9rem;
-            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, rgba(124,106,255,0.25), rgba(196,109,255,0.2));
+            border: 1px solid rgba(124,106,255,0.3);
+            box-shadow: 0 0 16px rgba(124,106,255,0.15);
         }
-        .add-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: #fff;
-            transform: translateY(-1px);
-        }
-
-        /* ── Archive List ── */
-        .archive-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-        .archive-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 14px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-            gap: 10px;
-        }
-        .archive-item:hover,
-        .archive-item.active {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-        .archive-item.active {
-            box-shadow: 0 0 20px rgba(255,255,255,0.03);
-        }
-        .archive-item .title-text {
-            font-size: 0.9rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .panel-title {
+            font-size: 0.78rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2.5px;
+            color: rgba(255,255,255,0.45);
             flex: 1;
-            min-width: 0;
-            color: rgba(255,255,255,0.75);
         }
-        .archive-item.active .title-text { color: #fff; }
-        .archive-item .item-delete {
-            color: var(--danger);
-            background: none;
-            border: none;
-            cursor: pointer;
-            opacity: 0;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-            padding: 4px 6px;
-            border-radius: 6px;
-            flex-shrink: 0;
-        }
-        .archive-item:hover .item-delete { opacity: 1; }
-        .archive-item .item-delete:hover { background: rgba(255, 68, 68, 0.2); }
-
-        /* ── Empty State ── */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255,255,255,0.3);
-            font-size: 0.9rem;
-        }
-        .empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.5; }
-
-        /* ── Form Elements ── */
-        textarea, input[type="text"] {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 15px 18px;
-            font-size: 1.05rem;
-            outline: none;
-            transition: all 0.3s ease;
-            resize: vertical;
-        }
-        .title-input {
-            font-size: 1.4rem !important;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            padding: 14px 18px !important;
-            background: rgba(255,255,255,0.02) !important;
-        }
-        textarea {
-            height: 380px;
-            resize: none;
-            line-height: 1.7;
-        }
-        textarea:focus, input[type="text"]:focus {
-            border-color: rgba(255, 255, 255, 0.35);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 30px rgba(255,255,255,0.03);
-        }
-
-        /* ── Status ── */
-        .status {
-            font-size: 0.8rem;
-            color: var(--success);
-            margin-top: 10px;
-            text-align: right;
-            transition: color 0.3s ease;
-            letter-spacing: 0.5px;
-        }
-
-        /* ── To-Do ── */
-        .todo-input-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn {
-            background: rgba(255,255,255,0.9);
-            color: #000;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-        }
-        .btn:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .btn:active { transform: scale(0.96); }
-
-        .todo-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            transition: background 0.2s ease;
-        }
-        .todo-item:hover { background: rgba(255, 255, 255, 0.02); }
-        .todo-item label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            flex: 1;
-            min-width: 0;
-            gap: 15px;
-        }
-        .todo-item input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 20px; height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 6px;
-            cursor: pointer;
-            position: relative;
-            flex-shrink: 0;
-            transition: all 0.25s ease;
-        }
-        .todo-item input[type="checkbox"]:checked {
-            background-color: #fff;
-            border-color: #fff;
-        }
-        .todo-item input[type="checkbox"]:checked::after {
-            content: '✓';
-            position: absolute;
-            color: #000;
-            font-size: 12px;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: bold;
-        }
-        .todo-item input[type="checkbox"]:checked + span {
-            color: rgba(255,255,255,0.35);
-            text-decoration: line-through;
-        }
-        .delete-btn {
-            background: none;
-            border: none;
-            color: var(--danger);
-            font-size: 1.1rem;
-            cursor: pointer;
-            opacity: 0;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-        .todo-item:hover .delete-btn { opacity: 0.7; }
-        .delete-btn:hover { opacity: 1 !important; background: rgba(255,68,68,0.15); }
-
-        /* ── Media ── */
-        .media-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        .media-grid iframe {
-            border: none;
-            width: 100%;
-            border-radius: 16px;
-            height: 300px;
+        .panel-badge {
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px;
+            padding: 3px 10px; border-radius: 20px;
+            background: rgba(124,106,255,0.15);
+            border: 1px solid rgba(124,106,255,0.3);
+            color: var(--accent1);
         }
 
         /* ══════════════════════════════════════
+           DASHBOARD — TODO
+        ══════════════════════════════════════ */
+        .todo-input-container {
+            display: flex; gap: 10px; margin-bottom: 24px;
+        }
+        .todo-input-wrap {
+            flex: 1; position: relative;
+        }
+        .todo-input-wrap input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 18px 14px 46px;
+            color: var(--text); font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .todo-input-wrap::before {
+            content: '⌘'; position: absolute;
+            left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--muted); font-size: 1rem; pointer-events: none;
+        }
+        .todo-input-wrap input:focus {
+            border-color: rgba(124,106,255,0.5);
+            background: rgba(124,106,255,0.06);
+            box-shadow: 0 0 0 3px rgba(124,106,255,0.08), 0 0 30px rgba(124,106,255,0.06);
+        }
+        .todo-input-wrap input::placeholder { color: var(--muted); }
+
+        .btn-primary {
+            position: relative; overflow: hidden;
+            padding: 14px 26px; border: none; border-radius: 14px;
+            font-size: 0.9rem; font-weight: 600; letter-spacing: 0.3px;
+            color: #fff; cursor: pointer; white-space: nowrap;
+            background: linear-gradient(135deg, #7c6aff 0%, #c46dff 100%);
+            box-shadow: 0 0 24px rgba(124,106,255,0.4), 0 4px 16px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+            font-family: inherit;
+        }
+        .btn-primary::before {
+            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 0 36px rgba(124,106,255,0.55), 0 8px 24px rgba(0,0,0,0.4); }
+        .btn-primary:hover::before { left:100%; }
+        .btn-primary:active { transform:scale(0.96); }
+
+        /* Todo items */
+        .todo-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+        .todo-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 16px; border-radius: 12px;
+            border: 1px solid transparent;
+            transition: all 0.25s ease; cursor: default;
+            position: relative;
+        }
+        .todo-item:hover {
+            background: rgba(255,255,255,0.03);
+            border-color: var(--border);
+        }
+        .todo-item:hover .delete-btn { opacity: 1; }
+
+        /* Custom checkbox */
+        .todo-check {
+            position: relative; flex-shrink: 0;
+            width: 20px; height: 20px; cursor: pointer;
+        }
+        .todo-check input {
+            position: absolute; opacity: 0; width: 0; height: 0;
+        }
+        .todo-check-box {
+            position: absolute; inset: 0; border-radius: 6px;
+            border: 2px solid rgba(124,106,255,0.4);
+            background: transparent;
+            transition: all 0.25s cubic-bezier(0.23,1,0.32,1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .todo-check input:checked ~ .todo-check-box {
+            background: linear-gradient(135deg, #7c6aff, #c46dff);
+            border-color: transparent;
+            box-shadow: 0 0 12px rgba(124,106,255,0.5);
+        }
+        .todo-check-box::after {
+            content: '';
+            width: 5px; height: 9px;
+            border-right: 2px solid #fff;
+            border-bottom: 2px solid #fff;
+            transform: rotate(45deg) translateY(-1px);
+            opacity: 0; transition: opacity 0.2s ease;
+        }
+        .todo-check input:checked ~ .todo-check-box::after { opacity: 1; }
+
+        .todo-text {
+            flex: 1; font-size: 0.95rem; color: var(--text);
+            transition: all 0.25s ease; line-height: 1.5;
+        }
+        .todo-item.done .todo-text { color: var(--muted); text-decoration: line-through; }
+
+        .delete-btn {
+            background: none; border: none; cursor: pointer;
+            color: var(--danger); font-size: 0.85rem;
+            padding: 4px 8px; border-radius: 8px;
+            opacity: 0; transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .delete-btn:hover { background: rgba(255,85,102,0.12); }
+
+        /* Priority tag */
+        .todo-priority {
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;
+            padding: 2px 8px; border-radius: 8px; flex-shrink: 0;
+        }
+        .todo-priority.high { background: rgba(255,85,102,0.15); color: var(--danger); border: 1px solid rgba(255,85,102,0.25); }
+        .todo-priority.med  { background: rgba(255,180,50,0.12); color: #ffb432; border: 1px solid rgba(255,180,50,0.2); }
+        .todo-priority.low  { background: rgba(34,211,160,0.12); color: var(--success); border: 1px solid rgba(34,211,160,0.2); }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center; padding: 48px 20px;
+            color: var(--muted); font-size: 0.9rem;
+        }
+        .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.4; }
+
+        /* Status bar */
+        .status-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 16px; padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .status-bar .progress-wrap {
+            display: flex; align-items: center; gap: 10px; flex: 1;
+        }
+        .progress-track {
+            flex: 1; height: 3px; background: rgba(255,255,255,0.06);
+            border-radius: 4px; overflow: hidden; max-width: 140px;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent2));
+            transition: width 0.5s cubic-bezier(0.23,1,0.32,1);
+            box-shadow: 0 0 8px var(--glow1);
+        }
+        .progress-label {
+            font-size: 0.72rem; color: var(--muted); letter-spacing: 0.5px;
+        }
+        .cloud-status {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.72rem; letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+        .cloud-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--success); flex-shrink: 0;
+            animation: blink 2.5s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%,100%{opacity:1} 50%{opacity:0.3}
+        }
+
+        /* ══════════════════════════════════════
+           JOURNAL & NOTES SPLIT
+        ══════════════════════════════════════ */
+        .split-container {
+            display: grid; grid-template-columns: 260px 1fr; gap: 20px;
+        }
+        .sidebar-panel {
+            border-right: 1px solid var(--border);
+            padding-right: 20px;
+            display: flex; flex-direction: column; gap: 8px;
+            max-height: 520px; overflow-y: auto;
+        }
+        .editor-panel { display: flex; flex-direction: column; gap: 14px; }
+
+        .add-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed rgba(124,106,255,0.3);
+            background: rgba(124,106,255,0.05);
+            color: rgba(124,106,255,0.8);
+            cursor: pointer; font-size: 0.85rem; font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: all 0.3s ease; margin-bottom: 6px; width: 100%;
+            font-family: inherit;
+        }
+        .add-btn:hover {
+            background: rgba(124,106,255,0.12);
+            border-color: rgba(124,106,255,0.55);
+            color: #c8b8ff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(124,106,255,0.12);
+        }
+
+        .archive-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .archive-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px; border-radius: 12px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.28s cubic-bezier(0.23,1,0.32,1);
+        }
+        .archive-item:hover { background: rgba(255,255,255,0.04); border-color: var(--border); }
+        .archive-item.active {
+            background: rgba(124,106,255,0.1);
+            border-color: rgba(124,106,255,0.3);
+            box-shadow: 0 0 20px rgba(124,106,255,0.08);
+        }
+        .archive-item-icon {
+            width: 28px; height: 28px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; flex-shrink: 0;
+            background: rgba(255,255,255,0.05);
+            transition: background 0.3s ease;
+        }
+        .archive-item.active .archive-item-icon { background: rgba(124,106,255,0.2); }
+        .title-text {
+            flex: 1; font-size: 0.85rem; color: var(--muted);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            transition: color 0.2s ease;
+            min-width: 0;
+        }
+        .archive-item.active .title-text, .archive-item:hover .title-text { color: var(--text); }
+        .item-delete {
+            background: none; border: none; color: var(--danger);
+            cursor: pointer; opacity: 0; font-size: 0.8rem;
+            padding: 4px 6px; border-radius: 6px; flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        .archive-item:hover .item-delete { opacity: 0.7; }
+        .item-delete:hover { opacity: 1 !important; background: rgba(255,85,102,0.15); }
+
+        /* Editor inputs */
+        .title-input {
+            width: 100%; padding: 14px 18px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--border); border-radius: 14px;
+            color: var(--text); font-size: 1.35rem; font-weight: 500;
+            outline: none; transition: all 0.3s ease; font-family: inherit;
+        }
+        .title-input:focus {
+            border-color: rgba(124,106,255,0.45);
+            background: rgba(124,106,255,0.04);
+            box-shadow: 0 0 0 3px rgba(124,106,255,0.07);
+        }
+        .title-input::placeholder { color: var(--muted); }
+
+        textarea {
+            width: 100%; height: 400px;
+            padding: 18px; resize: none;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border); border-radius: 14px;
+            color: var(--text); font-size: 0.95rem; line-height: 1.8;
+            outline: none; transition: all 0.3s ease; font-family: inherit;
+        }
+        textarea:focus {
+            border-color: rgba(124,106,255,0.45);
+            background: rgba(124,106,255,0.03);
+            box-shadow: 0 0 0 3px rgba(124,106,255,0.07);
+        }
+        textarea::placeholder { color: var(--muted); }
+
+        /* ══════════════════════════════════════
+           MEDIA
+        ══════════════════════════════════════ */
+        .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .media-card {
+            border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+        .media-card:hover { border-color: rgba(124,106,255,0.3); transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 30px rgba(124,106,255,0.08); }
+        .media-card iframe { border: none; width: 100%; display: block; height: 300px; }
+        .media-label {
+            position: absolute; top: 12px; left: 12px;
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px;
+            padding: 4px 10px; border-radius: 8px; text-transform: uppercase;
+            backdrop-filter: blur(8px);
+        }
+        .media-label.yt { background: rgba(255,0,0,0.2); border: 1px solid rgba(255,0,0,0.3); color: #ff6b6b; }
+        .media-label.sp { background: rgba(30,215,96,0.15); border: 1px solid rgba(30,215,96,0.3); color: #1ed760; }
+
+        /* ══════════════════════════════════════
            RESPONSIVE
-           ══════════════════════════════════════ */
+        ══════════════════════════════════════ */
         @media (max-width: 768px) {
-            .waveform-logo { gap: 4px; height: 55px; }
-            .waveform-logo .bar { width: 3px; }
-            .waveform-logo .bar:nth-child(1)  { height: 12px; }
-            .waveform-logo .bar:nth-child(2)  { height: 22px; }
-            .waveform-logo .bar:nth-child(3)  { height: 32px; }
-            .waveform-logo .bar:nth-child(4)  { height: 40px; }
-            .waveform-logo .bar:nth-child(5)  { height: 48px; }
-            .waveform-logo .bar:nth-child(6)  { height: 40px; }
-            .waveform-logo .bar:nth-child(7)  { height: 32px; }
-            .waveform-logo .bar:nth-child(8)  { height: 22px; }
-            .waveform-logo .bar:nth-child(9)  { height: 12px; }
-
-            .glow-ring { width: 100px; height: 100px; }
-
-            .intro-text { font-size: 2rem; letter-spacing: 3px; }
-            .intro-sub { font-size: 1.2rem; }
-            .intro-skip-hint { bottom: 30px; font-size: 0.75rem; }
-            .launch-btn { padding: 14px 36px; font-size: 1rem; letter-spacing: 2px; }
-
-            nav { flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-            .tab-btn {
-                flex: 1 1 calc(50% - 8px);
-                padding: 10px 14px;
-                font-size: 0.8rem;
-                text-align: center;
-                border-radius: 30px;
-            }
-            main { margin: 20px auto 40px; padding: 0 12px; }
-            .glass-panel { padding: 20px 16px; margin-bottom: 20px; border-radius: 18px; }
+            .top-bar { padding: 0 16px; }
+            .top-logo span:last-child { display: none; }
+            .top-time { display: none; }
+            nav { gap: 2px; }
+            .tab-btn { padding: 8px 14px; font-size: 0.78rem; }
+            main { margin: 16px auto 60px; padding: 0 12px; }
+            .glass-panel { padding: 20px 16px; }
             .split-container { grid-template-columns: 1fr; }
-            .sidebar-panel {
-                border-right: none;
-                border-bottom: 1px solid rgba(255,255,255,0.06);
-                padding-right: 0;
-                padding-bottom: 15px;
-                max-height: 200px;
-            }
-            .todo-input-container { flex-direction: column; }
-            .btn { padding: 14px; width: 100%; }
+            .sidebar-panel { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 16px; max-height: 180px; }
             .media-grid { grid-template-columns: 1fr; }
-            .media-grid iframe { height: 220px; }
-            textarea { height: 300px; font-size: 1rem; }
-            .title-input { font-size: 1.2rem !important; }
+            .media-card iframe { height: 220px; }
+            .todo-input-container { flex-direction: column; }
+            .intro-text { font-size: 2.2rem; letter-spacing: 4px; }
+            .intro-sub { font-size: 1.1rem; }
+            .waveform-logo { height: 55px; }
+            textarea { height: 280px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Gradient Arka Plan -->
-    <div class="gradient-bg" id="gradientBg"></div>
+<!-- Aurora Background -->
+<div class="aurora" id="aurora">
+    <div class="aurora-blob" id="blob1"></div>
+    <div class="aurora-blob" id="blob2"></div>
+    <div class="aurora-blob" id="blob3"></div>
+    <div class="aurora-blob" id="blob4"></div>
+</div>
+<div class="grid-lines"></div>
 
-    <!-- Arka Plan Videosu (başlangıçta gizli, SES AÇIK) -->
-    <video class="video-bg" id="bgVideo" loop playsinline webkit-playsinline>
-        <source src="arkaplan.mp4" type="video/mp4">
-    </video>
+<!-- Video Background -->
+<video class="video-bg" id="bgVideo" loop playsinline webkit-playsinline>
+    <source src="arkaplan.mp4" type="video/mp4">
+</video>
 
-    <!-- Intro Splash Screen -->
-    <div id="intro-screen" class="phase-start" aria-label="Welcome screen">
-
-        <!-- Aşama 1: Başlat Butonu -->
-        <div id="launchPhase">
-            <!-- Siri tarzı waveform animasyonu -->
-            <div class="waveform-logo" aria-hidden="true">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-            <!-- Glow halka -->
-            <div class="glow-ring"></div>
-            <!-- Buton -->
-            <div class="launch-btn-wrap">
-                <button class="launch-btn" id="launchBtn">Sistemi Başlat</button>
-            </div>
+<!-- ══ INTRO SCREEN ══ -->
+<div id="intro-screen" class="phase-start" aria-label="Başlangıç ekranı">
+    <div id="launchPhase">
+        <div class="glow-ring"></div>
+        <div class="waveform-logo" aria-hidden="true">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
         </div>
-
-        <!-- Aşama 2: Karşılama Yazıları -->
-        <div id="greetingPhase" style="display:none;">
-            <div class="intro-text fade-in-up delay-1">MERHABA, NURULLAH.</div>
-            <div class="intro-sub fade-in-up delay-2" id="dynamicGreeting">Sistem Başlatılıyor.</div>
-            <div class="intro-time fade-in-up delay-3" id="introTime">00:00</div>
-            <div class="intro-skip-hint fade-in-up delay-4">Dokun veya ESC ile geç ▸</div>
+        <div class="launch-btn-wrap">
+            <button class="launch-btn" id="launchBtn">Sistemi Başlat</button>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav id="mainNav" aria-label="Main navigation">
-        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-        <button class="tab-btn" data-tab="journal">Günlük</button>
-        <button class="tab-btn" data-tab="notes">Notlar</button>
-        <button class="tab-btn" data-tab="media">Medya</button>
+    <div id="greetingPhase" style="display:none;">
+        <div class="intro-text fade-in-up delay-1">MERHABA, NURULLAH.</div>
+        <div class="intro-sub fade-in-up delay-2" id="dynamicGreeting">Sistem Başlatılıyor.</div>
+        <div class="intro-time fade-in-up delay-3" id="introTime">00:00</div>
+        <div class="intro-skip-hint fade-in-up delay-4">Dokun veya ESC ile geç &rsaquo;</div>
+    </div>
+</div>
+
+<!-- ══ TOP BAR ══ -->
+<header class="top-bar" id="topBar">
+    <div class="top-logo">
+        <div class="top-logo-dot"></div>
+        <span>NURULLAH</span>
+        <span style="color:rgba(255,255,255,0.15)">//</span>
+        <span>CLOUD OS</span>
+    </div>
+
+    <nav id="mainNav" aria-label="Ana navigasyon">
+        <button class="tab-btn active" data-tab="dashboard"><span>Dashboard</span></button>
+        <button class="tab-btn" data-tab="journal"><span>Günlük</span></button>
+        <button class="tab-btn" data-tab="notes"><span>Notlar</span></button>
+        <button class="tab-btn" data-tab="media"><span>Medya</span></button>
     </nav>
 
-    <!-- Main Content -->
-    <main id="mainContent">
-        <!-- Dashboard -->
-        <section id="dashboard" class="tab-content active">
-            <div class="glass-panel">
-                <h2 class="panel-title">Aksiyon Planı &amp; To-Do</h2>
-                <form class="todo-input-container" onsubmit="return false;">
-                    <input type="text" id="todoInput" placeholder="Görev ekle ve Enter'a bas..." aria-label="Add new task" autocomplete="off">
-                    <button class="btn" type="button" id="addTodoBtn">Ekle</button>
-                </form>
-                <ul id="todoList" style="list-style: none;" aria-label="Task list"></ul>
-                <div class="status" id="todoStatus">Sistem Bekleniyor...</div>
-            </div>
-        </section>
+    <div class="top-time" id="liveClock">--:--</div>
+</header>
 
-        <!-- Journal -->
-        <section id="journal" class="tab-content">
-            <div class="glass-panel">
-                <h2 class="panel-title">Kişisel Günlük Arşivi</h2>
-                <div class="split-container">
-                    <div class="sidebar-panel">
-                        <button class="add-btn" id="newJournalBtn">+ Yeni Günlük Sayfası</button>
-                        <ul id="journalList" class="archive-list" aria-label="Journal entries"></ul>
-                    </div>
-                    <div class="editor-panel" id="journalEditor" style="display:none;">
-                        <input type="text" id="journalTitle" class="title-input" placeholder="Tarih / Başlık Yaz..." aria-label="Journal title">
-                        <textarea id="journalText" placeholder="Bugün neler yaşandı?..." aria-label="Journal content"></textarea>
-                        <div class="status" id="journalStatus">Bulut Senkronizasyonu Aktif ☁️</div>
+<!-- ══ MAIN CONTENT ══ -->
+<main id="mainContent">
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="tab-content active">
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-icon">✦</div>
+                <span class="panel-title">Aksiyon Planı &amp; To-Do</span>
+                <span class="panel-badge" id="todoBadge">0 Görev</span>
+            </div>
+
+            <form class="todo-input-container" onsubmit="return false;">
+                <div class="todo-input-wrap">
+                    <input type="text" id="todoInput" placeholder="Yeni bir görev ekle..." autocomplete="off" aria-label="Görev ekle">
+                </div>
+                <button class="btn-primary" type="button" id="addTodoBtn">+ Ekle</button>
+            </form>
+
+            <ul id="todoList" class="todo-list" aria-label="Görev listesi"></ul>
+
+            <div class="status-bar">
+                <div class="progress-wrap">
+                    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+                    <span class="progress-label" id="progressLabel">0 / 0 tamamlandı</span>
+                </div>
+                <div class="cloud-status" id="todoStatus">
+                    <div class="cloud-dot"></div>
+                    <span>Buluta Bağlı</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journal -->
+    <section id="journal" class="tab-content">
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-icon">📓</div>
+                <span class="panel-title">Kişisel Günlük Arşivi</span>
+            </div>
+            <div class="split-container">
+                <div class="sidebar-panel">
+                    <button class="add-btn" id="newJournalBtn">+ Yeni Günlük Sayfası</button>
+                    <ul id="journalList" class="archive-list" aria-label="Günlük listesi"></ul>
+                </div>
+                <div class="editor-panel" id="journalEditor" style="display:none;">
+                    <input type="text" id="journalTitle" class="title-input" placeholder="Başlık..." aria-label="Günlük başlığı">
+                    <textarea id="journalText" placeholder="Bugün neler yaşandı?..." aria-label="Günlük içeriği"></textarea>
+                    <div class="status-bar" style="margin-top:4px;padding-top:12px;">
+                        <div></div>
+                        <div class="cloud-status" id="journalStatus">
+                            <div class="cloud-dot"></div><span>Senkronize</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Notes -->
-        <section id="notes" class="tab-content">
-            <div class="glass-panel">
-                <h2 class="panel-title">Fikirler &amp; Gözlemler Deposu</h2>
-                <div class="split-container">
-                    <div class="sidebar-panel">
-                        <button class="add-btn" id="newNoteBtn">+ Yeni Not Oluştur</button>
-                        <ul id="notesList" class="archive-list" aria-label="Note entries"></ul>
-                    </div>
-                    <div class="editor-panel" id="notesEditor" style="display:none;">
-                        <input type="text" id="notesTitle" class="title-input" placeholder="Not Başlığı Gir..." aria-label="Note title">
-                        <textarea id="notesText" placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..." aria-label="Note content"></textarea>
-                        <div class="status" id="notesStatus">Bulut Senkronizasyonu Aktif ☁️</div>
+    <!-- Notes -->
+    <section id="notes" class="tab-content">
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-icon">📝</div>
+                <span class="panel-title">Fikirler &amp; Gözlemler Deposu</span>
+            </div>
+            <div class="split-container">
+                <div class="sidebar-panel">
+                    <button class="add-btn" id="newNoteBtn">+ Yeni Not Oluştur</button>
+                    <ul id="notesList" class="archive-list" aria-label="Not listesi"></ul>
+                </div>
+                <div class="editor-panel" id="notesEditor" style="display:none;">
+                    <input type="text" id="notesTitle" class="title-input" placeholder="Not Başlığı..." aria-label="Not başlığı">
+                    <textarea id="notesText" placeholder="Piyasa analizleri, stratejiler, fikirler..." aria-label="Not içeriği"></textarea>
+                    <div class="status-bar" style="margin-top:4px;padding-top:12px;">
+                        <div></div>
+                        <div class="cloud-status" id="notesStatus">
+                            <div class="cloud-dot"></div><span>Senkronize</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Media -->
-        <section id="media" class="tab-content">
-            <div class="glass-panel">
-                <h2 class="panel-title">Medya</h2>
-                <div class="media-grid">
-                    <iframe src="https://www.youtube.com/embed/f3A81s8wKpw" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&amp;theme=0" title="Spotify playlist" allow="encrypted-media"></iframe>
+    <!-- Media -->
+    <section id="media" class="tab-content">
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-icon">🎵</div>
+                <span class="panel-title">Medya</span>
+            </div>
+            <div class="media-grid">
+                <div class="media-card">
+                    <span class="media-label yt">YouTube</span>
+                    <iframe src="https://www.youtube.com/embed/f3A81s8wKpw" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="media-card">
+                    <span class="media-label sp">Spotify</span>
+                    <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0" title="Spotify" allow="encrypted-media"></iframe>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <script>
-    (function () {
-        'use strict';
+</main>
 
-        // ── DOM ──
-        var bgVideo         = document.getElementById('bgVideo');
-        var gradientBg      = document.getElementById('gradientBg');
-        var introScreen     = document.getElementById('intro-screen');
-        var launchPhase     = document.getElementById('launchPhase');
-        var greetingPhase   = document.getElementById('greetingPhase');
-        var launchBtn       = document.getElementById('launchBtn');
-        var dynamicGreeting = document.getElementById('dynamicGreeting');
-        var introTime       = document.getElementById('introTime');
-        var mainNav         = document.getElementById('mainNav');
-        var mainContent     = document.getElementById('mainContent');
-        var introTimer      = null;
+<script>
+(function () {
+    'use strict';
 
-        function getGreeting(h) {
-            if (h >= 5 && h < 12) return 'Günaydın.';
-            if (h >= 12 && h < 18) return 'İyi günler.';
-            if (h >= 18 && h < 22) return 'İyi akşamlar.';
-            return 'İyi geceler.';
-        }
-        function fmt(d) {
-            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-        }
+    /* ── DOM ── */
+    var bgVideo         = document.getElementById('bgVideo');
+    var introScreen     = document.getElementById('intro-screen');
+    var launchPhase     = document.getElementById('launchPhase');
+    var greetingPhase   = document.getElementById('greetingPhase');
+    var launchBtn       = document.getElementById('launchBtn');
+    var dynamicGreeting = document.getElementById('dynamicGreeting');
+    var introTimeEl     = document.getElementById('introTime');
+    var topBar          = document.getElementById('topBar');
+    var mainContent     = document.getElementById('mainContent');
+    var liveClock       = document.getElementById('liveClock');
+    var introTimer      = null;
 
-        /* ══════════════════════════════════════
-           INTRO FLOW
-           ══════════════════════════════════════ */
+    /* ── Clock ── */
+    function fmt(d) {
+        return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+    function tickClock() {
+        if (liveClock) liveClock.textContent = fmt(new Date());
+    }
+    tickClock();
+    setInterval(tickClock, 10000);
 
-        // Video bitti → gradient'e dön → başa sar → tekrar oynat
-        bgVideo.addEventListener('ended', function () {
-            gradientBg.classList.add('fade-in');
-            bgVideo.classList.remove('visible');
-            setTimeout(function () {
-                bgVideo.currentTime = 0;
-                bgVideo.play().then(function () {
-                    gradientBg.classList.remove('fade-in');
-                    gradientBg.classList.add('fade-out');
-                    bgVideo.classList.add('visible');
-                }).catch(function () {});
-            }, 2000);
+    function getGreeting(h) {
+        if (h >= 5  && h < 12) return 'Günaydın.';
+        if (h >= 12 && h < 18) return 'İyi günler.';
+        if (h >= 18 && h < 22) return 'İyi akşamlar.';
+        return 'İyi geceler.';
+    }
+
+    /* ══ AURORA BLOBS ══ */
+    function showBlobs() {
+        document.querySelectorAll('.aurora-blob').forEach(function(b) {
+            b.classList.add('visible');
         });
+    }
+    showBlobs();
 
-        // Sistemi Başlat
-        function onLaunchClick() {
-            launchBtn.classList.add('hide');
-
+    /* ══ INTRO FLOW ══ */
+    bgVideo.addEventListener('ended', function () {
+        bgVideo.classList.remove('visible');
+        setTimeout(function () {
+            bgVideo.currentTime = 0;
             bgVideo.play().then(function () {
                 bgVideo.classList.add('visible');
-                setTimeout(function () { gradientBg.classList.add('fade-out'); }, 300);
-                setTimeout(showGreeting, 4000);
-            }).catch(function () {
-                showGreeting();
-            });
-        }
+            }).catch(function(){});
+        }, 2000);
+    });
 
-        function showGreeting() {
-            var now = new Date();
-            introScreen.classList.remove('phase-start');
-            introScreen.classList.add('phase-greeting');
-            launchPhase.style.display = 'none';
-            greetingPhase.style.display = '';
-            dynamicGreeting.textContent = getGreeting(now.getHours());
-            introTime.textContent = fmt(now);
-
-            introTimer = setTimeout(dismissIntro, 3500);
-            introScreen.addEventListener('click', dismissIntro);
-            document.addEventListener('keydown', skipHandler);
-        }
-
-        function dismissIntro() {
-            if (introTimer) { clearTimeout(introTimer); introTimer = null; }
-            document.removeEventListener('keydown', skipHandler);
-            introScreen.removeEventListener('click', dismissIntro);
-            introScreen.classList.add('hidden');
-            setTimeout(function () {
-                mainNav.classList.add('visible');
-                mainContent.classList.add('visible');
-            }, 300);
-        }
-
-        function skipHandler(e) {
-            if (e.key === 'Escape') dismissIntro();
-        }
-
-        /* ══════════════════════════════════════
-           TABS
-           ══════════════════════════════════════ */
-        function initTabs() {
-            var btns = document.querySelectorAll('.tab-btn');
-            var tabs = document.querySelectorAll('.tab-content');
-            btns.forEach(function (b) {
-                b.addEventListener('click', function () {
-                    var name = this.getAttribute('data-tab');
-                    btns.forEach(function (x) { x.classList.remove('active'); });
-                    tabs.forEach(function (x) { x.classList.remove('active'); });
-                    this.classList.add('active');
-                    var t = document.getElementById(name);
-                    if (t) t.classList.add('active');
-                });
-            });
-        }
-
-        /* ══════════════════════════════════════
-           FIREBASE
-           ══════════════════════════════════════ */
-        firebase.initializeApp({
-            apiKey: "AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
-            authDomain: "dashboard-ab880.firebaseapp.com",
-            projectId: "dashboard-ab880",
-            storageBucket: "dashboard-ab880.firebasestorage.app",
-            messagingSenderId: "1014186585487",
-            appId: "1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa",
-            measurementId: "G-8NSGQBPVBF"
+    function onLaunchClick() {
+        launchBtn.classList.add('hide');
+        bgVideo.play().then(function () {
+            bgVideo.classList.add('visible');
+            setTimeout(showGreeting, 3500);
+        }).catch(function () {
+            showGreeting();
         });
-        var db = firebase.firestore();
-        var userDocRef = db.collection('users').doc('nurullah');
+    }
 
-        /* ══════════════════════════════════════
-           STATE
-           ══════════════════════════════════════ */
-        var state = {
-            todos: [],
-            journals: [],
-            notes: [],
-            activeJournalId: null,
-            activeNoteId: null
-        };
+    function showGreeting() {
+        var now = new Date();
+        introScreen.classList.remove('phase-start');
+        introScreen.classList.add('phase-greeting');
+        launchPhase.style.display = 'none';
+        greetingPhase.style.display = '';
+        dynamicGreeting.textContent = getGreeting(now.getHours());
+        introTimeEl.textContent = fmt(now);
+        introTimer = setTimeout(dismissIntro, 3200);
+        introScreen.addEventListener('click', dismissIntro);
+        document.addEventListener('keydown', skipHandler);
+    }
 
-        /* ══════════════════════════════════════
-           CLOUD SYNC
-           ══════════════════════════════════════ */
-        var saveTimeout = null;
-        function saveToCloud(field, value, statusId) {
-            var el = document.getElementById(statusId);
-            if (!el) return;
-            el.textContent = 'Kaydediliyor...';
-            el.style.color = 'white';
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(function () {
-                var p = {}; p[field] = value;
-                userDocRef.set(p, { merge: true })
-                    .then(function () { el.textContent = 'Senkronize Edildi ✓'; el.style.color = '#00D15E'; })
-                    .catch(function (e) { console.error(e); el.textContent = 'Hata!'; el.style.color = '#ff4444'; });
-            }, 800);
-        }
+    function dismissIntro() {
+        if (introTimer) { clearTimeout(introTimer); introTimer = null; }
+        document.removeEventListener('keydown', skipHandler);
+        introScreen.removeEventListener('click', dismissIntro);
+        introScreen.classList.add('hidden');
+        setTimeout(function () {
+            topBar.classList.add('visible');
+            mainContent.classList.add('visible');
+        }, 300);
+    }
 
-        /* ══════════════════════════════════════
-           LOAD
-           ══════════════════════════════════════ */
-        function loadFromCloud() {
-            var ts = document.getElementById('todoStatus');
-            userDocRef.get().then(function (doc) {
-                if (!doc.exists) { ts.textContent = 'Buluta Bağlı ☁️'; return; }
-                var d = doc.data();
-                if (Array.isArray(d.todos)) { state.todos = d.todos; renderTodos(); }
-                if (Array.isArray(d.journals)) { state.journals = d.journals; }
-                else if (d.journal && typeof d.journal === 'string' && d.journal.trim()) {
-                    state.journals = [{ id: 'legacy-j', title: 'Eski Sistemden Aktarılan Günlük', content: d.journal }];
-                }
-                renderJournalList();
-                if (Array.isArray(d.notes)) { state.notes = d.notes; }
-                else if (d.notes && typeof d.notes === 'string' && d.notes.trim()) {
-                    state.notes = [{ id: 'legacy-n', title: 'Eski Sistemden Aktarılan Notlar', content: d.notes }];
-                }
-                renderNotesList();
-                ts.textContent = 'Buluta Bağlı ☁️';
-            }).catch(function () { ts.textContent = 'Çevrimdışı mod'; ts.style.color = '#ffaa00'; });
-        }
+    function skipHandler(e) { if (e.key === 'Escape') dismissIntro(); }
 
-        /* ══════════════════════════════════════
-           JOURNAL
-           ══════════════════════════════════════ */
-        var jList = document.getElementById('journalList');
-        var jEditor = document.getElementById('journalEditor');
-        var jTitle = document.getElementById('journalTitle');
-        var jText  = document.getElementById('journalText');
-
-        function renderJournalList() {
-            jList.innerHTML = '';
-            if (!state.journals.length) {
-                jList.innerHTML = '<li class="empty-state"><span class="empty-state-icon">📓</span>Henüz günlük yok.</li>';
-                return;
-            }
-            state.journals.forEach(function (j) {
-                var li = document.createElement('li');
-                li.className = 'archive-item' + (j.id === state.activeJournalId ? ' active' : '');
-                li.setAttribute('role', 'button'); li.setAttribute('tabindex', '0');
-                var s = document.createElement('span'); s.className = 'title-text'; s.textContent = j.title || 'Başlıksız Günlük';
-                var b = document.createElement('button'); b.className = 'item-delete'; b.textContent = '✕';
-                b.setAttribute('aria-label', 'Sil');
-                b.addEventListener('click', function (e) { e.stopPropagation(); deleteJournal(j.id); });
-                li.appendChild(s); li.appendChild(b);
-                li.addEventListener('click', function () { selectJournal(j.id); });
-                li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectJournal(j.id); } });
-                jList.appendChild(li);
+    /* ══ TABS ══ */
+    function initTabs() {
+        var btns = document.querySelectorAll('.tab-btn');
+        var tabs = document.querySelectorAll('.tab-content');
+        btns.forEach(function (b) {
+            b.addEventListener('click', function () {
+                var name = this.getAttribute('data-tab');
+                btns.forEach(function (x) { x.classList.remove('active'); });
+                tabs.forEach(function (x) { x.classList.remove('active'); });
+                this.classList.add('active');
+                var t = document.getElementById(name);
+                if (t) t.classList.add('active');
             });
-        }
-        function createNewJournal() {
-            var today = new Date().toLocaleDateString('tr-TR');
-            var nj = { id: Date.now().toString(), title: today + ' - Günlük', content: '' };
-            state.journals.unshift(nj); state.activeJournalId = nj.id;
-            renderJournalList(); selectJournal(nj.id);
-            saveToCloud('journals', state.journals, 'journalStatus');
-        }
-        function selectJournal(id) {
-            state.activeJournalId = id;
-            var j = state.journals.find(function (x) { return x.id === id; });
-            if (j) { jEditor.style.display = 'flex'; jTitle.value = j.title; jText.value = j.content; renderJournalList(); }
-        }
-        function updateActiveJournal() {
-            var j = state.journals.find(function (x) { return x.id === state.activeJournalId; });
-            if (!j) return;
-            j.title = jTitle.value; j.content = jText.value;
-            saveToCloud('journals', state.journals, 'journalStatus');
-            var a = jList.querySelector('.active .title-text');
-            if (a) a.textContent = j.title || 'Başlıksız Günlük';
-        }
-        function deleteJournal(id) {
-            if (!confirm('Bu günlük sayfasını silmek istediğinize emin misiniz?')) return;
-            state.journals = state.journals.filter(function (x) { return x.id !== id; });
-            if (state.activeJournalId === id) { state.activeJournalId = null; jEditor.style.display = 'none'; }
-            renderJournalList(); saveToCloud('journals', state.journals, 'journalStatus');
-        }
+        });
+    }
 
-        /* ══════════════════════════════════════
-           NOTES
-           ══════════════════════════════════════ */
-        var nList = document.getElementById('notesList');
-        var nEditor = document.getElementById('notesEditor');
-        var nTitle = document.getElementById('notesTitle');
-        var nText  = document.getElementById('notesText');
+    /* ══ FIREBASE ══ */
+    firebase.initializeApp({
+        apiKey: "AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
+        authDomain: "dashboard-ab880.firebaseapp.com",
+        projectId: "dashboard-ab880",
+        storageBucket: "dashboard-ab880.firebasestorage.app",
+        messagingSenderId: "1014186585487",
+        appId: "1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa",
+        measurementId: "G-8NSGQBPVBF"
+    });
+    var db = firebase.firestore();
+    var userDocRef = db.collection('users').doc('nurullah');
 
-        function renderNotesList() {
-            nList.innerHTML = '';
-            if (!state.notes.length) {
-                nList.innerHTML = '<li class="empty-state"><span class="empty-state-icon">📝</span>Henüz not yok.</li>';
-                return;
-            }
-            state.notes.forEach(function (n) {
-                var li = document.createElement('li');
-                li.className = 'archive-item' + (n.id === state.activeNoteId ? ' active' : '');
-                li.setAttribute('role', 'button'); li.setAttribute('tabindex', '0');
-                var s = document.createElement('span'); s.className = 'title-text'; s.textContent = n.title || 'Başlıksız Not';
-                var b = document.createElement('button'); b.className = 'item-delete'; b.textContent = '✕';
-                b.setAttribute('aria-label', 'Sil');
-                b.addEventListener('click', function (e) { e.stopPropagation(); deleteNote(n.id); });
-                li.appendChild(s); li.appendChild(b);
-                li.addEventListener('click', function () { selectNote(n.id); });
-                li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectNote(n.id); } });
-                nList.appendChild(li);
-            });
-        }
-        function createNewNote() {
-            var nn = { id: Date.now().toString(), title: 'Yeni Strateji / Fikir', content: '' };
-            state.notes.unshift(nn); state.activeNoteId = nn.id;
-            renderNotesList(); selectNote(nn.id);
-            saveToCloud('notes', state.notes, 'notesStatus');
-        }
-        function selectNote(id) {
-            state.activeNoteId = id;
-            var n = state.notes.find(function (x) { return x.id === id; });
-            if (n) { nEditor.style.display = 'flex'; nTitle.value = n.title; nText.value = n.content; renderNotesList(); }
-        }
-        function updateActiveNote() {
-            var n = state.notes.find(function (x) { return x.id === state.activeNoteId; });
-            if (!n) return;
-            n.title = nTitle.value; n.content = nText.value;
-            saveToCloud('notes', state.notes, 'notesStatus');
-            var a = nList.querySelector('.active .title-text');
-            if (a) a.textContent = n.title || 'Başlıksız Not';
-        }
-        function deleteNote(id) {
-            if (!confirm('Bu notu silmek istediğinize emin misiniz?')) return;
-            state.notes = state.notes.filter(function (x) { return x.id !== id; });
-            if (state.activeNoteId === id) { state.activeNoteId = null; nEditor.style.display = 'none'; }
-            renderNotesList(); saveToCloud('notes', state.notes, 'notesStatus');
-        }
+    /* ══ STATE ══ */
+    var state = { todos: [], journals: [], notes: [], activeJournalId: null, activeNoteId: null };
 
-        /* ══════════════════════════════════════
-           TODOS
-           ══════════════════════════════════════ */
-        var todoInput  = document.getElementById('todoInput');
-        var todoListEl = document.getElementById('todoList');
-        var addTodoBtn = document.getElementById('addTodoBtn');
+    /* ══ CLOUD SYNC ══ */
+    var saveTimeout = null;
+    function saveToCloud(field, value, statusId) {
+        var el = document.getElementById(statusId);
+        if (el) { el.querySelector('span').textContent = 'Kaydediliyor...'; el.style.color = 'rgba(255,255,255,0.5)'; }
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(function () {
+            var p = {}; p[field] = value;
+            userDocRef.set(p, { merge: true })
+                .then(function () {
+                    if (el) { el.querySelector('span').textContent = 'Senkronize Edildi ✓'; el.style.color = 'var(--success)'; }
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    if (el) { el.querySelector('span').textContent = 'Hata!'; el.style.color = 'var(--danger)'; }
+                });
+        }, 800);
+    }
 
-        function renderTodos() {
-            todoListEl.innerHTML = '';
-            if (!state.todos.length) {
-                todoListEl.innerHTML = '<li class="empty-state"><span class="empty-state-icon">✅</span>Henüz görev yok.</li>';
-                return;
-            }
-            state.todos.forEach(function (t, i) {
-                var li = document.createElement('li'); li.className = 'todo-item';
-                var label = document.createElement('label');
-                var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = t.completed;
-                cb.addEventListener('change', function () { toggleTodo(i); });
-                var sp = document.createElement('span'); sp.textContent = t.text;
-                label.appendChild(cb); label.appendChild(sp);
-                var db = document.createElement('button'); db.className = 'delete-btn'; db.textContent = '✕';
-                db.setAttribute('aria-label', 'Sil');
-                db.addEventListener('click', function () { deleteTodo(i); });
-                li.appendChild(label); li.appendChild(db);
-                todoListEl.appendChild(li);
-            });
-        }
-        function saveTodos() { saveToCloud('todos', state.todos, 'todoStatus'); }
-        function addTodo() {
-            var txt = todoInput.value.trim();
-            if (!txt) return;
-            state.todos.push({ text: txt, completed: false });
-            todoInput.value = ''; renderTodos(); saveTodos(); todoInput.focus();
-        }
-        function toggleTodo(i) { state.todos[i].completed = !state.todos[i].completed; saveTodos(); }
-        function deleteTodo(i) { state.todos.splice(i, 1); renderTodos(); saveTodos(); }
+    /* ══ LOAD ══ */
+    function loadFromCloud() {
+        var ts = document.getElementById('todoStatus');
+        userDocRef.get().then(function (doc) {
+            if (!doc.exists) return;
+            var d = doc.data();
+            if (Array.isArray(d.todos)) { state.todos = d.todos; renderTodos(); }
+            if (Array.isArray(d.journals)) state.journals = d.journals;
+            else if (d.journal && d.journal.trim()) state.journals = [{ id: 'legacy-j', title: 'Aktarılan Günlük', content: d.journal }];
+            renderJournalList();
+            if (Array.isArray(d.notes)) state.notes = d.notes;
+            else if (d.notes && typeof d.notes === 'string' && d.notes.trim()) state.notes = [{ id: 'legacy-n', title: 'Aktarılan Notlar', content: d.notes }];
+            renderNotesList();
+        }).catch(function () {
+            if (ts) { ts.querySelector('span').textContent = 'Çevrimdışı'; ts.style.color = '#ffaa00'; }
+        });
+    }
 
-        /* ══════════════════════════════════════
-           BIND
-           ══════════════════════════════════════ */
-        function bindEvents() {
-            launchBtn.addEventListener('click', onLaunchClick);
-            todoInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addTodo(); } });
-            addTodoBtn.addEventListener('click', addTodo);
-            jTitle.addEventListener('input', updateActiveJournal);
-            jText.addEventListener('input', updateActiveJournal);
-            nTitle.addEventListener('input', updateActiveNote);
-            nText.addEventListener('input', updateActiveNote);
-            document.getElementById('newJournalBtn').addEventListener('click', createNewJournal);
-            document.getElementById('newNoteBtn').addEventListener('click', createNewNote);
-        }
+    /* ══ JOURNAL ══ */
+    var jList   = document.getElementById('journalList');
+    var jEditor = document.getElementById('journalEditor');
+    var jTitle  = document.getElementById('journalTitle');
+    var jText   = document.getElementById('journalText');
 
-        /* ══════════════════════════════════════
-           INIT
-           ══════════════════════════════════════ */
-        function init() {
-            gradientBg.classList.add('fade-in');
-            initTabs(); bindEvents(); loadFromCloud();
+    function renderJournalList() {
+        jList.innerHTML = '';
+        if (!state.journals.length) {
+            jList.innerHTML = '<li class="empty-state"><span class="empty-icon">📓</span>Henüz günlük yok.</li>';
+            return;
         }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else { init(); }
+        state.journals.forEach(function (j) {
+            var li = document.createElement('li');
+            li.className = 'archive-item' + (j.id === state.activeJournalId ? ' active' : '');
+            li.setAttribute('role','button'); li.setAttribute('tabindex','0');
+            var icon = document.createElement('div'); icon.className = 'archive-item-icon'; icon.textContent = '📄';
+            var s = document.createElement('span'); s.className = 'title-text'; s.textContent = j.title || 'Başlıksız';
+            var b = document.createElement('button'); b.className = 'item-delete'; b.textContent = '✕'; b.setAttribute('aria-label','Sil');
+            b.addEventListener('click', function(e){e.stopPropagation(); deleteJournal(j.id);});
+            li.appendChild(icon); li.appendChild(s); li.appendChild(b);
+            li.addEventListener('click', function(){selectJournal(j.id);});
+            li.addEventListener('keydown', function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();selectJournal(j.id);}});
+            jList.appendChild(li);
+        });
+    }
 
-    })();
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a038032d09f5e33e',t:'MTc4MDA4NDA2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    function createNewJournal() {
+        var today = new Date().toLocaleDateString('tr-TR');
+        var nj = { id: Date.now().toString(), title: today + ' — Günlük', content: '' };
+        state.journals.unshift(nj); state.activeJournalId = nj.id;
+        renderJournalList(); selectJournal(nj.id);
+        saveToCloud('journals', state.journals, 'journalStatus');
+    }
+
+    function selectJournal(id) {
+        state.activeJournalId = id;
+        var j = state.journals.find(function(x){return x.id===id;});
+        if (j) { jEditor.style.display='flex'; jTitle.value=j.title; jText.value=j.content; renderJournalList(); }
+    }
+
+    function updateActiveJournal() {
+        var j = state.journals.find(function(x){return x.id===state.activeJournalId;});
+        if (!j) return;
+        j.title = jTitle.value; j.content = jText.value;
+        saveToCloud('journals', state.journals, 'journalStatus');
+        var a = jList.querySelector('.active .title-text');
+        if (a) a.textContent = j.title || 'Başlıksız';
+    }
+
+    function deleteJournal(id) {
+        if (!confirm('Bu günlük sayfasını silmek istediğinize emin misiniz?')) return;
+        state.journals = state.journals.filter(function(x){return x.id!==id;});
+        if (state.activeJournalId === id) { state.activeJournalId=null; jEditor.style.display='none'; }
+        renderJournalList(); saveToCloud('journals', state.journals, 'journalStatus');
+    }
+
+    /* ══ NOTES ══ */
+    var nList   = document.getElementById('notesList');
+    var nEditor = document.getElementById('notesEditor');
+    var nTitle  = document.getElementById('notesTitle');
+    var nText   = document.getElementById('notesText');
+
+    function renderNotesList() {
+        nList.innerHTML = '';
+        if (!state.notes.length) {
+            nList.innerHTML = '<li class="empty-state"><span class="empty-icon">📝</span>Henüz not yok.</li>';
+            return;
+        }
+        state.notes.forEach(function (n) {
+            var li = document.createElement('li');
+            li.className = 'archive-item' + (n.id === state.activeNoteId ? ' active' : '');
+            li.setAttribute('role','button'); li.setAttribute('tabindex','0');
+            var icon = document.createElement('div'); icon.className = 'archive-item-icon'; icon.textContent = '💡';
+            var s = document.createElement('span'); s.className = 'title-text'; s.textContent = n.title || 'Başlıksız';
+            var b = document.createElement('button'); b.className = 'item-delete'; b.textContent = '✕'; b.setAttribute('aria-label','Sil');
+            b.addEventListener('click', function(e){e.stopPropagation(); deleteNote(n.id);});
+            li.appendChild(icon); li.appendChild(s); li.appendChild(b);
+            li.addEventListener('click', function(){selectNote(n.id);});
+            li.addEventListener('keydown', function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();selectNote(n.id);}});
+            nList.appendChild(li);
+        });
+    }
+
+    function createNewNote() {
+        var nn = { id: Date.now().toString(), title: 'Yeni Strateji / Fikir', content: '' };
+        state.notes.unshift(nn); state.activeNoteId = nn.id;
+        renderNotesList(); selectNote(nn.id);
+        saveToCloud('notes', state.notes, 'notesStatus');
+    }
+
+    function selectNote(id) {
+        state.activeNoteId = id;
+        var n = state.notes.find(function(x){return x.id===id;});
+        if (n) { nEditor.style.display='flex'; nTitle.value=n.title; nText.value=n.content; renderNotesList(); }
+    }
+
+    function updateActiveNote() {
+        var n = state.notes.find(function(x){return x.id===state.activeNoteId;});
+        if (!n) return;
+        n.title = nTitle.value; n.content = nText.value;
+        saveToCloud('notes', state.notes, 'notesStatus');
+        var a = nList.querySelector('.active .title-text');
+        if (a) a.textContent = n.title || 'Başlıksız';
+    }
+
+    function deleteNote(id) {
+        if (!confirm('Bu notu silmek istediğinize emin misiniz?')) return;
+        state.notes = state.notes.filter(function(x){return x.id!==id;});
+        if (state.activeNoteId === id) { state.activeNoteId=null; nEditor.style.display='none'; }
+        renderNotesList(); saveToCloud('notes', state.notes, 'notesStatus');
+    }
+
+    /* ══ TODOS ══ */
+    var todoInput  = document.getElementById('todoInput');
+    var todoListEl = document.getElementById('todoList');
+    var addTodoBtn = document.getElementById('addTodoBtn');
+
+    function updateProgress() {
+        var total = state.todos.length;
+        var done  = state.todos.filter(function(t){return t.completed;}).length;
+        var pct   = total ? Math.round(done/total*100) : 0;
+        var fill  = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        var badge = document.getElementById('todoBadge');
+        if (fill)  fill.style.width = pct + '%';
+        if (label) label.textContent = done + ' / ' + total + ' tamamlandı';
+        if (badge) badge.textContent = total + ' Görev';
+    }
+
+    function renderTodos() {
+        todoListEl.innerHTML = '';
+        if (!state.todos.length) {
+            todoListEl.innerHTML = '<li class="empty-state"><span class="empty-icon">✦</span>Henüz görev yok. Yukarıdan ekle.</li>';
+            updateProgress(); return;
+        }
+        state.todos.forEach(function (t, i) {
+            var li = document.createElement('li');
+            li.className = 'todo-item' + (t.completed ? ' done' : '');
+
+            // Custom checkbox
+            var checkWrap = document.createElement('label');
+            checkWrap.className = 'todo-check';
+            var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = t.completed;
+            cb.addEventListener('change', function(){toggleTodo(i);});
+            var checkBox = document.createElement('div'); checkBox.className = 'todo-check-box';
+            checkWrap.appendChild(cb); checkWrap.appendChild(checkBox);
+
+            var sp = document.createElement('span'); sp.className = 'todo-text'; sp.textContent = t.text;
+
+            var db = document.createElement('button'); db.className = 'delete-btn'; db.textContent = '✕'; db.setAttribute('aria-label','Sil');
+            db.addEventListener('click', function(){deleteTodo(i);});
+
+            li.appendChild(checkWrap); li.appendChild(sp); li.appendChild(db);
+            todoListEl.appendChild(li);
+        });
+        updateProgress();
+    }
+
+    function saveTodos() { saveToCloud('todos', state.todos, 'todoStatus'); }
+
+    function addTodo() {
+        var txt = todoInput.value.trim();
+        if (!txt) return;
+        state.todos.push({ text: txt, completed: false });
+        todoInput.value = ''; renderTodos(); saveTodos(); todoInput.focus();
+    }
+
+    function toggleTodo(i) {
+        state.todos[i].completed = !state.todos[i].completed;
+        renderTodos(); saveTodos();
+    }
+
+    function deleteTodo(i) {
+        state.todos.splice(i,1); renderTodos(); saveTodos();
+    }
+
+    /* ══ BIND ══ */
+    function bindEvents() {
+        launchBtn.addEventListener('click', onLaunchClick);
+        todoInput.addEventListener('keydown', function(e){if(e.key==='Enter'){e.preventDefault();addTodo();}});
+        addTodoBtn.addEventListener('click', addTodo);
+        jTitle.addEventListener('input', updateActiveJournal);
+        jText.addEventListener('input', updateActiveJournal);
+        nTitle.addEventListener('input', updateActiveNote);
+        nText.addEventListener('input', updateActiveNote);
+        document.getElementById('newJournalBtn').addEventListener('click', createNewJournal);
+        document.getElementById('newNoteBtn').addEventListener('click', createNewNote);
+    }
+
+    /* ══ INIT ══ */
+    function init() { initTabs(); bindEvents(); loadFromCloud(); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+
+})();
+</script>
+</body>
 </html>
