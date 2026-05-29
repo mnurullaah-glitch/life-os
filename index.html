@@ -14,9 +14,10 @@
             --text-muted: #aaaaaa;
             --accent: #ffffff;
             --glass-bg: rgba(10, 10, 10, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --danger: #ff4444;
             --success: #00D15E;
+            --glow: rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -31,64 +32,82 @@
             color: var(--text-main);
             overflow-x: hidden;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Gradient Background (ilk açılış) ── */
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        /* ══════════════════════════════════════
+           GRADIENT BACKGROUND (açılış)
+           ══════════════════════════════════════ */
         .gradient-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: -3;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1030 25%, #0d1b2a 50%, #1a0a1e 75%, #0a0a1a 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 12s ease infinite;
-            transition: opacity 1.5s ease;
+            background: linear-gradient(160deg, #050510 0%, #0c0c20 20%, #0a1228 40%, #100a1c 60%, #060610 80%, #0a0a18 100%);
+            background-size: 300% 300%;
+            animation: gradientShift 15s ease infinite;
+            transition: opacity 1.8s ease;
         }
-
-        .gradient-bg.fade-out {
-            opacity: 0;
-        }
-
-        .gradient-bg.fade-in {
-            opacity: 1;
-        }
+        .gradient-bg.fade-out { opacity: 0; }
+        .gradient-bg.fade-in  { opacity: 1; }
 
         @keyframes gradientShift {
             0%   { background-position: 0% 50%; }
-            25%  { background-position: 100% 0%; }
-            50%  { background-position: 100% 100%; }
-            75%  { background-position: 0% 100%; }
+            33%  { background-position: 100% 30%; }
+            66%  { background-position: 50% 100%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* ── Background Video ── */
+        /* Gizli partikül hissi için ince noktalar */
+        .gradient-bg::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.15), transparent),
+                radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.12), transparent),
+                radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.10), transparent),
+                radial-gradient(2px 2px at 85% 15%, rgba(255,255,255,0.08), transparent),
+                radial-gradient(1px 1px at 60% 45%, rgba(255,255,255,0.10), transparent),
+                radial-gradient(1px 1px at 25% 70%, rgba(255,255,255,0.06), transparent),
+                radial-gradient(2px 2px at 10% 50%, rgba(255,255,255,0.04), transparent),
+                radial-gradient(1px 1px at 90% 85%, rgba(255,255,255,0.08), transparent);
+            pointer-events: none;
+            animation: twinkle 6s ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0%   { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* ══════════════════════════════════════
+           BACKGROUND VIDEO
+           ══════════════════════════════════════ */
         .video-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             object-fit: cover;
             z-index: -2;
-            filter: brightness(0.3) contrast(1.2);
+            filter: brightness(0.35) contrast(1.15) saturate(0.8);
             pointer-events: none;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            transition: opacity 1.8s ease;
         }
+        .video-bg.visible { opacity: 1; }
 
-        .video-bg.visible {
-            opacity: 1;
-        }
-
-        /* ── Intro Screen ── */
+        /* ══════════════════════════════════════
+           INTRO SCREEN
+           ══════════════════════════════════════ */
         #intro-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -98,437 +117,444 @@
             padding: 20px;
             text-align: center;
         }
-
-        /* Aşama 1: Gradient arkada, buton görünür */
-        #intro-screen.phase-start {
-            background: transparent;
-            cursor: default;
-        }
-
-        /* Aşama 2: Video arkada, yazılar görünür */
+        #intro-screen.phase-start    { background: transparent; cursor: default; }
         #intro-screen.phase-greeting {
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.40);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             cursor: pointer;
         }
-
         #intro-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+            opacity: 0; visibility: hidden; pointer-events: none;
         }
 
-        /* ── Sistemi Başlat Butonu ── */
+        /* ── Waveform Logo (Siri tarzı) ── */
+        .waveform-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            height: 80px;
+            margin-bottom: 20px;
+            animation: fadeInUp 2s forwards 0.1s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .waveform-logo .bar {
+            width: 5px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.4) 100%);
+            box-shadow: 0 0 12px rgba(255,255,255,0.25);
+            animation: waveBounce 1.2s ease-in-out infinite;
+        }
+        .waveform-logo .bar:nth-child(1)  { height: 18px; animation-delay: 0.00s; }
+        .waveform-logo .bar:nth-child(2)  { height: 32px; animation-delay: 0.08s; }
+        .waveform-logo .bar:nth-child(3)  { height: 48px; animation-delay: 0.16s; }
+        .waveform-logo .bar:nth-child(4)  { height: 60px; animation-delay: 0.24s; }
+        .waveform-logo .bar:nth-child(5)  { height: 70px; animation-delay: 0.32s; }
+        .waveform-logo .bar:nth-child(6)  { height: 60px; animation-delay: 0.40s; }
+        .waveform-logo .bar:nth-child(7)  { height: 48px; animation-delay: 0.48s; }
+        .waveform-logo .bar:nth-child(8)  { height: 32px; animation-delay: 0.56s; }
+        .waveform-logo .bar:nth-child(9)  { height: 18px; animation-delay: 0.64s; }
+
+        @keyframes waveBounce {
+            0%, 100% { transform: scaleY(1); }
+            25%  { transform: scaleY(0.4); }
+            50%  { transform: scaleY(1.3); }
+            75%  { transform: scaleY(0.6); }
+        }
+
+        /* ── Glow Ring ── */
+        .glow-ring {
+            position: absolute;
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            animation: glowPulse 2.5s ease-in-out infinite, fadeInUp 2s forwards 0.1s;
+            opacity: 0;
+            transform: translateY(30px);
+            pointer-events: none;
+        }
+        .glow-ring::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.06);
+            animation: glowPulse 2.5s ease-in-out 0.5s infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50%      { transform: scale(1.15); opacity: 0.15; }
+        }
+
+        /* ── Launch Button ── */
         .launch-btn-wrap {
             animation: fadeInUp 2s forwards 0.3s;
             opacity: 0;
             transform: translateY(30px);
         }
-
         .launch-btn {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 18px 50px;
-            border-radius: 40px;
-            font-size: 1.3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 48px;
+            border-radius: 50px;
+            font-size: 1.2rem;
             font-weight: 400;
             letter-spacing: 3px;
             cursor: pointer;
-            transition: all 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             text-transform: uppercase;
             position: relative;
             overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                rgba(255,255,255,0.06) 0%,
+                rgba(255,255,255,0.02) 50%,
+                rgba(255,255,255,0.08) 100%
+            );
         }
-
         .launch-btn::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            transition: left 0.6s ease;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
-
         .launch-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.45);
+            box-shadow:
+                0 0 50px rgba(255, 255, 255, 0.06),
+                0 0 100px rgba(255, 255, 255, 0.03),
+                inset 0 0 30px rgba(255,255,255,0.02);
+            transform: translateY(-3px);
+            letter-spacing: 5px;
         }
-
-        .launch-btn:hover::before {
-            left: 100%;
-        }
-
-        .launch-btn:active {
-            transform: scale(0.96);
-        }
-
+        .launch-btn:hover::before { opacity: 1; }
+        .launch-btn:active { transform: scale(0.95); }
         .launch-btn.hide {
             opacity: 0;
-            transform: translateY(-20px);
+            transform: translateY(-20px) scale(0.95);
             pointer-events: none;
-            transition: all 0.6s ease;
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* ── Intro Logo / Simge ── */
-        .intro-logo {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            animation: fadeInUp 2s forwards 0.1s;
-            opacity: 0;
-            transform: translateY(30px);
-            filter: drop-shadow(0 0 30px rgba(255,255,255,0.2));
-        }
-
-        /* ── Intro Text ── */
+        /* ── Greeting Phase ── */
         .intro-text {
             font-size: 3.5rem;
             font-weight: 200;
-            letter-spacing: 4px;
-            text-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 80px rgba(0, 0, 0, 0.6);
+            letter-spacing: 5px;
+            text-shadow: 0 0 60px rgba(0,0,0,0.9), 0 0 120px rgba(0,0,0,0.5);
         }
-
         .intro-sub {
             font-size: 2rem;
             color: var(--text-muted);
             margin-top: 15px;
-            text-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
-
         .intro-time {
             margin-top: 25px;
             color: #999;
             font-size: 1.2rem;
-            text-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 0 25px rgba(0,0,0,0.7);
         }
-
         .intro-skip-hint {
             position: absolute;
             bottom: 40px;
-            color: #888;
+            color: #666;
             font-size: 0.85rem;
             letter-spacing: 1px;
-            text-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 15px rgba(0,0,0,0.8);
         }
-
-        /* Greeting animasyonu */
         .fade-in-up {
             animation: fadeInUp 1.5s forwards;
             opacity: 0;
             transform: translateY(20px);
         }
-
         .delay-1 { animation-delay: 0s; }
         .delay-2 { animation-delay: 0.3s; }
         .delay-3 { animation-delay: 0.6s; }
         .delay-4 { animation-delay: 0.9s; }
 
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
+            to { opacity: 1; }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-        }
-
-        /* ── Navigation ── */
+        /* ══════════════════════════════════════
+           NAVIGATION
+           ══════════════════════════════════════ */
         nav {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
             margin-top: 40px;
             opacity: 0;
             z-index: 10;
             position: relative;
             padding: 0 20px;
-            transition: opacity 1s ease;
+            transition: opacity 1s ease 0.2s;
         }
-
-        nav.visible {
-            opacity: 1;
-        }
+        nav.visible { opacity: 1; }
 
         .tab-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            border: 1px solid var(--glass-border);
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255,255,255,0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 26px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            letter-spacing: 0.5px;
+            position: relative;
         }
-
-        .tab-btn.active,
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 40px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
         .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border-color: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        .tab-btn:hover::after { opacity: 1; }
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 25px rgba(255,255,255,0.06);
         }
 
-        /* ── Main Content ── */
+        /* ══════════════════════════════════════
+           MAIN CONTENT
+           ══════════════════════════════════════ */
         main {
             max-width: 1200px;
             margin: 40px auto 60px;
             padding: 0 20px;
             opacity: 0;
-            transition: opacity 1s ease;
+            transition: opacity 1s ease 0.4s;
         }
-
-        main.visible {
-            opacity: 1;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        main.visible { opacity: 1; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
 
         /* ── Glass Panel ── */
         .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            background: rgba(12, 12, 18, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow:
+                0 8px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.03);
+            transition: border-color 0.4s ease;
+        }
+        .glass-panel:hover {
+            border-color: rgba(255,255,255,0.14);
         }
 
         .panel-title {
-            font-size: 1.2rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 10px;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 14px;
         }
 
-        /* ── Split Layout (Journal & Notes) ── */
+        /* ── Split Layout ── */
         .split-container {
             display: grid;
             grid-template-columns: 280px 1fr;
             gap: 20px;
         }
-
         .sidebar-panel {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            border-right: 1px solid var(--glass-border);
+            border-right: 1px solid rgba(255,255,255,0.06);
             padding-right: 15px;
             max-height: 500px;
             overflow-y: auto;
         }
-
         .editor-panel {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
+        /* ── Add Button ── */
         .add-btn {
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            border: 1px dashed var(--glass-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255,255,255,0.7);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
             padding: 14px;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            transition: all 0.3s ease;
             text-align: center;
             width: 100%;
             margin-bottom: 10px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
-
         .add-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            transform: translateY(-1px);
         }
 
         /* ── Archive List ── */
-        .archive-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
+        .archive-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
         .archive-item {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 14px 16px;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             gap: 10px;
         }
-
         .archive-item:hover,
         .archive-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
         }
-
+        .archive-item.active {
+            box-shadow: 0 0 20px rgba(255,255,255,0.03);
+        }
         .archive-item .title-text {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             flex: 1;
             min-width: 0;
+            color: rgba(255,255,255,0.75);
         }
-
+        .archive-item.active .title-text { color: #fff; }
         .archive-item .item-delete {
             color: var(--danger);
             background: none;
             border: none;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: all 0.2s ease;
             font-size: 1rem;
             padding: 4px 6px;
-            border-radius: 4px;
+            border-radius: 6px;
             flex-shrink: 0;
         }
-
-        .archive-item:hover .item-delete {
-            opacity: 1;
-        }
-
-        .archive-item .item-delete:hover {
-            background: rgba(255, 68, 68, 0.15);
-        }
+        .archive-item:hover .item-delete { opacity: 1; }
+        .archive-item .item-delete:hover { background: rgba(255, 68, 68, 0.2); }
 
         /* ── Empty State ── */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            opacity: 0.7;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.9rem;
         }
-
-        .empty-state-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            display: block;
-        }
+        .empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; opacity: 0.5; }
 
         /* ── Form Elements ── */
-        textarea,
-        input[type="text"] {
+        textarea, input[type="text"] {
             width: 100%;
             background: rgba(255, 255, 255, 0.03);
             color: white;
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 15px 18px;
+            font-size: 1.05rem;
             outline: none;
-            transition: border-color 0.3s ease, background 0.3s ease;
+            transition: all 0.3s ease;
             resize: vertical;
         }
-
         .title-input {
             font-size: 1.4rem !important;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
             padding: 14px 18px !important;
+            background: rgba(255,255,255,0.02) !important;
         }
-
         textarea {
             height: 380px;
             resize: none;
             line-height: 1.7;
         }
-
-        textarea:focus,
-        input[type="text"]:focus {
-            border-color: rgba(255, 255, 255, 0.4);
+        textarea:focus, input[type="text"]:focus {
+            border-color: rgba(255, 255, 255, 0.35);
             background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 30px rgba(255,255,255,0.03);
         }
 
-        /* ── Status Indicator ── */
+        /* ── Status ── */
         .status {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--success);
             margin-top: 10px;
             text-align: right;
             transition: color 0.3s ease;
+            letter-spacing: 0.5px;
         }
 
-        /* ── To-Do Section ── */
-        .todo-input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
+        /* ── To-Do ── */
+        .todo-input-container { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn {
-            background: white;
-            color: black;
+            background: rgba(255,255,255,0.9);
+            color: #000;
             border: none;
             padding: 14px 24px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.1s ease, opacity 0.2s ease;
-            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            font-size: 0.9rem;
             white-space: nowrap;
+            letter-spacing: 0.3px;
         }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-        }
+        .btn:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .btn:active { transform: scale(0.96); }
 
         .todo-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 14px 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             transition: background 0.2s ease;
         }
-
-        .todo-item:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
+        .todo-item:hover { background: rgba(255, 255, 255, 0.02); }
         .todo-item label {
             display: flex;
             align-items: center;
@@ -537,164 +563,109 @@
             min-width: 0;
             gap: 15px;
         }
-
         .todo-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--text-muted);
-            border-radius: 4px;
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
-
         .todo-item input[type="checkbox"]:checked {
-            background-color: var(--accent);
-            border-color: var(--accent);
+            background-color: #fff;
+            border-color: #fff;
         }
-
         .todo-item input[type="checkbox"]:checked::after {
             content: '✓';
             position: absolute;
-            color: black;
+            color: #000;
             font-size: 12px;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-weight: bold;
         }
-
-        .todo-item input[type="checkbox"]:checked+span {
-            color: var(--text-muted);
+        .todo-item input[type="checkbox"]:checked + span {
+            color: rgba(255,255,255,0.35);
             text-decoration: line-through;
         }
-
         .delete-btn {
             background: none;
             border: none;
             color: var(--danger);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             cursor: pointer;
             opacity: 0;
             padding: 4px 8px;
-            border-radius: 4px;
-            transition: opacity 0.2s ease, background 0.2s ease;
+            border-radius: 6px;
+            transition: all 0.2s ease;
             flex-shrink: 0;
         }
+        .todo-item:hover .delete-btn { opacity: 0.7; }
+        .delete-btn:hover { opacity: 1 !important; background: rgba(255,68,68,0.15); }
 
-        .todo-item:hover .delete-btn {
-            opacity: 1;
-        }
-
-        .delete-btn:hover {
-            background: rgba(255, 68, 68, 0.15);
-        }
-
-        /* ── Media Panel ── */
+        /* ── Media ── */
         .media-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-
         .media-grid iframe {
             border: none;
             width: 100%;
-            border-radius: 12px;
+            border-radius: 16px;
             height: 300px;
         }
 
-        /* ── Responsive ── */
+        /* ══════════════════════════════════════
+           RESPONSIVE
+           ══════════════════════════════════════ */
         @media (max-width: 768px) {
-            .intro-logo {
-                font-size: 2.5rem;
-            }
+            .waveform-logo { gap: 4px; height: 55px; }
+            .waveform-logo .bar { width: 3px; }
+            .waveform-logo .bar:nth-child(1)  { height: 12px; }
+            .waveform-logo .bar:nth-child(2)  { height: 22px; }
+            .waveform-logo .bar:nth-child(3)  { height: 32px; }
+            .waveform-logo .bar:nth-child(4)  { height: 40px; }
+            .waveform-logo .bar:nth-child(5)  { height: 48px; }
+            .waveform-logo .bar:nth-child(6)  { height: 40px; }
+            .waveform-logo .bar:nth-child(7)  { height: 32px; }
+            .waveform-logo .bar:nth-child(8)  { height: 22px; }
+            .waveform-logo .bar:nth-child(9)  { height: 12px; }
 
-            .intro-text {
-                font-size: 2rem;
-                letter-spacing: 2px;
-            }
+            .glow-ring { width: 100px; height: 100px; }
 
-            .intro-sub {
-                font-size: 1.2rem;
-            }
+            .intro-text { font-size: 2rem; letter-spacing: 3px; }
+            .intro-sub { font-size: 1.2rem; }
+            .intro-skip-hint { bottom: 30px; font-size: 0.75rem; }
+            .launch-btn { padding: 14px 36px; font-size: 1rem; letter-spacing: 2px; }
 
-            .intro-skip-hint {
-                bottom: 30px;
-                font-size: 0.75rem;
-            }
-
-            .launch-btn {
-                padding: 14px 36px;
-                font-size: 1rem;
-                letter-spacing: 2px;
-            }
-
-            nav {
-                flex-wrap: wrap;
-                gap: 8px;
-                margin-top: 20px;
-            }
-
+            nav { flex-wrap: wrap; gap: 8px; margin-top: 20px; }
             .tab-btn {
                 flex: 1 1 calc(50% - 8px);
                 padding: 10px 14px;
-                font-size: 0.85rem;
+                font-size: 0.8rem;
                 text-align: center;
-                border-radius: 25px;
+                border-radius: 30px;
             }
-
-            main {
-                margin: 20px auto 40px;
-                padding: 0 12px;
-            }
-
-            .glass-panel {
-                padding: 20px 16px;
-                margin-bottom: 20px;
-                border-radius: 16px;
-            }
-
-            .split-container {
-                grid-template-columns: 1fr;
-            }
-
+            main { margin: 20px auto 40px; padding: 0 12px; }
+            .glass-panel { padding: 20px 16px; margin-bottom: 20px; border-radius: 18px; }
+            .split-container { grid-template-columns: 1fr; }
             .sidebar-panel {
                 border-right: none;
-                border-bottom: 1px solid var(--glass-border);
+                border-bottom: 1px solid rgba(255,255,255,0.06);
                 padding-right: 0;
                 padding-bottom: 15px;
                 max-height: 200px;
             }
-
-            .todo-input-container {
-                flex-direction: column;
-            }
-
-            .btn {
-                padding: 14px;
-                width: 100%;
-            }
-
-            .media-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .media-grid iframe {
-                height: 220px;
-            }
-
-            textarea {
-                height: 300px;
-                font-size: 1rem;
-            }
-
-            .title-input {
-                font-size: 1.2rem !important;
-            }
+            .todo-input-container { flex-direction: column; }
+            .btn { padding: 14px; width: 100%; }
+            .media-grid { grid-template-columns: 1fr; }
+            .media-grid iframe { height: 220px; }
+            textarea { height: 300px; font-size: 1rem; }
+            .title-input { font-size: 1.2rem !important; }
         }
     </style>
 </head>
@@ -703,8 +674,8 @@
     <!-- Gradient Arka Plan -->
     <div class="gradient-bg" id="gradientBg"></div>
 
-    <!-- Arka Plan Videosu (başlangıçta gizli, paused) -->
-    <video class="video-bg" id="bgVideo" loop muted playsinline webkit-playsinline>
+    <!-- Arka Plan Videosu (başlangıçta gizli, SES AÇIK) -->
+    <video class="video-bg" id="bgVideo" loop playsinline webkit-playsinline>
         <source src="arkaplan.mp4" type="video/mp4">
     </video>
 
@@ -713,13 +684,27 @@
 
         <!-- Aşama 1: Başlat Butonu -->
         <div id="launchPhase">
-            <div class="intro-logo">◈</div>
+            <!-- Siri tarzı waveform animasyonu -->
+            <div class="waveform-logo" aria-hidden="true">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <!-- Glow halka -->
+            <div class="glow-ring"></div>
+            <!-- Buton -->
             <div class="launch-btn-wrap">
                 <button class="launch-btn" id="launchBtn">Sistemi Başlat</button>
             </div>
         </div>
 
-        <!-- Aşama 2: Karşılama Yazıları (başlangıçta gizli) -->
+        <!-- Aşama 2: Karşılama Yazıları -->
         <div id="greetingPhase" style="display:none;">
             <div class="intro-text fade-in-up delay-1">MERHABA, NURULLAH.</div>
             <div class="intro-sub fade-in-up delay-2" id="dynamicGreeting">Sistem Başlatılıyor.</div>
@@ -743,13 +728,7 @@
             <div class="glass-panel">
                 <h2 class="panel-title">Aksiyon Planı &amp; To-Do</h2>
                 <form class="todo-input-container" onsubmit="return false;">
-                    <input
-                        type="text"
-                        id="todoInput"
-                        placeholder="Görev ekle ve Enter'a bas..."
-                        aria-label="Add new task"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="todoInput" placeholder="Görev ekle ve Enter'a bas..." aria-label="Add new task" autocomplete="off">
                     <button class="btn" type="button" id="addTodoBtn">Ekle</button>
                 </form>
                 <ul id="todoList" style="list-style: none;" aria-label="Task list"></ul>
@@ -767,18 +746,8 @@
                         <ul id="journalList" class="archive-list" aria-label="Journal entries"></ul>
                     </div>
                     <div class="editor-panel" id="journalEditor" style="display:none;">
-                        <input
-                            type="text"
-                            id="journalTitle"
-                            class="title-input"
-                            placeholder="Tarih / Başlık Yaz..."
-                            aria-label="Journal title"
-                        >
-                        <textarea
-                            id="journalText"
-                            placeholder="Bugün neler yaşandı?..."
-                            aria-label="Journal content"
-                        ></textarea>
+                        <input type="text" id="journalTitle" class="title-input" placeholder="Tarih / Başlık Yaz..." aria-label="Journal title">
+                        <textarea id="journalText" placeholder="Bugün neler yaşandı?..." aria-label="Journal content"></textarea>
                         <div class="status" id="journalStatus">Bulut Senkronizasyonu Aktif ☁️</div>
                     </div>
                 </div>
@@ -795,18 +764,8 @@
                         <ul id="notesList" class="archive-list" aria-label="Note entries"></ul>
                     </div>
                     <div class="editor-panel" id="notesEditor" style="display:none;">
-                        <input
-                            type="text"
-                            id="notesTitle"
-                            class="title-input"
-                            placeholder="Not Başlığı Gir..."
-                            aria-label="Note title"
-                        >
-                        <textarea
-                            id="notesText"
-                            placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..."
-                            aria-label="Note content"
-                        ></textarea>
+                        <input type="text" id="notesTitle" class="title-input" placeholder="Not Başlığı Gir..." aria-label="Note title">
+                        <textarea id="notesText" placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..." aria-label="Note content"></textarea>
                         <div class="status" id="notesStatus">Bulut Senkronizasyonu Aktif ☁️</div>
                     </div>
                 </div>
@@ -818,17 +777,8 @@
             <div class="glass-panel">
                 <h2 class="panel-title">Medya</h2>
                 <div class="media-grid">
-                    <iframe
-                        src="https://www.youtube.com/embed/f3A81s8wKpw"
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                    ></iframe>
-                    <iframe
-                        src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&amp;theme=0"
-                        title="Spotify playlist"
-                        allow="encrypted-media"
-                    ></iframe>
+                    <iframe src="https://www.youtube.com/embed/f3A81s8wKpw" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&amp;theme=0" title="Spotify playlist" allow="encrypted-media"></iframe>
                 </div>
             </div>
         </section>
@@ -838,9 +788,7 @@
     (function () {
         'use strict';
 
-        // ─────────────────────────────────────
-        // DOM Referansları
-        // ─────────────────────────────────────
+        // ── DOM ──
         var bgVideo         = document.getElementById('bgVideo');
         var gradientBg      = document.getElementById('gradientBg');
         var introScreen     = document.getElementById('intro-screen');
@@ -853,31 +801,24 @@
         var mainContent     = document.getElementById('mainContent');
         var introTimer      = null;
 
-        // ─────────────────────────────────────
-        // Yardımcı Fonksiyonlar
-        // ─────────────────────────────────────
-        function getGreeting(hour) {
-            if (hour >= 5 && hour < 12) return 'Günaydın.';
-            if (hour >= 12 && hour < 18) return 'İyi günler.';
-            if (hour >= 18 && hour < 22) return 'İyi akşamlar.';
+        function getGreeting(h) {
+            if (h >= 5 && h < 12) return 'Günaydın.';
+            if (h >= 12 && h < 18) return 'İyi günler.';
+            if (h >= 18 && h < 22) return 'İyi akşamlar.';
             return 'İyi geceler.';
         }
-
-        function formatTime(date) {
-            return String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+        function fmt(d) {
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
         }
 
-        // ─────────────────────────────────────
-        // 1. İNTRO AKIŞI
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           INTRO FLOW
+           ══════════════════════════════════════ */
 
-        // Video bittiğinde → önce gradient'e dön, sonra videoyu başa sarıp tekrar oynat
+        // Video bitti → gradient'e dön → başa sar → tekrar oynat
         bgVideo.addEventListener('ended', function () {
-            // Gradient'i göster, videoyu gizle
             gradientBg.classList.add('fade-in');
             bgVideo.classList.remove('visible');
-
-            // 1.5 saniye sonra videoyu başa sarıp tekrar başlat
             setTimeout(function () {
                 bgVideo.currentTime = 0;
                 bgVideo.play().then(function () {
@@ -888,69 +829,38 @@
             }, 2000);
         });
 
-        // "Sistemi Başlat" butonuna tıklandı
+        // Sistemi Başlat
         function onLaunchClick() {
-            // Butonu gizle
             launchBtn.classList.add('hide');
 
-            // Videoyu başlat
             bgVideo.play().then(function () {
-                // Video görünür olsun
                 bgVideo.classList.add('visible');
-
-                // Gradient'i soldur
-                setTimeout(function () {
-                    gradientBg.classList.add('fade-out');
-                }, 300);
-
-                // 4 saniye bekle → karşılama yazılarını göster
-                setTimeout(function () {
-                    showGreeting();
-                }, 4000);
-
-            }).catch(function (err) {
-                console.error('Video oynatma hatası:', err);
-                // Video oynatılamazsa direkt geç
+                setTimeout(function () { gradientBg.classList.add('fade-out'); }, 300);
+                setTimeout(showGreeting, 4000);
+            }).catch(function () {
                 showGreeting();
             });
         }
 
-        // Karşılama yazılarını göster
         function showGreeting() {
             var now = new Date();
-
-            // Faz geçişi: gradient arka plan → video arka plan
             introScreen.classList.remove('phase-start');
             introScreen.classList.add('phase-greeting');
-
-            // Launch fazını gizle, greeting fazını göster
             launchPhase.style.display = 'none';
             greetingPhase.style.display = '';
-
-            // Saat ve selamlama
             dynamicGreeting.textContent = getGreeting(now.getHours());
-            introTime.textContent = formatTime(now);
+            introTime.textContent = fmt(now);
 
-            // 3 saniye sonra ana panele geç
             introTimer = setTimeout(dismissIntro, 3500);
-
-            // Tıkla veya ESC ile geç
             introScreen.addEventListener('click', dismissIntro);
             document.addEventListener('keydown', skipHandler);
         }
 
-        // Intro'yu kapat, ana paneli aç
         function dismissIntro() {
-            if (introTimer) {
-                clearTimeout(introTimer);
-                introTimer = null;
-            }
-
+            if (introTimer) { clearTimeout(introTimer); introTimer = null; }
             document.removeEventListener('keydown', skipHandler);
             introScreen.removeEventListener('click', dismissIntro);
             introScreen.classList.add('hidden');
-
-            // Nav ve main'i görünür yap
             setTimeout(function () {
                 mainNav.classList.add('visible');
                 mainContent.classList.add('visible');
@@ -958,36 +868,31 @@
         }
 
         function skipHandler(e) {
-            if (e.key === 'Escape') {
-                dismissIntro();
-            }
+            if (e.key === 'Escape') dismissIntro();
         }
 
-        // ─────────────────────────────────────
-        // 2. TAB NAVIGATION
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           TABS
+           ══════════════════════════════════════ */
         function initTabs() {
-            var tabButtons = document.querySelectorAll('.tab-btn');
-            var tabContents = document.querySelectorAll('.tab-content');
-
-            tabButtons.forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var tabName = this.getAttribute('data-tab');
-
-                    tabButtons.forEach(function (b) { b.classList.remove('active'); });
-                    tabContents.forEach(function (t) { t.classList.remove('active'); });
-
+            var btns = document.querySelectorAll('.tab-btn');
+            var tabs = document.querySelectorAll('.tab-content');
+            btns.forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var name = this.getAttribute('data-tab');
+                    btns.forEach(function (x) { x.classList.remove('active'); });
+                    tabs.forEach(function (x) { x.classList.remove('active'); });
                     this.classList.add('active');
-                    var target = document.getElementById(tabName);
-                    if (target) target.classList.add('active');
+                    var t = document.getElementById(name);
+                    if (t) t.classList.add('active');
                 });
             });
         }
 
-        // ─────────────────────────────────────
-        // 3. FIREBASE CONFIGURATION
-        // ─────────────────────────────────────
-        var firebaseConfig = {
+        /* ══════════════════════════════════════
+           FIREBASE
+           ══════════════════════════════════════ */
+        firebase.initializeApp({
             apiKey: "AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
             authDomain: "dashboard-ab880.firebaseapp.com",
             projectId: "dashboard-ab880",
@@ -995,15 +900,13 @@
             messagingSenderId: "1014186585487",
             appId: "1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa",
             measurementId: "G-8NSGQBPVBF"
-        };
-
-        firebase.initializeApp(firebaseConfig);
+        });
         var db = firebase.firestore();
         var userDocRef = db.collection('users').doc('nurullah');
 
-        // ─────────────────────────────────────
-        // 4. APPLICATION STATE
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           STATE
+           ══════════════════════════════════════ */
         var state = {
             todos: [],
             journals: [],
@@ -1012,403 +915,220 @@
             activeNoteId: null
         };
 
-        // ─────────────────────────────────────
-        // 5. CLOUD SYNC (debounced)
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           CLOUD SYNC
+           ══════════════════════════════════════ */
         var saveTimeout = null;
-
         function saveToCloud(field, value, statusId) {
-            var statusEl = document.getElementById(statusId);
-            if (!statusEl) return;
-
-            statusEl.textContent = 'Kaydediliyor...';
-            statusEl.style.color = 'white';
-
+            var el = document.getElementById(statusId);
+            if (!el) return;
+            el.textContent = 'Kaydediliyor...';
+            el.style.color = 'white';
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(function () {
-                var payload = {};
-                payload[field] = value;
-                userDocRef.set(payload, { merge: true })
-                    .then(function () {
-                        statusEl.textContent = 'Senkronize Edildi ✓';
-                        statusEl.style.color = '#00D15E';
-                    })
-                    .catch(function (err) {
-                        console.error('Sync error:', err);
-                        statusEl.textContent = 'Hata: Veri gönderilemedi!';
-                        statusEl.style.color = '#ff4444';
-                    });
+                var p = {}; p[field] = value;
+                userDocRef.set(p, { merge: true })
+                    .then(function () { el.textContent = 'Senkronize Edildi ✓'; el.style.color = '#00D15E'; })
+                    .catch(function (e) { console.error(e); el.textContent = 'Hata!'; el.style.color = '#ff4444'; });
             }, 800);
         }
 
-        // ─────────────────────────────────────
-        // 6. DATA LOADING FROM FIRESTORE
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           LOAD
+           ══════════════════════════════════════ */
         function loadFromCloud() {
-            var todoStatusEl = document.getElementById('todoStatus');
-
+            var ts = document.getElementById('todoStatus');
             userDocRef.get().then(function (doc) {
-                if (!doc.exists) {
-                    todoStatusEl.textContent = 'Buluta Bağlı ☁️ (yeni kullanıcı)';
-                    return;
-                }
-
-                var data = doc.data();
-
-                if (Array.isArray(data.todos)) {
-                    state.todos = data.todos;
-                    renderTodos();
-                }
-
-                if (Array.isArray(data.journals)) {
-                    state.journals = data.journals;
-                } else if (data.journal && typeof data.journal === 'string' && data.journal.trim() !== '') {
-                    state.journals = [{
-                        id: 'legacy-j',
-                        title: 'Eski Sistemden Aktarılan Günlük',
-                        content: data.journal
-                    }];
+                if (!doc.exists) { ts.textContent = 'Buluta Bağlı ☁️'; return; }
+                var d = doc.data();
+                if (Array.isArray(d.todos)) { state.todos = d.todos; renderTodos(); }
+                if (Array.isArray(d.journals)) { state.journals = d.journals; }
+                else if (d.journal && typeof d.journal === 'string' && d.journal.trim()) {
+                    state.journals = [{ id: 'legacy-j', title: 'Eski Sistemden Aktarılan Günlük', content: d.journal }];
                 }
                 renderJournalList();
-
-                if (Array.isArray(data.notes)) {
-                    state.notes = data.notes;
-                } else if (data.notes && typeof data.notes === 'string' && data.notes.trim() !== '') {
-                    state.notes = [{
-                        id: 'legacy-n',
-                        title: 'Eski Sistemden Aktarılan Notlar',
-                        content: data.notes
-                    }];
+                if (Array.isArray(d.notes)) { state.notes = d.notes; }
+                else if (d.notes && typeof d.notes === 'string' && d.notes.trim()) {
+                    state.notes = [{ id: 'legacy-n', title: 'Eski Sistemden Aktarılan Notlar', content: d.notes }];
                 }
                 renderNotesList();
-
-                todoStatusEl.textContent = 'Buluta Bağlı ☁️';
-            }).catch(function (err) {
-                console.error('Veri çekme hatası:', err);
-                todoStatusEl.textContent = 'Bağlantı hatası — çevrimdışı mod';
-                todoStatusEl.style.color = '#ffaa00';
-            });
+                ts.textContent = 'Buluta Bağlı ☁️';
+            }).catch(function () { ts.textContent = 'Çevrimdışı mod'; ts.style.color = '#ffaa00'; });
         }
 
-        // ─────────────────────────────────────
-        // 7. JOURNAL OPERATIONS
-        // ─────────────────────────────────────
-        var journalListEl   = document.getElementById('journalList');
-        var journalEditor   = document.getElementById('journalEditor');
-        var journalTitleInp = document.getElementById('journalTitle');
-        var journalTextInp  = document.getElementById('journalText');
+        /* ══════════════════════════════════════
+           JOURNAL
+           ══════════════════════════════════════ */
+        var jList = document.getElementById('journalList');
+        var jEditor = document.getElementById('journalEditor');
+        var jTitle = document.getElementById('journalTitle');
+        var jText  = document.getElementById('journalText');
 
         function renderJournalList() {
-            journalListEl.innerHTML = '';
-
-            if (state.journals.length === 0) {
-                journalListEl.innerHTML =
-                    '<li class="empty-state"><span class="empty-state-icon">📓</span>Henüz günlük yok.<br>Yeni bir sayfa oluşturun.</li>';
+            jList.innerHTML = '';
+            if (!state.journals.length) {
+                jList.innerHTML = '<li class="empty-state"><span class="empty-state-icon">📓</span>Henüz günlük yok.</li>';
                 return;
             }
-
             state.journals.forEach(function (j) {
                 var li = document.createElement('li');
                 li.className = 'archive-item' + (j.id === state.activeJournalId ? ' active' : '');
-                li.setAttribute('role', 'button');
-                li.setAttribute('tabindex', '0');
-
-                var titleSpan = document.createElement('span');
-                titleSpan.className = 'title-text';
-                titleSpan.textContent = j.title || 'Başlıksız Günlük';
-
-                var delBtn = document.createElement('button');
-                delBtn.className = 'item-delete';
-                delBtn.textContent = '✕';
-                delBtn.setAttribute('aria-label', 'Delete journal');
-                delBtn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    deleteJournal(j.id);
-                });
-
-                li.appendChild(titleSpan);
-                li.appendChild(delBtn);
-
+                li.setAttribute('role', 'button'); li.setAttribute('tabindex', '0');
+                var s = document.createElement('span'); s.className = 'title-text'; s.textContent = j.title || 'Başlıksız Günlük';
+                var b = document.createElement('button'); b.className = 'item-delete'; b.textContent = '✕';
+                b.setAttribute('aria-label', 'Sil');
+                b.addEventListener('click', function (e) { e.stopPropagation(); deleteJournal(j.id); });
+                li.appendChild(s); li.appendChild(b);
                 li.addEventListener('click', function () { selectJournal(j.id); });
-                li.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        selectJournal(j.id);
-                    }
-                });
-
-                journalListEl.appendChild(li);
+                li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectJournal(j.id); } });
+                jList.appendChild(li);
             });
         }
-
         function createNewJournal() {
             var today = new Date().toLocaleDateString('tr-TR');
-            var newJournal = {
-                id: Date.now().toString(),
-                title: today + ' - Günlük',
-                content: ''
-            };
-            state.journals.unshift(newJournal);
-            state.activeJournalId = newJournal.id;
-            renderJournalList();
-            selectJournal(newJournal.id);
+            var nj = { id: Date.now().toString(), title: today + ' - Günlük', content: '' };
+            state.journals.unshift(nj); state.activeJournalId = nj.id;
+            renderJournalList(); selectJournal(nj.id);
             saveToCloud('journals', state.journals, 'journalStatus');
         }
-
         function selectJournal(id) {
             state.activeJournalId = id;
-            var journal = state.journals.find(function (j) { return j.id === id; });
-            if (journal) {
-                journalEditor.style.display = 'flex';
-                journalTitleInp.value = journal.title;
-                journalTextInp.value = journal.content;
-                renderJournalList();
-            }
+            var j = state.journals.find(function (x) { return x.id === id; });
+            if (j) { jEditor.style.display = 'flex'; jTitle.value = j.title; jText.value = j.content; renderJournalList(); }
         }
-
         function updateActiveJournal() {
-            var journal = state.journals.find(function (j) { return j.id === state.activeJournalId; });
-            if (!journal) return;
-            journal.title = journalTitleInp.value;
-            journal.content = journalTextInp.value;
+            var j = state.journals.find(function (x) { return x.id === state.activeJournalId; });
+            if (!j) return;
+            j.title = jTitle.value; j.content = jText.value;
             saveToCloud('journals', state.journals, 'journalStatus');
-
-            var activeItem = journalListEl.querySelector('.active .title-text');
-            if (activeItem) {
-                activeItem.textContent = journal.title || 'Başlıksız Günlük';
-            }
+            var a = jList.querySelector('.active .title-text');
+            if (a) a.textContent = j.title || 'Başlıksız Günlük';
         }
-
         function deleteJournal(id) {
             if (!confirm('Bu günlük sayfasını silmek istediğinize emin misiniz?')) return;
-            state.journals = state.journals.filter(function (j) { return j.id !== id; });
-            if (state.activeJournalId === id) {
-                state.activeJournalId = null;
-                journalEditor.style.display = 'none';
-            }
-            renderJournalList();
-            saveToCloud('journals', state.journals, 'journalStatus');
+            state.journals = state.journals.filter(function (x) { return x.id !== id; });
+            if (state.activeJournalId === id) { state.activeJournalId = null; jEditor.style.display = 'none'; }
+            renderJournalList(); saveToCloud('journals', state.journals, 'journalStatus');
         }
 
-        // ─────────────────────────────────────
-        // 8. NOTES OPERATIONS
-        // ─────────────────────────────────────
-        var notesListEl   = document.getElementById('notesList');
-        var notesEditor   = document.getElementById('notesEditor');
-        var notesTitleInp = document.getElementById('notesTitle');
-        var notesTextInp  = document.getElementById('notesText');
+        /* ══════════════════════════════════════
+           NOTES
+           ══════════════════════════════════════ */
+        var nList = document.getElementById('notesList');
+        var nEditor = document.getElementById('notesEditor');
+        var nTitle = document.getElementById('notesTitle');
+        var nText  = document.getElementById('notesText');
 
         function renderNotesList() {
-            notesListEl.innerHTML = '';
-
-            if (state.notes.length === 0) {
-                notesListEl.innerHTML =
-                    '<li class="empty-state"><span class="empty-state-icon">📝</span>Henüz not yok.<br>Bir not oluşturun.</li>';
+            nList.innerHTML = '';
+            if (!state.notes.length) {
+                nList.innerHTML = '<li class="empty-state"><span class="empty-state-icon">📝</span>Henüz not yok.</li>';
                 return;
             }
-
             state.notes.forEach(function (n) {
                 var li = document.createElement('li');
                 li.className = 'archive-item' + (n.id === state.activeNoteId ? ' active' : '');
-                li.setAttribute('role', 'button');
-                li.setAttribute('tabindex', '0');
-
-                var titleSpan = document.createElement('span');
-                titleSpan.className = 'title-text';
-                titleSpan.textContent = n.title || 'Başlıksız Not';
-
-                var delBtn = document.createElement('button');
-                delBtn.className = 'item-delete';
-                delBtn.textContent = '✕';
-                delBtn.setAttribute('aria-label', 'Delete note');
-                delBtn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    deleteNote(n.id);
-                });
-
-                li.appendChild(titleSpan);
-                li.appendChild(delBtn);
-
+                li.setAttribute('role', 'button'); li.setAttribute('tabindex', '0');
+                var s = document.createElement('span'); s.className = 'title-text'; s.textContent = n.title || 'Başlıksız Not';
+                var b = document.createElement('button'); b.className = 'item-delete'; b.textContent = '✕';
+                b.setAttribute('aria-label', 'Sil');
+                b.addEventListener('click', function (e) { e.stopPropagation(); deleteNote(n.id); });
+                li.appendChild(s); li.appendChild(b);
                 li.addEventListener('click', function () { selectNote(n.id); });
-                li.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        selectNote(n.id);
-                    }
-                });
-
-                notesListEl.appendChild(li);
+                li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectNote(n.id); } });
+                nList.appendChild(li);
             });
         }
-
         function createNewNote() {
-            var newNote = {
-                id: Date.now().toString(),
-                title: 'Yeni Strateji / Fikir',
-                content: ''
-            };
-            state.notes.unshift(newNote);
-            state.activeNoteId = newNote.id;
-            renderNotesList();
-            selectNote(newNote.id);
+            var nn = { id: Date.now().toString(), title: 'Yeni Strateji / Fikir', content: '' };
+            state.notes.unshift(nn); state.activeNoteId = nn.id;
+            renderNotesList(); selectNote(nn.id);
             saveToCloud('notes', state.notes, 'notesStatus');
         }
-
         function selectNote(id) {
             state.activeNoteId = id;
-            var note = state.notes.find(function (n) { return n.id === id; });
-            if (note) {
-                notesEditor.style.display = 'flex';
-                notesTitleInp.value = note.title;
-                notesTextInp.value = note.content;
-                renderNotesList();
-            }
+            var n = state.notes.find(function (x) { return x.id === id; });
+            if (n) { nEditor.style.display = 'flex'; nTitle.value = n.title; nText.value = n.content; renderNotesList(); }
         }
-
         function updateActiveNote() {
-            var note = state.notes.find(function (n) { return n.id === state.activeNoteId; });
-            if (!note) return;
-            note.title = notesTitleInp.value;
-            note.content = notesTextInp.value;
+            var n = state.notes.find(function (x) { return x.id === state.activeNoteId; });
+            if (!n) return;
+            n.title = nTitle.value; n.content = nText.value;
             saveToCloud('notes', state.notes, 'notesStatus');
-
-            var activeItem = notesListEl.querySelector('.active .title-text');
-            if (activeItem) {
-                activeItem.textContent = note.title || 'Başlıksız Not';
-            }
+            var a = nList.querySelector('.active .title-text');
+            if (a) a.textContent = n.title || 'Başlıksız Not';
         }
-
         function deleteNote(id) {
             if (!confirm('Bu notu silmek istediğinize emin misiniz?')) return;
-            state.notes = state.notes.filter(function (n) { return n.id !== id; });
-            if (state.activeNoteId === id) {
-                state.activeNoteId = null;
-                notesEditor.style.display = 'none';
-            }
-            renderNotesList();
-            saveToCloud('notes', state.notes, 'notesStatus');
+            state.notes = state.notes.filter(function (x) { return x.id !== id; });
+            if (state.activeNoteId === id) { state.activeNoteId = null; nEditor.style.display = 'none'; }
+            renderNotesList(); saveToCloud('notes', state.notes, 'notesStatus');
         }
 
-        // ─────────────────────────────────────
-        // 9. TODO OPERATIONS
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           TODOS
+           ══════════════════════════════════════ */
         var todoInput  = document.getElementById('todoInput');
         var todoListEl = document.getElementById('todoList');
         var addTodoBtn = document.getElementById('addTodoBtn');
 
         function renderTodos() {
             todoListEl.innerHTML = '';
-
-            if (state.todos.length === 0) {
-                todoListEl.innerHTML =
-                    '<li class="empty-state"><span class="empty-state-icon">✅</span>Henüz görev yok.<br>Yukarıdan bir görev ekleyin.</li>';
+            if (!state.todos.length) {
+                todoListEl.innerHTML = '<li class="empty-state"><span class="empty-state-icon">✅</span>Henüz görev yok.</li>';
                 return;
             }
-
-            state.todos.forEach(function (todo, index) {
-                var li = document.createElement('li');
-                li.className = 'todo-item';
-
+            state.todos.forEach(function (t, i) {
+                var li = document.createElement('li'); li.className = 'todo-item';
                 var label = document.createElement('label');
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = todo.completed;
-                checkbox.addEventListener('change', function () {
-                    toggleTodo(index);
-                });
-
-                var span = document.createElement('span');
-                span.textContent = todo.text;
-
-                label.appendChild(checkbox);
-                label.appendChild(span);
-
-                var delBtn = document.createElement('button');
-                delBtn.className = 'delete-btn';
-                delBtn.textContent = '✕';
-                delBtn.setAttribute('aria-label', 'Delete task');
-                delBtn.addEventListener('click', function () {
-                    deleteTodo(index);
-                });
-
-                li.appendChild(label);
-                li.appendChild(delBtn);
+                var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = t.completed;
+                cb.addEventListener('change', function () { toggleTodo(i); });
+                var sp = document.createElement('span'); sp.textContent = t.text;
+                label.appendChild(cb); label.appendChild(sp);
+                var db = document.createElement('button'); db.className = 'delete-btn'; db.textContent = '✕';
+                db.setAttribute('aria-label', 'Sil');
+                db.addEventListener('click', function () { deleteTodo(i); });
+                li.appendChild(label); li.appendChild(db);
                 todoListEl.appendChild(li);
             });
         }
-
-        function saveTodos() {
-            saveToCloud('todos', state.todos, 'todoStatus');
-        }
-
+        function saveTodos() { saveToCloud('todos', state.todos, 'todoStatus'); }
         function addTodo() {
-            var text = todoInput.value.trim();
-            if (text === '') return;
-
-            state.todos.push({ text: text, completed: false });
-            todoInput.value = '';
-            renderTodos();
-            saveTodos();
-            todoInput.focus();
+            var txt = todoInput.value.trim();
+            if (!txt) return;
+            state.todos.push({ text: txt, completed: false });
+            todoInput.value = ''; renderTodos(); saveTodos(); todoInput.focus();
         }
+        function toggleTodo(i) { state.todos[i].completed = !state.todos[i].completed; saveTodos(); }
+        function deleteTodo(i) { state.todos.splice(i, 1); renderTodos(); saveTodos(); }
 
-        function toggleTodo(index) {
-            state.todos[index].completed = !state.todos[index].completed;
-            saveTodos();
-        }
-
-        function deleteTodo(index) {
-            state.todos.splice(index, 1);
-            renderTodos();
-            saveTodos();
-        }
-
-        // ─────────────────────────────────────
-        // 10. EVENT BINDINGS
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           BIND
+           ══════════════════════════════════════ */
         function bindEvents() {
-            // Launch button
             launchBtn.addEventListener('click', onLaunchClick);
-
-            // Todo input: Enter key
-            todoInput.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addTodo();
-                }
-            });
-
+            todoInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addTodo(); } });
             addTodoBtn.addEventListener('click', addTodo);
-
-            journalTitleInp.addEventListener('input', updateActiveJournal);
-            journalTextInp.addEventListener('input', updateActiveJournal);
-
-            notesTitleInp.addEventListener('input', updateActiveNote);
-            notesTextInp.addEventListener('input', updateActiveNote);
-
+            jTitle.addEventListener('input', updateActiveJournal);
+            jText.addEventListener('input', updateActiveJournal);
+            nTitle.addEventListener('input', updateActiveNote);
+            nText.addEventListener('input', updateActiveNote);
             document.getElementById('newJournalBtn').addEventListener('click', createNewJournal);
             document.getElementById('newNoteBtn').addEventListener('click', createNewNote);
         }
 
-        // ─────────────────────────────────────
-        // 11. INITIALIZATION
-        // ─────────────────────────────────────
+        /* ══════════════════════════════════════
+           INIT
+           ══════════════════════════════════════ */
         function init() {
-            // Başlangıçta gradient görünür, video gizli (opacity:0)
             gradientBg.classList.add('fade-in');
-
-            initTabs();
-            bindEvents();
-            loadFromCloud();
+            initTabs(); bindEvents(); loadFromCloud();
         }
-
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
+        } else { init(); }
 
     })();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a037f817197ae333',t:'MTc4MDA4MzYwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
