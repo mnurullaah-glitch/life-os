@@ -23,6 +23,7 @@
         .video-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             object-fit: cover; z-index: -2; filter: brightness(0.3) contrast(1.2);
+            pointer-events: none; /* Mobil uyum için dokunmayı engeller */
         }
 
         #intro-screen {
@@ -38,8 +39,7 @@
 
         nav {
             display: flex; gap: 15px; justify-content: center; margin-top: 40px;
-            animation: fadeIn 2s forwards 5s; opacity: 0; z-index: 10; position: relative;
-            padding: 0 20px;
+            animation: fadeIn 2s forwards 5s; opacity: 0; z-index: 10; position: relative; padding: 0 20px;
         }
         .tab-btn {
             background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--glass-border);
@@ -59,17 +59,33 @@
         }
         .panel-title { font-size: 1.2rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
 
+        /* ARŞİV SİSTEMİ İÇİN SAKLAMA DÜZENİ (SPLIT PANEL) */
+        .split-container { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        .sidebar-panel { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--glass-border); padding-right: 15px; max-height: 500px; overflow-y: auto; }
+        .editor-panel { display: flex; flex-direction: column; gap: 15px; }
+
+        .add-btn { background: rgba(255,255,255,0.1); color: white; border: 1px dashed var(--glass-border); padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; text-align: center; width: 100%; margin-bottom: 10px; }
+        .add-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .archive-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .archive-item { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); padding: 12px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .archive-item:hover, .archive-item.active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
+        .archive-item .title-text { font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 80%; }
+        .archive-item .item-delete { color: #ff4444; background: none; border: none; cursor: pointer; opacity: 0.4; transition: 0.2s; }
+        .archive-item:hover .item-delete { opacity: 1; }
+
         textarea, input[type="text"] {
             width: 100%; background: rgba(255, 255, 255, 0.02); color: white;
             border: 1px solid var(--glass-border); border-radius: 10px; padding: 15px;
             font-size: 1.1rem; outline: none; transition: 0.3s;
         }
-        textarea { height: 400px; resize: none; line-height: 1.6; }
+        .title-input { font-size: 1.4rem; font-weight: 600; letter-spacing: 0.5px; }
+        textarea { height: 380px; resize: none; line-height: 1.6; }
         textarea:focus, input[type="text"]:focus { border-color: rgba(255,255,255,0.3); }
         
         .status { font-size: 0.85rem; color: #00D15E; margin-top: 10px; text-align: right; }
 
-        /* TO-DO LIST STYLES */
+        /* TO-DO LIST */
         .todo-input-container { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn { background: white; color: black; border: none; padding: 0 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
         .btn:active { transform: scale(0.95); }
@@ -82,22 +98,18 @@
         .delete-btn { background: none; border: none; color: #ff4444; font-size: 1.2rem; cursor: pointer; opacity: 0.5; padding-left: 10px;}
         .todo-item:hover .delete-btn { opacity: 1; }
 
-        /* ========================================= */
-        /* MOBİL UYUM (RESPONSIVE) AYARLARI BURADA   */
-        /* ========================================= */
+        /* MOBİL UYUM (RESPONSIVE) */
         @media (max-width: 768px) {
             .intro-text { font-size: 2.2rem; letter-spacing: 2px; }
             .intro-sub { font-size: 1.4rem; }
-            
             nav { flex-wrap: wrap; gap: 10px; margin-top: 20px; }
             .tab-btn { flex: 1 1 calc(50% - 10px); padding: 10px; font-size: 0.9rem; text-align: center; }
-
             main { margin: 20px auto; padding: 0 15px; }
             .glass-panel { padding: 20px; margin-bottom: 20px; }
-            
+            .split-container { grid-template-columns: 1fr; }
+            .sidebar-panel { border-right: none; border-bottom: 1px solid var(--glass-border); padding-right: 0; padding-bottom: 15px; max-height: 200px; }
             .todo-input-container { flex-direction: column; }
             .btn { padding: 15px; width: 100%; }
-            
             #media .glass-panel { grid-template-columns: 1fr !important; }
             iframe { height: 220px; }
             textarea { height: 300px; font-size: 1rem; }
@@ -106,8 +118,8 @@
 </head>
 <body>
 
-    <video class="video-bg" autoplay loop muted playsinline>
-        <source src="https://cdn.pixabay.com/video/2021/08/04/83864-584705391_large.mp4" type="video/mp4">
+    <video class="video-bg" autoplay loop muted playsinline webkit-playsinline>
+        <source src="arkaplan.mp4" type="video/mp4">
     </video>
 
     <div id="intro-screen">
@@ -138,17 +150,35 @@
 
         <section id="journal" class="tab-content">
             <div class="glass-panel">
-                <div class="panel-title">Kişisel Günlük</div>
-                <textarea id="journalText" placeholder="Bugün neler yaşandı?"></textarea>
-                <div class="status" id="journalStatus">Sistem Bekleniyor...</div>
+                <div class="panel-title">Kişisel Günlük Arşivi</div>
+                <div class="split-container">
+                    <div class="sidebar-panel">
+                        <button class="add-btn" onclick="createNewJournal()">+ Yeni Günlük Sayfası</button>
+                        <ul id="journalList" class="archive-list"></ul>
+                    </div>
+                    <div class="editor-panel" id="journalEditor" style="display:none;">
+                        <input type="text" id="journalTitle" class="title-input" placeholder="Tarih / Başlık Yaz..." oninput="updateActiveJournal()">
+                        <textarea id="journalText" placeholder="Bugün neler yaşandı?..." oninput="updateActiveJournal()"></textarea>
+                        <div class="status" id="journalStatus">Bulut Senkronizasyonu Aktif ☁️</div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section id="notes" class="tab-content">
             <div class="glass-panel">
-                <div class="panel-title">Hızlı Fikirler & Gözlemler</div>
-                <textarea id="notesText" placeholder="Piyasa analizleri veya yeni projeler..."></textarea>
-                <div class="status" id="notesStatus">Sistem Bekleniyor...</div>
+                <div class="panel-title">Fikirler & Gözlemler Deposu</div>
+                <div class="split-container">
+                    <div class="sidebar-panel">
+                        <button class="add-btn" onclick="createNewNote()">+ Yeni Not Oluştur</button>
+                        <ul id="notesList" class="archive-list"></ul>
+                    </div>
+                    <div class="editor-panel" id="notesEditor" style="display:none;">
+                        <input type="text" id="notesTitle" class="title-input" placeholder="Not Başlığı Gir..." oninput="updateActiveNote()">
+                        <textarea id="notesText" placeholder="Piyasa analizleri, yeni stratejiler veya fikirler..." oninput="updateActiveNote()"></textarea>
+                        <div class="status" id="notesStatus">Bulut Senkronizasyonu Aktif ☁️</div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -161,7 +191,7 @@
     </main>
 
     <script>
-        // --- 1. INTRO VE SAAT ---
+        // --- 1. SAAT VE AÇILIŞ EKRANI ---
         window.onload = () => {
             const now = new Date();
             const hour = now.getHours();
@@ -202,64 +232,176 @@
         const db = firebase.firestore();
         const userDocRef = db.collection('users').doc('nurullah');
 
-        // --- 3. BULUTTAN VERİLERİ ÇEKME ---
+        // --- DATA DEPOLARI ---
         let todos = [];
+        let journals = [];
+        let notes = [];
+        let activeJournalId = null;
+        let activeNoteId = null;
+
+        // --- 3. BULUTTAN TÜM VERİLERİ ÇEKME ---
         userDocRef.get().then((doc) => {
             if (doc.exists) {
                 const data = doc.data();
-                if(data.journal) document.getElementById('journalText').value = data.journal;
-                if(data.notes) document.getElementById('notesText').value = data.notes;
-                if(data.todos) {
-                    todos = data.todos;
-                    renderTodos();
-                }
-            } else {
-                renderTodos();
+                if(data.todos) { todos = data.todos; renderTodos(); }
+                if(data.journals) { journals = data.journals; renderJournalList(); }
+                if(data.notes) { notes = data.notes; renderNotesList(); }
             }
-            
             document.getElementById('todoStatus').textContent = "Buluta Bağlı ☁️";
-            document.getElementById('journalStatus').textContent = "Buluta Bağlı ☁️";
-            document.getElementById('notesStatus').textContent = "Buluta Bağlı ☁️";
-            
         }).catch(error => {
-            console.log("Veri çekme hatası:", error);
-            document.getElementById('journalStatus').textContent = "Bağlantı Hatası!";
+            console.log("Hata:", error);
         });
 
-        // --- 4. BULUTA VERİ KAYDETME ---
-        let timeout;
-        function updateCloudData(field, value, statusElementId) {
-            const statusEl = document.getElementById(statusElementId);
+        // --- BULUTA KAYDETME FONKSİYONU (OTOMATİK DEBOUNCE) ---
+        let saveTimeout;
+        function saveToCloud(field, value, statusId) {
+            const statusEl = document.getElementById(statusId);
             statusEl.textContent = 'Kaydediliyor...';
             statusEl.style.color = 'white';
 
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
                 userDocRef.set({ [field]: value }, { merge: true })
                 .then(() => {
                     statusEl.textContent = 'Senkronize Edildi ✓';
                     statusEl.style.color = '#00D15E';
-                }).catch(error => {
-                    statusEl.textContent = 'Hata: Veritabanı izni yok!';
+                }).catch(() => {
+                    statusEl.textContent = 'Hata: Kaydedilemedi!';
                     statusEl.style.color = '#ff4444';
                 });
-            }, 1000);
+            }, 8000); // 800ms bekleyip kaydeder
         }
 
-        document.getElementById('journalText').addEventListener('input', (e) => {
-            updateCloudData('journal', e.target.value, 'journalStatus');
-        });
+        // --- 4. GÜNLÜK ARŞİV YÖNETİMİ ---
+        function renderJournalList() {
+            const listEl = document.getElementById('journalList');
+            listEl.innerHTML = '';
+            journals.forEach(j => {
+                const li = document.createElement('li');
+                li.className = `archive-item ${j.id === activeJournalId ? 'active' : ''}`;
+                li.onclick = (e) => { if(e.target.tagName !== 'BUTTON') selectJournal(j.id); };
+                li.innerHTML = `
+                    <span class="title-text">${j.title || 'Başlıksız Günlük'}</span>
+                    <button class="item-delete" onclick="deleteJournal('${j.id}')">✕</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
 
-        document.getElementById('notesText').addEventListener('input', (e) => {
-            updateCloudData('notes', e.target.value, 'notesStatus');
-        });
+        function createNewJournal() {
+            const today = new Date().toLocaleDateString('tr-TR');
+            const newJournal = {
+                id: Date.now().toString(),
+                title: today + " - Günlük",
+                content: ""
+            };
+            journals.unshift(newJournal);
+            activeJournalId = newJournal.id;
+            renderJournalList();
+            selectJournal(newJournal.id);
+            saveToCloud('journals', journals, 'journalStatus');
+        }
 
-        // --- 5. TO-DO LİSTESİ YÖNETİMİ ---
+        function selectJournal(id) {
+            activeJournalId = id;
+            const journal = journals.find(j => j.id === id);
+            if(journal) {
+                document.getElementById('journalEditor').style.display = 'flex';
+                document.getElementById('journalTitle').value = journal.title;
+                document.getElementById('journalText').value = journal.content;
+                renderJournalList();
+            }
+        }
+
+        function updateActiveJournal() {
+            const journal = journals.find(j => j.id === activeJournalId);
+            if(journal) {
+                journal.title = document.getElementById('journalTitle').value;
+                journal.content = document.getElementById('journalText').value;
+                saveToCloud('journals', journals, 'journalStatus');
+                // Sol taraftaki başlığı anlık güncellemek için de-bounce olmadan sadece metni değiştiriyoruz
+                const activeItem = document.querySelector('#journalList .active .title-text');
+                if(activeItem) activeItem.textContent = journal.title || 'Başlıksız Günlük';
+            }
+        }
+
+        function deleteJournal(id) {
+            journals = journals.filter(j => j.id !== id);
+            if(activeJournalId === id) {
+                document.getElementById('journalEditor').style.display = 'none';
+                activeJournalId = null;
+            }
+            renderJournalList();
+            saveToCloud('journals', journals, 'journalStatus');
+        }
+
+        // --- 5. NOTLAR ARŞİV YÖNETİMİ ---
+        function renderNotesList() {
+            const listEl = document.getElementById('notesList');
+            listEl.innerHTML = '';
+            notes.forEach(n => {
+                const li = document.createElement('li');
+                li.className = `archive-item ${n.id === activeNoteId ? 'active' : ''}`;
+                li.onclick = (e) => { if(e.target.tagName !== 'BUTTON') selectNote(n.id); };
+                li.innerHTML = `
+                    <span class="title-text">${n.title || 'Başlıksız Not'}</span>
+                    <button class="item-delete" onclick="deleteNote('${n.id}')">✕</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function createNewNote() {
+            const newNote = {
+                id: Date.now().toString(),
+                title: "Yeni Strateji / Fikir",
+                content: ""
+            };
+            notes.unshift(newNote);
+            activeNoteId = newNote.id;
+            renderNotesList();
+            selectNote(newNote.id);
+            saveToCloud('notes', notes, 'notesStatus');
+        }
+
+        function selectNote(id) {
+            activeNoteId = id;
+            const note = notes.find(n => n.id === id);
+            if(note) {
+                document.getElementById('notesEditor').style.display = 'flex';
+                document.getElementById('notesTitle').value = note.title;
+                document.getElementById('notesText').value = note.content;
+                renderNotesList();
+            }
+        }
+
+        function updateActiveNote() {
+            const note = notes.find(n => n.id === activeNoteId);
+            if(note) {
+                note.title = document.getElementById('notesTitle').value;
+                note.content = document.getElementById('notesText').value;
+                saveToCloud('notes', notes, 'notesStatus');
+                const activeItem = document.querySelector('#notesList .active .title-text');
+                if(activeItem) activeItem.textContent = note.title || 'Başlıksız Not';
+            }
+        }
+
+        function deleteNote(id) {
+            notes = notes.filter(n => n.id !== id);
+            if(activeNoteId === id) {
+                document.getElementById('notesEditor').style.display = 'none';
+                activeNoteId = null;
+            }
+            renderNotesList();
+            saveToCloud('notes', notes, 'notesStatus');
+        }
+
+        // --- 6. TO-DO LİSTESİ YÖNETİMİ ---
         const todoInput = document.getElementById('todoInput');
         const todoList = document.getElementById('todoList');
 
         function saveTodosToCloud() {
-            updateCloudData('todos', todos, 'todoStatus');
+            saveToCloud('todos', todos, 'todoStatus');
             renderTodos();
         }
 
@@ -291,7 +433,6 @@
         function handleEnter(e) { if (e.key === 'Enter') addTodo(); }
         function toggleTodo(index) { todos[index].completed = !todos[index].completed; saveTodosToCloud(); }
         function deleteTodo(index) { todos.splice(index, 1); saveTodosToCloud(); }
-
     </script>
 </body>
 </html>
