@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NURULLAH // CLOUD OS</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --accent: #ffffff;
+            --glass-bg: rgba(10, 10, 10, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: #000; color: var(--text-main); overflow-x: hidden; }
+
+        .video-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: -2; filter: brightness(0.3) contrast(1.2);
+        }
+
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 1.5s; padding: 20px; text-align: center;
+        }
+        .intro-text { font-size: 3.5rem; font-weight: 200; letter-spacing: 4px; animation: fadeIn 2s forwards 0.5s; opacity: 0; }
+        .intro-sub { font-size: 2rem; color: var(--text-muted); margin-top: 15px; animation: fadeIn 2s forwards 2s; opacity: 0; }
+        .intro-time { margin-top: 25px; color: #777; animation: fadeIn 2s forwards 3.5s; opacity: 0; font-size: 1.2rem;}
+        
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        nav {
+            display: flex; gap: 15px; justify-content: center; margin-top: 40px;
+            animation: fadeIn 2s forwards 5s; opacity: 0; z-index: 10; position: relative;
+            padding: 0 20px;
+        }
+        .tab-btn {
+            background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--glass-border);
+            padding: 12px 25px; border-radius: 30px; font-size: 1rem; cursor: pointer; transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .tab-btn.active, .tab-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+
+        main { max-width: 1200px; margin: 40px auto; padding: 0 20px; animation: fadeIn 2s forwards 5.5s; opacity: 0; }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 30px;
+            margin-bottom: 30px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .panel-title { font-size: 1.2rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+
+        textarea, input[type="text"] {
+            width: 100%; background: rgba(255, 255, 255, 0.02); color: white;
+            border: 1px solid var(--glass-border); border-radius: 10px; padding: 15px;
+            font-size: 1.1rem; outline: none; transition: 0.3s;
+        }
+        textarea { height: 400px; resize: none; line-height: 1.6; }
+        textarea:focus, input[type="text"]:focus { border-color: rgba(255,255,255,0.3); }
+        
+        .status { font-size: 0.85rem; color: #00D15E; margin-top: 10px; text-align: right; }
+
+        /* TO-DO LIST STYLES */
+        .todo-input-container { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn { background: white; color: black; border: none; padding: 0 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
+        .btn:active { transform: scale(0.95); }
+        .todo-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .todo-item label { display: flex; align-items: center; cursor: pointer; width: 100%; }
+        .todo-item input[type="checkbox"] { appearance: none; width: 20px; height: 20px; border: 2px solid var(--text-muted); border-radius: 4px; margin-right: 15px; cursor: pointer; position: relative; flex-shrink: 0; }
+        .todo-item input[type="checkbox"]:checked { background-color: var(--accent); border-color: var(--accent); }
+        .todo-item input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: black; font-size: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; }
+        .todo-item input[type="checkbox"]:checked + span { color: var(--text-muted); text-decoration: line-through; }
+        .delete-btn { background: none; border: none; color: #ff4444; font-size: 1.2rem; cursor: pointer; opacity: 0.5; padding-left: 10px;}
+        .todo-item:hover .delete-btn { opacity: 1; }
+
+        /* ========================================= */
+        /* MOBİL UYUM (RESPONSIVE) AYARLARI BURADA   */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            .intro-text { font-size: 2.2rem; letter-spacing: 2px; }
+            .intro-sub { font-size: 1.4rem; }
+            
+            nav { flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+            .tab-btn { flex: 1 1 calc(50% - 10px); padding: 10px; font-size: 0.9rem; text-align: center; }
+
+            main { margin: 20px auto; padding: 0 15px; }
+            .glass-panel { padding: 20px; margin-bottom: 20px; }
+            
+            .todo-input-container { flex-direction: column; }
+            .btn { padding: 15px; width: 100%; }
+            
+            #media .glass-panel { grid-template-columns: 1fr !important; }
+            iframe { height: 220px; }
+            textarea { height: 300px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <video class="video-bg" autoplay loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2021/08/04/83864-584705391_large.mp4" type="video/mp4">
+    </video>
+
+    <div id="intro-screen">
+        <div class="intro-text">MERHABA, NURULLAH.</div>
+        <div class="intro-sub" id="dynamicGreeting">Sistem Başlatılıyor.</div>
+        <div class="intro-time" id="introTime">00:00</div>
+    </div>
+
+    <nav>
+        <button class="tab-btn active" onclick="openTab(event, 'dashboard')">Dashboard</button>
+        <button class="tab-btn" onclick="openTab(event, 'journal')">Günlük</button>
+        <button class="tab-btn" onclick="openTab(event, 'notes')">Notlar</button>
+        <button class="tab-btn" onclick="openTab(event, 'media')">Medya</button>
+    </nav>
+
+    <main>
+        <section id="dashboard" class="tab-content active">
+            <div class="glass-panel">
+                <div class="panel-title">Aksiyon Planı & To-Do</div>
+                <div class="todo-input-container">
+                    <input type="text" id="todoInput" placeholder="Görev ekle ve Enter'a bas..." onkeypress="handleEnter(event)">
+                    <button class="btn" onclick="addTodo()">Ekle</button>
+                </div>
+                <ul id="todoList" style="list-style: none;"></ul>
+                <div class="status" id="todoStatus">Sistem Bekleniyor...</div>
+            </div>
+        </section>
+
+        <section id="journal" class="tab-content">
+            <div class="glass-panel">
+                <div class="panel-title">Kişisel Günlük</div>
+                <textarea id="journalText" placeholder="Bugün neler yaşandı?"></textarea>
+                <div class="status" id="journalStatus">Sistem Bekleniyor...</div>
+            </div>
+        </section>
+
+        <section id="notes" class="tab-content">
+            <div class="glass-panel">
+                <div class="panel-title">Hızlı Fikirler & Gözlemler</div>
+                <textarea id="notesText" placeholder="Piyasa analizleri veya yeni projeler..."></textarea>
+                <div class="status" id="notesStatus">Sistem Bekleniyor...</div>
+            </div>
+        </section>
+
+        <section id="media" class="tab-content">
+            <div class="glass-panel" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <iframe height="300" src="https://www.youtube.com/embed/f3A81s8wKpw" style="border:none; width:100%; border-radius: 10px;"></iframe>
+                <iframe height="300" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0" style="border:none; width:100%; border-radius: 10px;"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. INTRO VE SAAT ---
+        window.onload = () => {
+            const now = new Date();
+            const hour = now.getHours();
+            let greetingMsg = "İyi geceler.";
+            if (hour >= 5 && hour < 12) greetingMsg = "Günaydın.";
+            else if (hour >= 12 && hour < 18) greetingMsg = "İyi günler.";
+            else if (hour >= 18 && hour < 22) greetingMsg = "İyi akşamlar.";
+
+            document.getElementById('dynamicGreeting').textContent = greetingMsg;
+            document.getElementById('introTime').textContent = `${String(hour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            setTimeout(() => {
+                const intro = document.getElementById('intro-screen');
+                intro.style.opacity = '0';
+                setTimeout(() => intro.style.display = 'none', 1500);
+            }, 4500);
+        };
+
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // --- 2. FIREBASE BAĞLANTISI ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
+            authDomain: "dashboard-ab880.firebaseapp.com",
+            projectId: "dashboard-ab880",
+            storageBucket: "dashboard-ab880.firebasestorage.app",
+            messagingSenderId: "1014186585487",
+            appId: "1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa",
+            measurementId: "G-8NSGQBPVBF"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const userDocRef = db.collection('users').doc('nurullah');
+
+        // --- 3. BULUTTAN VERİLERİ ÇEKME ---
+        let todos = [];
+        userDocRef.get().then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                if(data.journal) document.getElementById('journalText').value = data.journal;
+                if(data.notes) document.getElementById('notesText').value = data.notes;
+                if(data.todos) {
+                    todos = data.todos;
+                    renderTodos();
+                }
+            } else {
+                renderTodos();
+            }
+            
+            document.getElementById('todoStatus').textContent = "Buluta Bağlı ☁️";
+            document.getElementById('journalStatus').textContent = "Buluta Bağlı ☁️";
+            document.getElementById('notesStatus').textContent = "Buluta Bağlı ☁️";
+            
+        }).catch(error => {
+            console.log("Veri çekme hatası:", error);
+            document.getElementById('journalStatus').textContent = "Bağlantı Hatası!";
+        });
+
+        // --- 4. BULUTA VERİ KAYDETME ---
+        let timeout;
+        function updateCloudData(field, value, statusElementId) {
+            const statusEl = document.getElementById(statusElementId);
+            statusEl.textContent = 'Kaydediliyor...';
+            statusEl.style.color = 'white';
+
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                userDocRef.set({ [field]: value }, { merge: true })
+                .then(() => {
+                    statusEl.textContent = 'Senkronize Edildi ✓';
+                    statusEl.style.color = '#00D15E';
+                }).catch(error => {
+                    statusEl.textContent = 'Hata: Veritabanı izni yok!';
+                    statusEl.style.color = '#ff4444';
+                });
+            }, 1000);
+        }
+
+        document.getElementById('journalText').addEventListener('input', (e) => {
+            updateCloudData('journal', e.target.value, 'journalStatus');
+        });
+
+        document.getElementById('notesText').addEventListener('input', (e) => {
+            updateCloudData('notes', e.target.value, 'notesStatus');
+        });
+
+        // --- 5. TO-DO LİSTESİ YÖNETİMİ ---
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+
+        function saveTodosToCloud() {
+            updateCloudData('todos', todos, 'todoStatus');
+            renderTodos();
+        }
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+            todos.forEach((todo, index) => {
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                li.innerHTML = `
+                    <label>
+                        <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${index})">
+                        <span>${todo.text}</span>
+                    </label>
+                    <button class="delete-btn" onclick="deleteTodo(${index})">✕</button>
+                `;
+                todoList.appendChild(li);
+            });
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text !== '') {
+                todos.push({ text: text, completed: false });
+                todoInput.value = '';
+                saveTodosToCloud();
+            }
+        }
+
+        function handleEnter(e) { if (e.key === 'Enter') addTodo(); }
+        function toggleTodo(index) { todos[index].completed = !todos[index].completed; saveTodosToCloud(); }
+        function deleteTodo(index) { todos.splice(index, 1); saveTodosToCloud(); }
+
+    </script>
+</body>
+</html>
