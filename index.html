@@ -35,11 +35,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 #intro-screen.phase-greeting{background:transparent;cursor:pointer;}
 #intro-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
 #greetingPhase{position:absolute;inset:0;}
-.waveform-logo{display:flex;align-items:center;justify-content:center;gap:5px;height:80px;margin-bottom:32px;animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .2s;opacity:0;transform:translateY(40px);transition:opacity 0.5s ease;}
+.waveform-logo{display:flex;align-items:center;justify-content:center;gap:5px;height:80px;margin-bottom:32px;animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .2s;opacity:0;transform:translateY(40px);}
 .waveform-logo .bar{width:4px;border-radius:4px;background:linear-gradient(180deg,#c46dff 0%,#7c6aff 50%,#4fd1ff 100%);box-shadow:0 0 16px rgba(124,106,255,.6);animation:waveBounce 1.4s ease-in-out infinite;}
 .bar:nth-child(1){height:14px;animation-delay:0s}.bar:nth-child(2){height:26px;animation-delay:.08s}.bar:nth-child(3){height:42px;animation-delay:.16s}.bar:nth-child(4){height:56px;animation-delay:.24s}.bar:nth-child(5){height:68px;animation-delay:.32s}.bar:nth-child(6){height:56px;animation-delay:.40s}.bar:nth-child(7){height:42px;animation-delay:.48s}.bar:nth-child(8){height:26px;animation-delay:.56s}.bar:nth-child(9){height:14px;animation-delay:.64s}
 @keyframes waveBounce{0%,100%{transform:scaleY(1)}25%{transform:scaleY(.35)}50%{transform:scaleY(1.4)}75%{transform:scaleY(.55)}}
-.glow-ring{position:absolute;width:180px;height:180px;border-radius:50%;border:1px solid rgba(124,106,255,.3);box-shadow:0 0 40px rgba(124,106,255,.15),inset 0 0 40px rgba(124,106,255,.05);animation:ringPulse 3s ease-in-out infinite,riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .1s;opacity:0;transform:translateY(40px);pointer-events:none;transition:opacity 0.5s ease;}
+.glow-ring{position:absolute;width:180px;height:180px;border-radius:50%;border:1px solid rgba(124,106,255,.3);box-shadow:0 0 40px rgba(124,106,255,.15),inset 0 0 40px rgba(124,106,255,.05);animation:ringPulse 3s ease-in-out infinite,riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .1s;opacity:0;transform:translateY(40px);pointer-events:none;}
 .glow-ring::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(196,109,255,.12);animation:ringPulse 3s ease-in-out .8s infinite;}
 @keyframes ringPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.12);opacity:.2}}
 .launch-btn-wrap{animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .4s;opacity:0;transform:translateY(40px);}
@@ -518,27 +518,7 @@ textarea::placeholder{color:var(--muted);}
 .b-ant{animation:bAnt 1.5s ease-in-out infinite alternate;}
 @keyframes bAnt{from{opacity:.35}to{opacity:1}}
 
-/* SAYAÇ SİSTEMİ */
-#countdownDisplay {
-  display: none;
-  font-size: 6rem;
-  font-weight: 700;
-  color: #fff;
-  position: absolute;
-  z-index: 10000;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-shadow: 0 0 30px var(--a1), 0 0 60px var(--a2);
-  letter-spacing: 4px;
-  animation: pulseCount 2s infinite;
-}
-@keyframes pulseCount {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
-}
-
-/* RESPONSIVE MOBİL */
+/* RESPONSIVE */
 @media(max-width:1100px){
   .dashboard-grid{grid-template-columns:1fr 300px;}
   .showcase-col{display:none;}
@@ -551,19 +531,13 @@ textarea::placeholder{color:var(--muted);}
   .showcase-card{height:350px;}
 }
 @media(max-width:768px){
-  /* TOP BAR — sekmelerin rahatça görünebilmesi için düzenlendi */
-  .top-bar{flex-direction:row;flex-wrap:nowrap;height:auto;min-height:56px;padding:5px 8px;gap:8px;overflow:visible;justify-content:center;}
-  .top-logo{display:none;} /* Tablara daha çok yer bırakmak için logoyu mobilde gizliyoruz */
+  /* TOP BAR — single row with scrollable nav */
+  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:8px;overflow:hidden;}
+  .top-logo{font-size:.72rem;letter-spacing:1px;gap:6px;}
+  .top-logo span{display:none;}
   .top-right{display:none;}
-  nav{flex:1;margin:0;padding:6px;border-radius:12px;min-width:100%;justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .tab-btn{padding:8px 14px;font-size:.75rem;}
-
-  /* İntro ekranı mobil ortalama */
-  .intro-text{font-size:2.2rem;letter-spacing:3px;}
-  .intro-sub{font-size:1.1rem;}
-  #intro-screen{padding:15px;justify-content:center;align-items:center;}
-  .cinematic-text{width:100%;left:50%;transform:translate(-50%,-50%);padding:0 10px;}
-
+  nav{flex:1;margin:0;padding:4px;border-radius:28px;min-width:0;}
+  .tab-btn{padding:6px 11px;font-size:.7rem;}
   main{margin:12px auto 60px;padding:0 10px;}
   .glass-panel{padding:16px 14px;}
   .todo-layout{grid-template-columns:1fr;}
@@ -582,8 +556,6 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
-<audio id="alarmAudio" src="ses.mp3"></audio>
-
 <div id="login-screen">
   <div class="glass-panel login-panel">
     <div class="panel-icon" style="margin:0 auto;width:48px;height:48px;font-size:1.5rem;">🔒</div>
@@ -599,6 +571,7 @@ textarea::placeholder{color:var(--muted);}
 <div class="grid-lines"></div>
 <video class="video-bg" id="bgVideo" playsinline webkit-playsinline></video>
 
+<!-- BOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -623,6 +596,7 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
+<!-- INTRO -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -634,7 +608,6 @@ textarea::placeholder{color:var(--muted);}
     <div class="launch-btn-wrap">
       <button class="launch-btn" id="launchBtn">Sistemi Başlat</button>
     </div>
-    <div id="countdownDisplay"></div>
   </div>
   <div id="greetingPhase" style="display:none;">
     <div class="intro-text cinematic-text cine-1">MERHABA, NURULLAH.</div>
@@ -663,9 +636,11 @@ textarea::placeholder{color:var(--muted);}
 
 <main id="mainContent">
 
+<!-- ══════════════ DASHBOARD ══════════════ -->
 <section id="dashboard" class="tab-content active">
   <div class="dashboard-grid">
     <div>
+      <!-- QUICK TODOS -->
       <div class="glass-panel">
         <div class="panel-header">
           <div class="panel-icon">✦</div>
@@ -686,6 +661,7 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
+      <!-- DASHBOARD MINI CALENDAR WIDGET -->
       <div class="dash-cal-widget">
         <div class="dash-cal-header">
           <div class="dash-cal-icon">📅</div>
@@ -769,6 +745,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<!-- ══════════════ GÖREVLER ══════════════ -->
 <section id="todos" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header">
@@ -895,6 +872,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<!-- ══════════════ TAKVİM ══════════════ -->
 <section id="calendar" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header">
@@ -936,6 +914,7 @@ textarea::placeholder{color:var(--muted);}
         <div class="cal-selected-day">
           <div class="cal-selected-title">Seçili Gün</div>
           <div class="cal-selected-date" id="calSelectedDate">Bir gün seç</div>
+          <!-- Takvim Olayları (Todo'dan bağımsız) -->
           <div class="cal-section-label">📅 Etkinlikler</div>
           <div class="cal-own-event-row">
             <input type="text" class="cal-own-event-input" id="calOwnEventInput" placeholder="Etkinlik ekle...">
@@ -943,6 +922,7 @@ textarea::placeholder{color:var(--muted);}
             <button class="cal-own-add-btn" id="calOwnAddBtn">+ Ekle</button>
           </div>
           <div id="calOwnEventsList" style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;max-height:140px;overflow-y:auto;"></div>
+          <!-- Todo görevleri -->
           <div class="cal-section-label">✦ Görevler</div>
           <div class="cal-add-task-row">
             <input type="text" class="cal-add-input" id="calAddInput" placeholder="Bu güne görev ekle...">
@@ -961,6 +941,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<!-- ══════════════ GÜNLÜK ══════════════ -->
 <section id="journal" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -978,6 +959,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<!-- ══════════════ NOTLAR ══════════════ -->
 <section id="notes" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -995,6 +977,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<!-- ══════════════ VİBE ══════════════ -->
 <section id="vibe" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -1044,6 +1027,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<!-- ══════════════ OYUN ══════════════ -->
 <section id="game" class="tab-content">
   <div class="glass-panel" style="text-align:center;max-width:600px;margin:0 auto;">
     <div class="panel-header" style="justify-content:center;border-bottom:none;margin-bottom:5px;">
@@ -1146,53 +1130,16 @@ loginBtn.addEventListener('click',function(){
 });
 document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')loginBtn.click();});
 
-/* ══ INTRO / LAUNCH ══ */
+/* ══ INTRO ══ */
 var launchPhase=document.getElementById('launchPhase'),greetingPhase=document.getElementById('greetingPhase'),launchBtn=document.getElementById('launchBtn'),bgVideo=document.getElementById('bgVideo');
 var introTimer=null,videoList=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4'];
-
 launchBtn.addEventListener('click',function(){
   launchBtn.classList.add('hide');
-  document.querySelector('.glow-ring').style.opacity = '0';
-  document.querySelector('.waveform-logo').style.opacity = '0';
-
-  var cDisplay = document.getElementById('countdownDisplay');
-  var alarm = document.getElementById('alarmAudio');
-  cDisplay.style.display = 'block';
-
-  // Sesi Başlat
-  alarm.currentTime = 0;
-  var playPromise = alarm.play();
-  if(playPromise !== undefined) {
-    playPromise.catch(function(e) { console.log("Otomatik ses engellendi:", e); });
-  }
-
-  var count = 5;
-  cDisplay.textContent = count;
-
-  // 10 Saniye Toplam Sürmesi İçin setInterval aralığı 2000ms yapıldı (5 adım * 2s = 10 saniye)
-  var cInt = setInterval(function(){
-    count--;
-    if(count > 0){
-      cDisplay.textContent = count;
-    } else if(count === 0){
-      cDisplay.textContent = "HADİ!";
-      // 1 olduktan sonraki adımda sesi durdur
-      alarm.pause();
-      alarm.currentTime = 0;
-    } else {
-      clearInterval(cInt);
-      cDisplay.style.display = 'none';
-      document.getElementById('launchPhase').style.display = 'none';
-
-      // Arkaplan videosu ve Hoşgeldin ekranı
-      var rv=videoList[Math.floor(Math.random()*videoList.length)];bgVideo.src=rv;bgVideo.muted=false;
-      var p=bgVideo.play();
-      if(p)p.then(function(){bgVideo.classList.add('visible');showGreeting(9600);}).catch(function(){showGreeting(9600);});
-      else showGreeting(9600);
-    }
-  }, 2000); 
+  var rv=videoList[Math.floor(Math.random()*videoList.length)];bgVideo.src=rv;bgVideo.muted=false;
+  var p=bgVideo.play();
+  if(p)p.then(function(){bgVideo.classList.add('visible');showGreeting(9600);}).catch(function(){showGreeting(9600);});
+  else showGreeting(9600);
 });
-
 function showGreeting(duration){
   var now=new Date();introScreen.classList.remove('phase-start');introScreen.classList.add('phase-greeting');
   launchPhase.style.display='none';greetingPhase.style.display='block';
