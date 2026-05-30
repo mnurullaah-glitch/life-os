@@ -6,6 +6,7 @@
 <title>NURULLAH // CLOUD OS</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap');
 :root{
@@ -316,6 +317,18 @@ textarea::placeholder{color:var(--muted);}
 .vibe-note-area:focus{border-color:rgba(124,106,255,.4);background:rgba(124,106,255,.03);}
 .vibe-note-area::placeholder{color:var(--muted);}
 
+/* LOGIN EKRANI CSS (Sadece buraya eklendi) */
+#login-screen {
+  position: fixed; inset: 0; z-index: 10000; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease;
+}
+.login-panel {
+  width: 320px; text-align: center; display: flex; flex-direction: column; gap: 16px; padding: 40px 30px;
+}
+.login-input {
+  width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; color: var(--text); outline: none; font-family: inherit; font-size: 0.85rem; transition: border-color 0.3s;
+}
+.login-input:focus { border-color: var(--a1); }
+
 /* ROBOT */
 #bot{
   position:fixed;z-index:9998;
@@ -377,6 +390,17 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
+<div id="login-screen">
+  <div class="glass-panel login-panel">
+    <div class="panel-icon" style="margin: 0 auto; width: 48px; height: 48px; font-size: 1.5rem;">🔒</div>
+    <h2 style="font-size: 0.9rem; color: var(--text); letter-spacing: 3px; font-weight: 600;">SİSTEME GİRİŞ</h2>
+    <input type="email" id="loginEmail" class="login-input" placeholder="E-posta adresi">
+    <input type="password" id="loginPass" class="login-input" placeholder="Şifre">
+    <button id="loginBtn" class="launch-btn" style="padding: 14px; width: 100%; margin-top: 10px; font-size: 0.85rem;">GİRİŞ YAP</button>
+    <div id="loginError" style="color: var(--err); font-size: 0.75rem; display: none;">Hatalı e-posta veya şifre.</div>
+  </div>
+</div>
+
 <div class="aurora">
   <div class="aurora-blob"></div><div class="aurora-blob"></div>
   <div class="aurora-blob"></div><div class="aurora-blob"></div>
@@ -386,7 +410,6 @@ textarea::placeholder{color:var(--muted);}
   <source src="arkaplan.mp4" type="video/mp4">
 </video>
 
-<!-- ROBOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -414,8 +437,7 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
-<!-- INTRO -->
-<div id="intro-screen" class="phase-start">
+<div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
     <div class="waveform-logo">
@@ -435,7 +457,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </div>
 
-<!-- TOP BAR -->
 <header class="top-bar" id="topBar">
   <div class="top-logo">
     <div class="top-logo-dot"></div>
@@ -451,18 +472,15 @@ textarea::placeholder{color:var(--muted);}
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
 
-<!-- MAIN -->
 <main id="mainContent">
 
-  <!-- DASHBOARD -->
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
-      <!-- TODO sol -->
       <div>
         <div class="glass-panel">
           <div class="panel-header">
             <div class="panel-icon">✦</div>
-            <span class="panel-title">Aksiyon Planı &amp; To-Do</span>
+            <span class="panel-title">Aksiyon Planı & To-Do</span>
             <span class="panel-badge" id="todoBadge">0 Görev</span>
           </div>
           <div class="todo-layout">
@@ -566,9 +584,7 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
-      <!-- Widgets sağ -->
       <div class="widgets-col">
-        <!-- Film -->
         <div class="widget-card">
           <div class="widget-header">
             <div class="widget-icon film">🎬</div>
@@ -585,7 +601,6 @@ textarea::placeholder{color:var(--muted);}
           <a href="https://letterboxd.com" target="_blank" class="film-link">🎞 Letterboxd'u Aç</a>
         </div>
 
-        <!-- Fitness -->
         <div class="fitness-grid">
           <div class="fitness-widget">
             <div class="fitness-widget-header"><span class="fitness-widget-icon">🏃</span><span class="fitness-widget-title">Koşu</span></div>
@@ -609,7 +624,6 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
-        <!-- Keyfini Getir -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
@@ -630,7 +644,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- JOURNAL -->
   <section id="journal" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -648,10 +661,9 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- NOTES -->
   <section id="notes" class="tab-content">
     <div class="glass-panel">
-      <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler &amp; Gözlemler Deposu</span></div>
+      <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
       <div class="split-container">
         <div class="sidebar-panel">
           <button class="add-btn" id="newNoteBtn">+ Yeni Not Oluştur</button>
@@ -666,7 +678,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- MEDIA -->
   <section id="media" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">🎵</div><span class="panel-title">Medya</span></div>
@@ -683,7 +694,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- VIBE -->
   <section id="vibe" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -859,8 +869,76 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
   });
 });
 
-/* INTRO */
-var introScreen=document.getElementById('intro-screen');
+/* FIREBASE */
+firebase.initializeApp({
+  apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
+  authDomain:"dashboard-ab880.firebaseapp.com",
+  projectId:"dashboard-ab880",
+  storageBucket:"dashboard-ab880.firebasestorage.app",
+  messagingSenderId:"1014186585487",
+  appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"
+});
+var db=firebase.firestore();
+var userDoc=db.collection('users').doc('nurullah');
+var state={todos:[],journals:[],notes:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
+var saveT=null;
+
+/* --- FIREBASE AUTH & GİRİŞ İŞLEMLERİ --- */
+var auth = firebase.auth();
+var loginScreen = document.getElementById('login-screen');
+var introScreen = document.getElementById('intro-screen');
+var loginBtn = document.getElementById('loginBtn');
+var loginError = document.getElementById('loginError');
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    // 1. Giriş başarılı, login ekranını gizle
+    loginScreen.style.opacity = '0';
+    setTimeout(function() { 
+      loginScreen.style.display = 'none'; 
+      // 2. Senin o harika Intro (Sistemi Başlat) ekranını göster
+      introScreen.style.display = 'flex';
+      introScreen.classList.remove('hidden');
+    }, 800);
+    
+    // 3. Buluttan verileri çekmeye başla
+    loadFromCloud();
+  } else {
+    // Çıkış yapılmışsa Intro'yu gizle, Login ekranını göster
+    introScreen.style.display = 'none';
+    loginScreen.style.display = 'flex';
+    loginScreen.style.opacity = '1';
+  }
+});
+
+// Giriş Butonuna Basıldığında
+loginBtn.addEventListener('click', function() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass = document.getElementById('loginPass').value.trim();
+  
+  if(!email || !pass) return;
+
+  loginBtn.textContent = 'BEKLEYİN...';
+  loginError.style.display = 'none';
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(function() {
+      loginBtn.textContent = 'GİRİŞ YAP';
+    })
+    .catch(function(error) {
+      loginError.style.display = 'block';
+      loginBtn.textContent = 'GİRİŞ YAP';
+      console.log(error);
+    });
+});
+
+// Enter'a basınca giriş yap
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if(e.key === 'Enter') loginBtn.click();
+});
+
+
+/* INTRO EKRANI MANTIĞI */
 var launchPhase=document.getElementById('launchPhase');
 var greetingPhase=document.getElementById('greetingPhase');
 var launchBtn=document.getElementById('launchBtn');
@@ -900,32 +978,6 @@ function dismissIntro(){
     startBot();
   },300);
 }
-setTimeout(function(){if(!botStarted)startBot();},2000);
-
-/* TABS */
-document.querySelectorAll('.tab-btn').forEach(function(b){
-  b.addEventListener('click',function(){
-    var name=this.getAttribute('data-tab');
-    document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('active');});
-    document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
-    this.classList.add('active');
-    var t=document.getElementById(name);if(t)t.classList.add('active');
-  });
-});
-
-/* FIREBASE */
-firebase.initializeApp({
-  apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",
-  authDomain:"dashboard-ab880.firebaseapp.com",
-  projectId:"dashboard-ab880",
-  storageBucket:"dashboard-ab880.firebasestorage.app",
-  messagingSenderId:"1014186585487",
-  appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"
-});
-var db=firebase.firestore();
-var userDoc=db.collection('users').doc('nurullah');
-var state={todos:[],journals:[],notes:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
-var saveT=null;
 
 function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
@@ -1002,6 +1054,17 @@ if(vibeSpBtn){
   });
 }
 if(vibeSpInput){vibeSpInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&vibeSpBtn)vibeSpBtn.click();});}
+
+/* TABS */
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var name=this.getAttribute('data-tab');
+    document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');
+    var t=document.getElementById(name);if(t)t.classList.add('active');
+  });
+});
 
 /* LOAD FROM CLOUD */
 function loadFromCloud(){
@@ -1205,9 +1268,7 @@ vibeNoteEl.addEventListener('input',function(){
   },900);
 });
 
-loadFromCloud();
-
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0389fee7bdbf2ed',t:'MTc4MDA5MDQ4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
