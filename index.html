@@ -1127,7 +1127,7 @@ document.getElementById('loginPass').addEventListener('keydown',function(e){if(e
 
 /* ══ INTRO ══ */
 var launchPhase=document.getElementById('launchPhase'),greetingPhase=document.getElementById('greetingPhase'),launchBtn=document.getElementById('launchBtn'),bgVideo=document.getElementById('bgVideo');
-var introTimer=null,videoList=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4'];
+var introTimer=null,videoList=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
 launchBtn.addEventListener('click',function(){
   launchBtn.classList.add('hide');
   var rv=videoList[Math.floor(Math.random()*videoList.length)];bgVideo.src=rv;bgVideo.muted=false;
