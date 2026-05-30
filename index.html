@@ -18,7 +18,7 @@
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(124,106,255,.3);border-radius:4px}
 
-/* AKAN GRADIENT ARKA PLAN (Ana ekran için) */
+/* AKAN GRADIENT ARKA PLAN */
 .aurora {
   position: fixed; inset: 0; z-index: -3; overflow: hidden;
   background: linear-gradient(135deg, #04040f 0%, #160b29 25%, #08081a 50%, #0a1128 75%, #04040f 100%);
@@ -60,7 +60,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
-/* SİNEMATİK METİN ANİMASYONLARI (Smooth) */
+/* SİNEMATİK METİN ANİMASYONLARI */
 .cinematic-text {
   position: absolute;
   top: 50%;
@@ -75,7 +75,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .intro-text { font-size: 3.8rem; font-weight: 200; letter-spacing: 8px; background: linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .intro-sub { font-size: 1.6rem; color: var(--muted); font-weight: 300; letter-spacing: 2px; }
 
-/* Yumuşatılmış Animasyonlar */
 @keyframes cineFade {
   0% { opacity: 0; filter: blur(15px); transform: translate(-50%, calc(-50% + 15px)) scale(0.95); }
   25% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%) scale(1); }
@@ -450,7 +449,6 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
-<!-- LOGIN EKRANI -->
 <div id="login-screen">
   <div class="glass-panel login-panel">
     <div class="panel-icon" style="margin: 0 auto; width: 48px; height: 48px; font-size: 1.5rem;">🔒</div>
@@ -465,10 +463,8 @@ textarea::placeholder{color:var(--muted);}
 <div class="aurora"></div>
 <div class="grid-lines"></div>
 
-<!-- INTRO VİDEOSU (Rastgele yüklenecek) -->
 <video class="video-bg" id="bgVideo" playsinline webkit-playsinline></video>
 
-<!-- ROBOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -496,7 +492,6 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
-<!-- INTRO SİNEMATİK EKRAN -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -517,7 +512,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </div>
 
-<!-- TOP BAR -->
 <header class="top-bar" id="topBar">
   <div class="top-logo">
     <div class="top-logo-dot"></div>
@@ -533,13 +527,10 @@ textarea::placeholder{color:var(--muted);}
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
 
-<!-- MAIN -->
 <main id="mainContent">
 
-  <!-- DASHBOARD -->
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
-      <!-- TODO sol -->
       <div>
         <div class="glass-panel">
           <div class="panel-header">
@@ -648,9 +639,7 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
-      <!-- Widgets sağ -->
       <div class="widgets-col">
-        <!-- Film -->
         <div class="widget-card">
           <div class="widget-header">
             <div class="widget-icon film">🎬</div>
@@ -667,7 +656,6 @@ textarea::placeholder{color:var(--muted);}
           <a href="https://letterboxd.com" target="_blank" class="film-link">🎞 Letterboxd'u Aç</a>
         </div>
 
-        <!-- Fitness -->
         <div class="fitness-grid">
           <div class="fitness-widget">
             <div class="fitness-widget-header"><span class="fitness-widget-icon">🏃</span><span class="fitness-widget-title">Koşu</span></div>
@@ -691,7 +679,6 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
-        <!-- Keyfini Getir -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
@@ -712,7 +699,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- JOURNAL -->
   <section id="journal" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -730,7 +716,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- NOTES -->
   <section id="notes" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -748,7 +733,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- VIBE -->
   <section id="vibe" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -795,7 +779,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- OYUN (KEEPIE-UPPIE) -->
   <section id="game" class="tab-content">
     <div class="glass-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
       <div class="panel-header" style="justify-content: center; border-bottom: none; margin-bottom: 5px;">
@@ -955,7 +938,25 @@ firebase.initializeApp({
 var db=firebase.firestore();
 var userDoc=db.collection('users').doc('nurullah');
 var state={todos:[],journals:[],notes:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
-var saveT=null;
+
+/* ÇOKLU ZAMANLAYICI (Veri Kayıplarını ve Çakışmaları Engeller) */
+var saveTimers = {};
+
+function saveToCloud(field, value, statusId){
+  var el = document.getElementById(statusId);
+  if(el){el.querySelector('span').textContent='Kaydediliyor...'; el.style.color='rgba(255,255,255,.5)';}
+  
+  // O alana ait eski kaydetme isteğini iptal et
+  if(saveTimers[field]) clearTimeout(saveTimers[field]);
+  
+  // 800ms bekleyip o alanı güvenle kaydet
+  saveTimers[field] = setTimeout(function(){
+    var p = {}; p[field] = value;
+    userDoc.set(p, {merge:true})
+      .then(function(){ if(el){el.querySelector('span').textContent='Senkronize ✓'; el.style.color='var(--ok)';} })
+      .catch(function(e){ console.error(e); if(el){el.querySelector('span').textContent='Hata!'; el.style.color='var(--err)';} });
+  }, 800);
+}
 
 /* --- FIREBASE AUTH & GİRİŞ İŞLEMLERİ --- */
 var auth = firebase.auth();
@@ -966,19 +967,14 @@ var loginError = document.getElementById('loginError');
 
 auth.onAuthStateChanged(function(user) {
   if (user) {
-    // 1. Giriş başarılı, login ekranını gizle
     loginScreen.style.opacity = '0';
     setTimeout(function() { 
       loginScreen.style.display = 'none'; 
-      // 2. Intro ekranını göster
       introScreen.style.display = 'flex';
       introScreen.classList.remove('hidden');
     }, 800);
-    
-    // 3. Buluttan verileri çekmeye başla
     loadFromCloud();
   } else {
-    // Çıkış yapılmışsa Intro'yu gizle, Login ekranını göster
     introScreen.style.display = 'none';
     loginScreen.style.display = 'flex';
     loginScreen.style.opacity = '1';
@@ -989,27 +985,19 @@ auth.onAuthStateChanged(function(user) {
 loginBtn.addEventListener('click', function() {
   var email = document.getElementById('loginEmail').value.trim();
   var pass = document.getElementById('loginPass').value.trim();
-  
   if(!email || !pass) return;
-
   loginBtn.textContent = 'BEKLEYİN...';
   loginError.style.display = 'none';
 
   auth.signInWithEmailAndPassword(email, pass)
-    .then(function() {
-      loginBtn.textContent = 'GİRİŞ YAP';
-    })
+    .then(function() { loginBtn.textContent = 'GİRİŞ YAP'; })
     .catch(function(error) {
       loginError.style.display = 'block';
       loginBtn.textContent = 'GİRİŞ YAP';
       console.log(error);
     });
 });
-
-// Enter'a basınca giriş yap
-document.getElementById('loginPass').addEventListener('keydown', function(e) {
-  if(e.key === 'Enter') loginBtn.click();
-});
+document.getElementById('loginPass').addEventListener('keydown', function(e) { if(e.key === 'Enter') loginBtn.click(); });
 
 
 /* INTRO EKRANI VE VİDEO MANTIĞI */
@@ -1036,7 +1024,6 @@ launchBtn.addEventListener('click', function() {
       // Video arkada oynarken sinematik sekans tetikleniyor. (Toplam sekans ~9.5sn)
       showGreeting(9600); 
     }).catch(function() {
-      // Hata olursa videosuz geç
       showGreeting(9600); 
     });
   } else {
@@ -1074,18 +1061,6 @@ function dismissIntro() {
     document.getElementById('mainContent').classList.add('visible');
     startBot();
   }, 300);
-}
-
-function saveToCloud(field,value,statusId){
-  var el=document.getElementById(statusId);
-  if(el){el.querySelector('span').textContent='Kaydediliyor...';el.style.color='rgba(255,255,255,.5)';}
-  clearTimeout(saveT);
-  saveT=setTimeout(function(){
-    var p={};p[field]=value;
-    userDoc.set(p,{merge:true})
-      .then(function(){if(el){el.querySelector('span').textContent='Senkronize ✓';el.style.color='var(--ok)';}})
-      .catch(function(e){console.error(e);if(el){el.querySelector('span').textContent='Hata!';el.style.color='var(--err)';}});
-  },800);
 }
 
 /* WIDGETS */
@@ -1163,11 +1138,19 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
   });
 });
 
-/* LOAD FROM CLOUD */
+/* YENİLENMİŞ LOAD FROM CLOUD (Hata Korumalı) */
 function loadFromCloud(){
   userDoc.get().then(function(doc){
-    if(!doc.exists) return;
+    // Eğer doküman henüz yoksa (yeni hesapsa) listeleri boş render et.
+    if(!doc.exists) {
+        renderTodos();
+        renderJournalList();
+        renderNotesList();
+        return;
+    }
+    
     var d=doc.data();
+    
     if(Array.isArray(d.todos)){
       state.todos=d.todos.map(function(t){
         if(!t.id)t.id=Date.now().toString()+Math.random().toString(36).slice(2);
@@ -1176,14 +1159,24 @@ function loadFromCloud(){
         t.starred=t.starred||false;t.createdAt=t.createdAt||Date.now();
         return t;
       });
-      renderTodos();
     }
-    if(Array.isArray(d.journals))state.journals=d.journals;
-    else if(d.journal&&d.journal.trim())state.journals=[{id:'legacy-j',title:'Aktarılan Günlük',content:d.journal}];
+    renderTodos();
+
+    // Veri yapısı bozuksa çökmeyi önleyen yeni katman
+    if(Array.isArray(d.journals)){
+        state.journals=d.journals;
+    } else if(d.journal && typeof d.journal === 'string' && d.journal.trim()){
+        state.journals=[{id:Date.now().toString(),title:'Aktarılan Günlük',content:d.journal}];
+    }
     renderJournalList();
-    if(Array.isArray(d.notes))state.notes=d.notes;
-    else if(d.notes&&typeof d.notes==='string'&&d.notes.trim())state.notes=[{id:'legacy-n',title:'Aktarılan Notlar',content:d.notes}];
+
+    if(Array.isArray(d.notes)){
+        state.notes=d.notes;
+    } else if(d.notes && typeof d.notes === 'string' && d.notes.trim()){
+        state.notes=[{id:Date.now().toString(),title:'Aktarılan Notlar',content:d.notes}];
+    }
     renderNotesList();
+
     if(d.widgets){
       var w=d.widgets;
       if(w.filmCount!==undefined){filmInput.value=w.filmCount;filmDisplay.textContent=w.filmCount;}
@@ -1204,7 +1197,12 @@ function loadFromCloud(){
       if(v.mood){var mb=document.querySelector('.mood-btn[data-mood="'+v.mood+'"]');if(mb){mb.classList.add('selected');var mm=document.getElementById('moodMessage');if(mm)mm.textContent=mb.dataset.msg;}}
       if(v.spotifyUrl){var em2=toEmbed(v.spotifyUrl);if(em2&&vibeSpEmbed)vibeSpEmbed.src=em2;if(vibeSpInput)vibeSpInput.value=v.spotifyUrl;}
     }
-  }).catch(function(){
+  }).catch(function(e){
+    console.error("Yükleme Hatası:", e);
+    // Hata olsa bile arayüzü çiz
+    renderTodos();
+    renderJournalList();
+    renderNotesList();
     var ts=document.getElementById('todoStatus');
     if(ts){ts.querySelector('span').textContent='Cevrimdisi';ts.style.color='#ffaa00';}
   });
@@ -1292,7 +1290,7 @@ document.getElementById('completedToggle').addEventListener('click',function(){c
 var jList=document.getElementById('journalList'),jEditor=document.getElementById('journalEditor'),jTitle=document.getElementById('journalTitle'),jText=document.getElementById('journalText');
 function renderJournalList(){
   jList.innerHTML='';
-  if(!state.journals.length){jList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henuz gunluk yok.</li>';return;}
+  if(!state.journals || !state.journals.length){jList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henuz gunluk yok.</li>';return;}
   state.journals.forEach(function(j){
     var li=document.createElement('li');li.className='archive-item'+(j.id===state.activeJournalId?' active':'');li.setAttribute('role','button');li.setAttribute('tabindex','0');
     var ic=document.createElement('div');ic.className='archive-item-icon';ic.textContent='📄';
@@ -1304,7 +1302,7 @@ function renderJournalList(){
     jList.appendChild(li);
   });
 }
-document.getElementById('newJournalBtn').addEventListener('click',function(){var nj={id:Date.now().toString(),title:new Date().toLocaleDateString('tr-TR')+' — Günlük',content:''};state.journals.unshift(nj);state.activeJournalId=nj.id;renderJournalList();jEditor.style.display='flex';jTitle.value=nj.title;jText.value='';saveToCloud('journals',state.journals,'journalStatus');});
+document.getElementById('newJournalBtn').addEventListener('click',function(){var nj={id:Date.now().toString() + Math.random().toString(36).slice(2),title:new Date().toLocaleDateString('tr-TR')+' — Günlük',content:''};state.journals.unshift(nj);state.activeJournalId=nj.id;renderJournalList();jEditor.style.display='flex';jTitle.value=nj.title;jText.value='';saveToCloud('journals',state.journals,'journalStatus');});
 jTitle.addEventListener('input',function(){var j=state.journals.find(function(x){return x.id===state.activeJournalId;});if(!j)return;j.title=this.value;j.content=jText.value;saveToCloud('journals',state.journals,'journalStatus');var a=jList.querySelector('.active .title-text');if(a)a.textContent=j.title||'Başlıksız';});
 jText.addEventListener('input',function(){var j=state.journals.find(function(x){return x.id===state.activeJournalId;});if(!j)return;j.content=this.value;saveToCloud('journals',state.journals,'journalStatus');});
 
@@ -1312,7 +1310,7 @@ jText.addEventListener('input',function(){var j=state.journals.find(function(x){
 var nList=document.getElementById('notesList'),nEditor=document.getElementById('notesEditor'),nTitle=document.getElementById('notesTitle'),nText=document.getElementById('notesText');
 function renderNotesList(){
   nList.innerHTML='';
-  if(!state.notes.length){nList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henuz not yok.</li>';return;}
+  if(!state.notes || !state.notes.length){nList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henuz not yok.</li>';return;}
   state.notes.forEach(function(n){
     var li=document.createElement('li');li.className='archive-item'+(n.id===state.activeNoteId?' active':'');li.setAttribute('role','button');li.setAttribute('tabindex','0');
     var ic=document.createElement('div');ic.className='archive-item-icon';ic.textContent='💡';
@@ -1324,7 +1322,7 @@ function renderNotesList(){
     nList.appendChild(li);
   });
 }
-document.getElementById('newNoteBtn').addEventListener('click',function(){var nn={id:Date.now().toString(),title:'Yeni Fikir',content:''};state.notes.unshift(nn);state.activeNoteId=nn.id;renderNotesList();nEditor.style.display='flex';nTitle.value=nn.title;nText.value='';saveToCloud('notes',state.notes,'notesStatus');});
+document.getElementById('newNoteBtn').addEventListener('click',function(){var nn={id:Date.now().toString() + Math.random().toString(36).slice(2),title:'Yeni Fikir',content:''};state.notes.unshift(nn);state.activeNoteId=nn.id;renderNotesList();nEditor.style.display='flex';nTitle.value=nn.title;nText.value='';saveToCloud('notes',state.notes,'notesStatus');});
 nTitle.addEventListener('input',function(){var n=state.notes.find(function(x){return x.id===state.activeNoteId;});if(!n)return;n.title=this.value;saveToCloud('notes',state.notes,'notesStatus');var a=nList.querySelector('.active .title-text');if(a)a.textContent=n.title||'Başlıksız';});
 nText.addEventListener('input',function(){var n=state.notes.find(function(x){return x.id===state.activeNoteId;});if(!n)return;n.content=this.value;saveToCloud('notes',state.notes,'notesStatus');});
 
