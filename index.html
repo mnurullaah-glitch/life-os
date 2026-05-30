@@ -18,7 +18,6 @@
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(124,106,255,.3);border-radius:4px}
 
-/* AKAN GRADIENT ARKA PLAN (Ana ekran için) */
 .aurora {
   position: fixed; inset: 0; z-index: -3; overflow: hidden;
   background: linear-gradient(135deg, #04040f 0%, #160b29 25%, #08081a 50%, #0a1128 75%, #04040f 100%);
@@ -32,11 +31,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 }
 .grid-lines{position:fixed;inset:0;z-index: -2;pointer-events:none;opacity:.025;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:80px 80px;}
 
-/* VİDEO (Sadece İntro için) */
 .video-bg{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;z-index:9000;filter:brightness(.35) contrast(1.1) saturate(.7);pointer-events:none;opacity:0;transition:opacity 1.5s ease;}
 .video-bg.visible{opacity:1;}
 
-/* INTRO */
 #intro-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center;transition:opacity 1.2s ease,visibility 1.2s ease;}
 #intro-screen.phase-greeting{background:transparent;cursor:pointer;}
 #intro-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
@@ -60,7 +57,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
-/* SİNEMATİK METİN ANİMASYONLARI (Smooth) */
 .cinematic-text {
   position: absolute;
   top: 50%;
@@ -75,7 +71,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .intro-text { font-size: 3.8rem; font-weight: 200; letter-spacing: 8px; background: linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .intro-sub { font-size: 1.6rem; color: var(--muted); font-weight: 300; letter-spacing: 2px; }
 
-/* Yumuşatılmış Animasyonlar */
 @keyframes cineFade {
   0% { opacity: 0; filter: blur(15px); transform: translate(-50%, calc(-50% + 15px)) scale(0.95); }
   25% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%) scale(1); }
@@ -101,7 +96,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 }
 @keyframes fadeInHint { to { opacity: 1; } }
 
-/* TOP BAR */
 .top-bar{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:0 24px;height:64px;background:rgba(4,4,15,.75);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);opacity:0;transition:opacity .8s ease .1s;}
 .top-bar.visible{opacity:1;}
 .top-logo{font-size:.8rem;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px;white-space:nowrap;}
@@ -118,14 +112,12 @@ nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);bor
 .top-right{display:flex;justify-content:flex-end;align-items:center;}
 .top-time{font-size:.75rem;font-weight:400;letter-spacing:3px;color:var(--muted);font-variant-numeric:tabular-nums; white-space:nowrap;}
 
-/* MAIN */
 main{max-width:1350px;margin:28px auto 80px;padding:0 20px;opacity:0;transition:opacity .8s ease .3s;}
 main.visible{opacity:1;}
 .tab-content{display:none;}
 .tab-content.active{display:block;animation:tabSlide .45s cubic-bezier(.23,1,.32,1);}
 @keyframes tabSlide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* GLASS PANEL */
 .glass-panel{background:rgba(255,255,255,.025);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:20px;padding:24px 28px;margin-bottom:18px;box-shadow:0 4px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);position:relative;overflow:hidden;transition:border-color .4s ease;}
 .glass-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,106,255,.5),rgba(196,109,255,.5),rgba(79,209,255,.3),transparent);opacity:0;transition:opacity .4s ease;}
 .glass-panel:hover::before{opacity:1;}
@@ -134,10 +126,8 @@ main.visible{opacity:1;}
 .panel-title{font-size:.73rem;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.45);flex:1;}
 .panel-badge{font-size:.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(124,106,255,.15);border:1px solid rgba(124,106,255,.3);color:var(--a1);}
 
-/* YENİ 3 SÜTUNLU DASHBOARD */
 .dashboard-grid{display:grid;grid-template-columns:1fr 320px 280px;gap:18px;align-items:start;}
 
-/* TODO */
 .todo-layout{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:520px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
 .todo-left{border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(255,255,255,.015);}
 .todo-filters{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto;}
@@ -263,7 +253,6 @@ main.visible{opacity:1;}
 .film-input-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
 .film-input-row input,.fitness-input{width:70px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:.9rem;font-family:inherit;outline:none;text-align:center;font-weight:600;transition:all .2s ease;}
 .film-input-row input:focus,.fitness-input:focus{border-color:rgba(124,106,255,.45);background:rgba(124,106,255,.06);}
-.film-input-label{font-size:.72rem;color:var(--muted);}
 .fitness-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .fitness-widget{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden;transition:all .3s ease;}
 .fitness-widget:hover{border-color:rgba(255,255,255,.12);transform:translateY(-1px);}
@@ -281,22 +270,43 @@ main.visible{opacity:1;}
 .fitness-edit-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
 .fitness-edit-label{font-size:.65rem;color:var(--muted);white-space:nowrap;}
 
-/* KEYFINI GETIR WIDGET */
+/* KEYFİNİ GETİR WIDGET */
 .vibe-widget{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:all .3s ease;}
 .vibe-widget:hover{border-color:rgba(30,215,96,.25);transform:translateY(-2px);}
 .vibe-widget-header{display:flex;align-items:center;gap:10px;padding:16px 18px 0;}
 .vibe-widget-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem;background:linear-gradient(135deg,rgba(30,215,96,.2),rgba(30,215,96,.08));border:1px solid rgba(30,215,96,.3);}
 .vibe-widget-title{font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);flex:1;}
-.sp-input-row{display:flex;gap:7px;padding:12px 18px 8px;}
+
+/* MÜZİK PLAYER BÖLÜMÜ - YENİ */
+.music-tabs{display:flex;gap:0;padding:10px 18px 0;}
+.music-tab-btn{flex:1;padding:7px 10px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:.68rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .25s ease;font-family:inherit;}
+.music-tab-btn:hover{color:var(--text);}
+.music-tab-btn.active.spotify{color:#1db954;border-bottom-color:#1db954;}
+.music-tab-btn.active.youtube{color:#ff0000;border-bottom-color:#ff0000;}
+
+.music-panel{display:none;}
+.music-panel.active{display:block;}
+
+.sp-input-row{display:flex;gap:7px;padding:10px 18px 8px;}
 .sp-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-size:.8rem;font-family:inherit;outline:none;color-scheme:dark;transition:border-color .2s ease;}
 .sp-input:focus{border-color:rgba(30,215,96,.4);}
 .sp-input::placeholder{color:var(--muted);}
 .sp-load-btn{background:linear-gradient(135deg,#1db954,#1ed760);border:none;border-radius:10px;padding:9px 16px;color:#000;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
 .sp-load-btn:hover{opacity:.85;transform:translateY(-1px);}
-.sp-hint{font-size:.65rem;color:var(--muted);padding:0 18px 10px;}
-.sp-embed-wrap iframe{border:none;width:100%;display:block;height:232px;}
+.yt-input-row{display:flex;gap:7px;padding:10px 18px 8px;}
+.yt-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-size:.8rem;font-family:inherit;outline:none;color-scheme:dark;transition:border-color .2s ease;}
+.yt-input:focus{border-color:rgba(255,0,0,.4);}
+.yt-input::placeholder{color:var(--muted);}
+.yt-load-btn{background:linear-gradient(135deg,#ff0000,#cc0000);border:none;border-radius:10px;padding:9px 16px;color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
+.yt-load-btn:hover{opacity:.85;transform:translateY(-1px);}
 
-/* APPLE STYLE SHOWCASE WIDGET CSS (En Sağ Sütun) */
+.sp-hint{font-size:.65rem;color:var(--muted);padding:0 18px 10px;}
+.sp-embed-wrap iframe,.yt-embed-wrap iframe{border:none;width:100%;display:block;}
+.sp-embed-wrap iframe{height:232px;}
+.yt-embed-wrap iframe{height:200px;border-radius:0 0 18px 18px;}
+.yt-embed-wrap{padding:0 0 0 0;}
+
+/* SHOWCASE */
 .showcase-col { display: flex; flex-direction: column; }
 .showcase-card {
   padding: 0 !important;
@@ -305,7 +315,7 @@ main.visible{opacity:1;}
   overflow: hidden;
   border-radius: 18px;
   background: rgba(0,0,0,0.2) !important;
-  display: block; /* mobilde gizlenmesin diye */
+  display: block;
 }
 .showcase-slider {
   position: relative;
@@ -365,14 +375,33 @@ textarea::placeholder{color:var(--muted);}
 .mood-label{font-size:.6rem;color:var(--muted);font-weight:600;letter-spacing:.5px;}
 .mood-btn.selected .mood-label{color:#c8b8ff;}
 .mood-message-box{background:rgba(124,106,255,.07);border:1px solid rgba(124,106,255,.2);border-radius:14px;padding:16px;font-size:.88rem;line-height:1.6;color:rgba(255,255,255,.75);min-height:56px;transition:all .4s ease;}
+
+/* VİBE SEKMESİ MÜZİK BÖLÜMÜ - YENİ */
+.vibe-music-tabs{display:flex;gap:0;margin-bottom:10px;border-bottom:1px solid var(--border);}
+.vibe-music-tab-btn{flex:1;padding:8px 10px;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-size:.7rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .25s ease;font-family:inherit;margin-bottom:-1px;}
+.vibe-music-tab-btn:hover{color:var(--text);}
+.vibe-music-tab-btn.active.spotify{color:#1db954;border-bottom-color:#1db954;}
+.vibe-music-tab-btn.active.youtube{color:#ff0000;border-bottom-color:#ff0000;}
+.vibe-music-panel{display:none;}
+.vibe-music-panel.active{display:block;}
+
 .vibe-sp-row{display:flex;gap:8px;margin-bottom:10px;}
 .vibe-sp-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.82rem;font-family:inherit;outline:none;color-scheme:dark;transition:border-color .2s ease;}
 .vibe-sp-input:focus{border-color:rgba(30,215,96,.4);}
 .vibe-sp-input::placeholder{color:var(--muted);}
 .vibe-sp-btn{background:linear-gradient(135deg,#1db954,#1ed760);border:none;border-radius:10px;padding:10px 18px;color:#000;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
 .vibe-sp-btn:hover{opacity:.85;transform:translateY(-1px);}
-.vibe-sp-embed{border-radius:14px;overflow:hidden;border:1px solid var(--border);}
+.vibe-yt-row{display:flex;gap:8px;margin-bottom:10px;}
+.vibe-yt-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.82rem;font-family:inherit;outline:none;color-scheme:dark;transition:border-color .2s ease;}
+.vibe-yt-input:focus{border-color:rgba(255,0,0,.4);}
+.vibe-yt-input::placeholder{color:var(--muted);}
+.vibe-yt-btn{background:linear-gradient(135deg,#ff0000,#cc0000);border:none;border-radius:10px;padding:10px 18px;color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
+.vibe-yt-btn:hover{opacity:.85;transform:translateY(-1px);}
+
+.vibe-sp-embed,.vibe-yt-embed{border-radius:14px;overflow:hidden;border:1px solid var(--border);}
 .vibe-sp-embed iframe{border:none;width:100%;display:block;height:352px;}
+.vibe-yt-embed iframe{border:none;width:100%;display:block;height:280px;}
+
 .quote-box{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;}
 .quote-text{font-size:.95rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.75);font-style:italic;}
 .quote-author{font-size:.7rem;color:var(--muted);margin-top:10px;letter-spacing:1px;}
@@ -382,7 +411,7 @@ textarea::placeholder{color:var(--muted);}
 .vibe-note-area:focus{border-color:rgba(124,106,255,.4);background:rgba(124,106,255,.03);}
 .vibe-note-area::placeholder{color:var(--muted);}
 
-/* LOGIN EKRANI CSS */
+/* LOGIN */
 #login-screen {
   position: fixed; inset: 0; z-index: 10000; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease;
 }
@@ -395,34 +424,11 @@ textarea::placeholder{color:var(--muted);}
 .login-input:focus { border-color: var(--a1); }
 
 /* ROBOT */
-#bot{
-  position:fixed;z-index:9998;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  bottom:24px;right:24px;
-  opacity:0;
-  transition:opacity .7s ease;
-  user-select:none;
-}
+#bot{position:fixed;z-index:9998;display:flex;flex-direction:column;align-items:center;gap:8px;bottom:24px;right:24px;opacity:0;transition:opacity .7s ease;user-select:none;}
 #bot.on{opacity:1;pointer-events:auto;}
-#bot-bubble{
-  background:rgba(14,8,38,.96);
-  border:1px solid rgba(124,106,255,.55);
-  border-radius:16px 16px 4px 16px;
-  padding:9px 15px;font-size:.77rem;color:#ddd6ff;
-  max-width:185px;text-align:center;line-height:1.45;
-  box-shadow:0 0 28px rgba(124,106,255,.3),0 4px 20px rgba(0,0,0,.6);
-  backdrop-filter:blur(14px);
-  opacity:0;transform:scale(.82) translateY(8px);
-  transition:all .32s cubic-bezier(.23,1,.32,1);
-  pointer-events:none;
-}
+#bot-bubble{background:rgba(14,8,38,.96);border:1px solid rgba(124,106,255,.55);border-radius:16px 16px 4px 16px;padding:9px 15px;font-size:.77rem;color:#ddd6ff;max-width:185px;text-align:center;line-height:1.45;box-shadow:0 0 28px rgba(124,106,255,.3),0 4px 20px rgba(0,0,0,.6);backdrop-filter:blur(14px);opacity:0;transform:scale(.82) translateY(8px);transition:all .32s cubic-bezier(.23,1,.32,1);pointer-events:none;}
 #bot-bubble.pop{opacity:1;transform:scale(1) translateY(0);}
-#bot-svg{
-  width:66px;height:66px;
-  cursor:grab;
-  filter:drop-shadow(0 0 16px rgba(124,106,255,.6));
-  animation:botFloat 2.8s ease-in-out infinite;
-}
+#bot-svg{width:66px;height:66px;cursor:grab;filter:drop-shadow(0 0 16px rgba(124,106,255,.6));animation:botFloat 2.8s ease-in-out infinite;}
 #bot-svg:active{cursor:grabbing;}
 #bot-svg:hover{filter:drop-shadow(0 0 26px rgba(196,109,255,.8));}
 @keyframes botFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
@@ -434,51 +440,26 @@ textarea::placeholder{color:var(--muted);}
 .b-ant{animation:bAnt 1.5s ease-in-out infinite alternate;}
 @keyframes bAnt{from{opacity:.35}to{opacity:1}}
 
-/* RESPONSIVE (Mobil İyileştirmeler) */
+/* RESPONSIVE */
 @media(max-width:1024px){
   .dashboard-grid{grid-template-columns:1fr;}
   .fitness-grid{grid-template-columns:1fr 1fr;}
-  .showcase-card { height: 400px; } /* Tablette biraz daha kısa olsun */
+  .showcase-card { height: 400px; }
 }
 @media(max-width:768px){
-  .top-bar { 
-    display: flex; 
-    flex-direction: column; 
-    height: auto; 
-    padding: 14px 10px; 
-    gap: 12px; 
-  }
+  .top-bar { display: flex; flex-direction: column; height: auto; padding: 14px 10px; gap: 12px; }
   .top-logo { justify-content: center; width: 100%; margin: 0; }
   .top-right { display: none; }
-  
-  /* MOBİL TAB KAYDIRMA */
-  nav { 
-    width: 100%;
-    margin: 0;
-    justify-content: flex-start; 
-    overflow-x: auto; 
-    overflow-y: hidden;
-    flex-wrap: nowrap; 
-    -webkit-overflow-scrolling: touch; 
-    scrollbar-width: none;
-    padding: 5px;
-    border-radius: 20px;
-  }
+  nav { width: 100%; margin: 0; justify-content: flex-start; overflow-x: auto; overflow-y: hidden; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 5px; border-radius: 20px; }
   nav::-webkit-scrollbar { display: none; }
   .tab-btn{padding:8px 14px;font-size:.75rem;flex-shrink: 0;}
-  
-  /* SİNEMATİK METİN MOBİL UYUMU */
   .intro-text.cinematic-text { font-size: 2rem; letter-spacing: 4px; white-space: normal; line-height: 1.3; }
   .intro-sub.cinematic-text { font-size: 1.2rem; white-space: normal; }
-
   main{margin:14px auto 60px;padding:0 10px;}.glass-panel{padding:16px 14px;}
   .dashboard-grid{grid-template-columns:1fr;}.todo-layout{grid-template-columns:1fr;min-height:auto;}
   .todo-right{border-top:1px solid var(--border);min-height:300px;}
   .split-container{grid-template-columns:1fr;}
-  
-  /* NOTLAR VE GÜNLÜK KAYDIRMA DÜZELTMESİ (MOBİL) */
   .sidebar-panel{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-  
   .fitness-grid{grid-template-columns:1fr 1fr;}
   textarea{height:260px;}.vibe-grid{grid-template-columns:1fr;}
   #bot{bottom:14px;right:12px;}#bot-svg{width:52px;height:52px;}
@@ -719,20 +700,43 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
+        <!-- KEYFİNİ GETİR - SPOTİFY + YOUTUBE TAB'LI -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
             <span class="vibe-widget-title">Keyfini Getir</span>
           </div>
-          <div class="sp-input-row">
-            <input type="text" class="sp-input" id="dashSpInput" placeholder="Spotify linki yapıştır...">
-            <button class="sp-load-btn" id="dashSpBtn">▶ Yükle</button>
+          <div class="music-tabs">
+            <button class="music-tab-btn active spotify" data-music-tab="dash-spotify">🟢 Spotify</button>
+            <button class="music-tab-btn youtube" data-music-tab="dash-youtube">▶ YouTube</button>
           </div>
-          <div class="sp-hint">Playlist, albüm veya şarkı — kaydedilir ☁️</div>
-          <div class="sp-embed-wrap">
-            <iframe id="dashSpEmbed"
-              src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO3bx7am?utm_source=generator&theme=0"
-              allow="encrypted-media" allowfullscreen></iframe>
+
+          <!-- Spotify Paneli -->
+          <div class="music-panel active" id="dash-spotify">
+            <div class="sp-input-row">
+              <input type="text" class="sp-input" id="dashSpInput" placeholder="Spotify linki yapıştır...">
+              <button class="sp-load-btn" id="dashSpBtn">▶ Yükle</button>
+            </div>
+            <div class="sp-hint">Playlist, albüm veya şarkı — kaydedilir ☁️</div>
+            <div class="sp-embed-wrap">
+              <iframe id="dashSpEmbed"
+                src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO3bx7am?utm_source=generator&theme=0"
+                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <!-- YouTube Paneli -->
+          <div class="music-panel" id="dash-youtube">
+            <div class="yt-input-row">
+              <input type="text" class="yt-input" id="dashYtInput" placeholder="YouTube linki yapıştır...">
+              <button class="yt-load-btn" id="dashYtBtn">▶ Yükle</button>
+            </div>
+            <div class="sp-hint">Video, playlist veya şarkı — kaydedilir ☁️</div>
+            <div class="yt-embed-wrap">
+              <iframe id="dashYtEmbed"
+                src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&rel=0"
+                allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            </div>
           </div>
         </div>
       </div>
@@ -746,20 +750,6 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
       </div>
-
-      </div> <div class="glass-panel" style="margin-top: 20px; width: 100%;">
-      <div class="panel-header">
-        <div class="panel-icon">▶</div>
-        <span class="panel-title">YouTube Video</span>
-      </div>
-      <div class="sp-input-row" style="padding: 10px 0;">
-        <input type="text" class="sp-input" id="ytInput" placeholder="Video ID gir..." style="width: 80%;">
-        <button class="sp-load-btn" onclick="loadYT()" style="background: #ff0000; color: white; padding: 10px 20px;">Yükle</button>
-      </div>
-      <div class="sp-embed-wrap" style="width: 100%; margin-top: 15px;">
-        <iframe id="ytEmbed" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
-      </div>
-    </div>
       
     </div>
   </section>
@@ -827,17 +817,41 @@ textarea::placeholder{color:var(--muted);}
         </div>
         <div class="vibe-right">
           <div>
-            <div class="mood-section-title">Spotify Playlist</div>
-            <div class="vibe-sp-row">
-              <input type="text" class="vibe-sp-input" id="vibeSpInput" placeholder="Spotify linki yapıştır...">
-              <button class="vibe-sp-btn" id="vibeSpBtn">▶ Yükle</button>
+            <div class="mood-section-title">Müzik</div>
+
+            <!-- VİBE MÜZİK TAB'LARI -->
+            <div class="vibe-music-tabs">
+              <button class="vibe-music-tab-btn active spotify" data-vibe-tab="vibe-spotify">🟢 Spotify</button>
+              <button class="vibe-music-tab-btn youtube" data-vibe-tab="vibe-youtube">▶ YouTube</button>
             </div>
-            <div class="vibe-sp-embed">
-              <iframe id="vibeSpEmbed"
-                src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0"
-                allow="encrypted-media" allowfullscreen></iframe>
+
+            <!-- Vibe Spotify -->
+            <div class="vibe-music-panel active" id="vibe-spotify">
+              <div class="vibe-sp-row">
+                <input type="text" class="vibe-sp-input" id="vibeSpInput" placeholder="Spotify linki yapıştır...">
+                <button class="vibe-sp-btn" id="vibeSpBtn">▶ Yükle</button>
+              </div>
+              <div class="vibe-sp-embed">
+                <iframe id="vibeSpEmbed"
+                  src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0"
+                  allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+              </div>
             </div>
-            <div style="margin-top:8px;font-size:.68rem;color:var(--muted);">Playlist, albüm veya şarkı linki — kaydedilir.</div>
+
+            <!-- Vibe YouTube -->
+            <div class="vibe-music-panel" id="vibe-youtube">
+              <div class="vibe-yt-row">
+                <input type="text" class="vibe-yt-input" id="vibeYtInput" placeholder="YouTube linki yapıştır...">
+                <button class="vibe-yt-btn" id="vibeYtBtn">▶ Yükle</button>
+              </div>
+              <div class="vibe-yt-embed">
+                <iframe id="vibeYtEmbed"
+                  src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&rel=0"
+                  allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+              </div>
+            </div>
+
+            <div style="margin-top:8px;font-size:.68rem;color:var(--muted);">Playlist, albüm, şarkı veya YouTube videosu — kaydedilir.</div>
           </div>
         </div>
       </div>
@@ -851,7 +865,6 @@ textarea::placeholder{color:var(--muted);}
         <span class="panel-title" style="flex: none;">Kafa Dağıtma: Top Sektirme</span>
       </div>
       <p style="font-size: 0.82rem; color: var(--muted); margin-bottom: 20px;">Topu havada tutmak için üzerine tıkla veya dokun. Yere düşürme!</p>
-      
       <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 20px;">
         <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px 24px; border-radius: 12px;">
           <div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">Skor</div>
@@ -862,7 +875,6 @@ textarea::placeholder{color:var(--muted);}
           <div id="gameBest" style="font-size: 2rem; font-weight: 200; color: var(--warn); line-height: 1;">0</div>
         </div>
       </div>
-      
       <div style="display:flex; justify-content:center;">
         <canvas id="gameCanvas" width="340" height="400" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 18px; cursor: pointer; box-shadow: inset 0 0 40px rgba(0,0,0,0.5);"></canvas>
       </div>
@@ -934,7 +946,6 @@ function startBot(){
   botLoop();
 }
 
-/* ── DRAG — global scope, IIFE yok ── */
 var dragOn=false, dragSX=0, dragSY=0, dragOL=0, dragOT=0, dragMoved=false;
 
 function dragBegin(cx,cy){
@@ -970,12 +981,10 @@ document.addEventListener('touchmove',function(e){if(!dragOn)return;e.preventDef
 document.addEventListener('touchend',function(){if(dragOn&&!dragMoved)botSay(null,3000);dragEnd();});
 botSvg.addEventListener('click',function(){if(!dragMoved)botSay(null,3000);});
 
-/* Tab değiştirince */
 document.querySelectorAll('.tab-btn').forEach(function(b){
   b.addEventListener('click',function(){
     var t=this.getAttribute('data-tab');
     if(tabLines[t]) setTimeout(function(){botSay(tabLines[t],2800);},300);
-    /* tab arası yer değiştirme */
     if(botStarted){
       var positions=[
         {bottom:'24px',right:'24px',top:'auto',left:'auto'},
@@ -1004,15 +1013,12 @@ var db=firebase.firestore();
 var userDoc=db.collection('users').doc('nurullah');
 var state={todos:[],journals:[],notes:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
 
-/* ÇOKLU ZAMANLAYICI */
 var saveTimers = {};
 
 function saveToCloud(field, value, statusId){
   var el = document.getElementById(statusId);
   if(el){el.querySelector('span').textContent='Kaydediliyor...'; el.style.color='rgba(255,255,255,.5)';}
-  
   if(saveTimers[field]) clearTimeout(saveTimers[field]);
-  
   saveTimers[field] = setTimeout(function(){
     var p = {}; p[field] = value;
     userDoc.set(p, {merge:true})
@@ -1021,7 +1027,7 @@ function saveToCloud(field, value, statusId){
   }, 800);
 }
 
-/* --- FIREBASE AUTH & GİRİŞ İŞLEMLERİ --- */
+/* AUTH */
 var auth = firebase.auth();
 var loginScreen = document.getElementById('login-screen');
 var introScreen = document.getElementById('intro-screen');
@@ -1050,7 +1056,6 @@ loginBtn.addEventListener('click', function() {
   if(!email || !pass) return;
   loginBtn.textContent = 'BEKLEYİN...';
   loginError.style.display = 'none';
-
   auth.signInWithEmailAndPassword(email, pass)
     .then(function() { loginBtn.textContent = 'GİRİŞ YAP'; })
     .catch(function(error) {
@@ -1061,34 +1066,24 @@ loginBtn.addEventListener('click', function() {
 });
 document.getElementById('loginPass').addEventListener('keydown', function(e) { if(e.key === 'Enter') loginBtn.click(); });
 
-
-/* INTRO EKRANI VE VİDEO MANTIĞI */
+/* INTRO */
 var launchPhase = document.getElementById('launchPhase');
 var greetingPhase = document.getElementById('greetingPhase');
 var launchBtn = document.getElementById('launchBtn');
 var bgVideo = document.getElementById('bgVideo');
 var introTimer = null;
-
 var videoList = ['arkaplan.mp4', 'arkaplan2.mp4', 'arkaplan3.mp4', 'arkaplan4.mp4'];
 
 launchBtn.addEventListener('click', function() {
   launchBtn.classList.add('hide');
-
   var randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
   bgVideo.src = randomVideo;
   bgVideo.muted = false;
-
   var p = bgVideo.play();
   if(p) {
-    p.then(function() {
-      bgVideo.classList.add('visible');
-      showGreeting(9600); 
-    }).catch(function() {
-      showGreeting(9600); 
-    });
-  } else {
-    showGreeting(9600);
-  }
+    p.then(function() { bgVideo.classList.add('visible'); showGreeting(9600); })
+     .catch(function() { showGreeting(9600); });
+  } else { showGreeting(9600); }
 });
 
 function showGreeting(duration) {
@@ -1097,9 +1092,7 @@ function showGreeting(duration) {
   introScreen.classList.add('phase-greeting');
   launchPhase.style.display = 'none';
   greetingPhase.style.display = 'block'; 
-  
   document.getElementById('dynamicGreeting').textContent = getGreeting(now.getHours()) + ', saat ' + fmt(now);
-  
   introTimer = setTimeout(dismissIntro, duration || 9600);
   introScreen.addEventListener('click', dismissIntro);
   document.addEventListener('keydown', function sk(e){
@@ -1110,10 +1103,8 @@ function showGreeting(duration) {
 function dismissIntro() {
   if(introTimer){ clearTimeout(introTimer); introTimer=null; }
   introScreen.classList.add('hidden');
-  
   bgVideo.classList.remove('visible');
   setTimeout(function(){ bgVideo.pause(); }, 1500);
-
   setTimeout(function(){
     document.getElementById('topBar').classList.add('visible');
     document.getElementById('mainContent').classList.add('visible');
@@ -1141,49 +1132,126 @@ function saveWidgets(){
   },1000);
 }
 
-/* SPOTIFY HELPER */
-function toEmbed(url){
-  try{var m=url.match(/spotify\.com\/(playlist|album|track|artist)\/([a-zA-Z0-9]+)/);if(m)return 'https://open.spotify.com/embed/'+m[1]+'/'+m[2]+'?utm_source=generator&theme=0';}catch(e){}
+/* ══ EMBED HELPERs ══ */
+function toSpotifyEmbed(url){
+  try{
+    var m=url.match(/spotify\.com\/(playlist|album|track|artist)\/([a-zA-Z0-9]+)/);
+    if(m) return 'https://open.spotify.com/embed/'+m[1]+'/'+m[2]+'?utm_source=generator&theme=0';
+  }catch(e){}
   return null;
 }
 
-/* Dashboard Spotify */
+function toYoutubeEmbed(url){
+  try{
+    // Normal video: youtube.com/watch?v=ID veya youtu.be/ID
+    var vm=url.match(/(?:youtube\.com\/watch\?(?:.*&)?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if(vm) return 'https://www.youtube.com/embed/'+vm[1]+'?autoplay=0&rel=0';
+    // Playlist: youtube.com/playlist?list=ID
+    var pm=url.match(/youtube\.com\/playlist\?(?:.*&)?list=([a-zA-Z0-9_-]+)/);
+    if(pm) return 'https://www.youtube.com/embed/videoseries?list='+pm[1]+'&rel=0';
+  }catch(e){}
+  return null;
+}
+
+/* ── MÜZİK TAB'LARI (Dashboard) ── */
+document.querySelectorAll('.music-tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var target=this.getAttribute('data-music-tab');
+    document.querySelectorAll('.music-tab-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.music-panel').forEach(function(p){p.classList.remove('active');});
+    this.classList.add('active');
+    var panel=document.getElementById(target);
+    if(panel) panel.classList.add('active');
+  });
+});
+
+/* ── MÜZİK TAB'LARI (Vibe) ── */
+document.querySelectorAll('.vibe-music-tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var target=this.getAttribute('data-vibe-tab');
+    document.querySelectorAll('.vibe-music-tab-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.vibe-music-panel').forEach(function(p){p.classList.remove('active');});
+    this.classList.add('active');
+    var panel=document.getElementById(target);
+    if(panel) panel.classList.add('active');
+  });
+});
+
+/* ── Dashboard Spotify ── */
 var dashSpInput=document.getElementById('dashSpInput');
 var dashSpBtn=document.getElementById('dashSpBtn');
 var dashSpEmbed=document.getElementById('dashSpEmbed');
 if(dashSpBtn){
   dashSpBtn.addEventListener('click',function(){
     var url=dashSpInput?dashSpInput.value.trim():'';
-    var em=toEmbed(url);
+    var em=toSpotifyEmbed(url);
     if(em&&dashSpEmbed){
       dashSpEmbed.src=em;
       userDoc.set({dashSpotify:{url:url}},{merge:true}).catch(function(){});
-      botSay('Playlist yuklendi! 🎵',2500);
+      botSay('Spotify yüklendi! 🎵',2500);
     } else {
-      botSay('Gecerli bir Spotify linki gir! 🎵',2500);
+      botSay('Geçerli bir Spotify linki gir! 🎵',2500);
     }
   });
 }
 if(dashSpInput){dashSpInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&dashSpBtn)dashSpBtn.click();});}
 
-/* Vibe Spotify */
+/* ── Dashboard YouTube ── */
+var dashYtInput=document.getElementById('dashYtInput');
+var dashYtBtn=document.getElementById('dashYtBtn');
+var dashYtEmbed=document.getElementById('dashYtEmbed');
+if(dashYtBtn){
+  dashYtBtn.addEventListener('click',function(){
+    var url=dashYtInput?dashYtInput.value.trim():'';
+    var em=toYoutubeEmbed(url);
+    if(em&&dashYtEmbed){
+      dashYtEmbed.src=em;
+      userDoc.set({dashYoutube:{url:url}},{merge:true}).catch(function(){});
+      botSay('YouTube yüklendi! ▶',2500);
+    } else {
+      botSay('Geçerli bir YouTube linki gir! ▶',2500);
+    }
+  });
+}
+if(dashYtInput){dashYtInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&dashYtBtn)dashYtBtn.click();});}
+
+/* ── Vibe Spotify ── */
 var vibeSpInput=document.getElementById('vibeSpInput');
 var vibeSpBtn=document.getElementById('vibeSpBtn');
 var vibeSpEmbed=document.getElementById('vibeSpEmbed');
 if(vibeSpBtn){
   vibeSpBtn.addEventListener('click',function(){
     var url=vibeSpInput?vibeSpInput.value.trim():'';
-    var em=toEmbed(url);
+    var em=toSpotifyEmbed(url);
     if(em&&vibeSpEmbed){
       vibeSpEmbed.src=em;
       userDoc.set({vibeData:{spotifyUrl:url}},{merge:true}).catch(function(){});
-      botSay('Playlist yuklendi! 🎵',2500);
+      botSay('Spotify yüklendi! 🎵',2500);
     } else {
-      botSay('Gecerli bir Spotify linki gir! 🎵',2500);
+      botSay('Geçerli bir Spotify linki gir! 🎵',2500);
     }
   });
 }
 if(vibeSpInput){vibeSpInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&vibeSpBtn)vibeSpBtn.click();});}
+
+/* ── Vibe YouTube ── */
+var vibeYtInput=document.getElementById('vibeYtInput');
+var vibeYtBtn=document.getElementById('vibeYtBtn');
+var vibeYtEmbed=document.getElementById('vibeYtEmbed');
+if(vibeYtBtn){
+  vibeYtBtn.addEventListener('click',function(){
+    var url=vibeYtInput?vibeYtInput.value.trim():'';
+    var em=toYoutubeEmbed(url);
+    if(em&&vibeYtEmbed){
+      vibeYtEmbed.src=em;
+      userDoc.set({vibeData:{youtubeUrl:url}},{merge:true}).catch(function(){});
+      botSay('YouTube yüklendi! ▶',2500);
+    } else {
+      botSay('Geçerli bir YouTube linki gir! ▶',2500);
+    }
+  });
+}
+if(vibeYtInput){vibeYtInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&vibeYtBtn)vibeYtBtn.click();});}
 
 /* TABS */
 document.querySelectorAll('.tab-btn').forEach(function(b){
@@ -1200,12 +1268,9 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 function loadFromCloud(){
   userDoc.get().then(function(doc){
     if(!doc.exists) {
-        renderTodos();
-        renderJournalList();
-        renderNotesList();
+        renderTodos();renderJournalList();renderNotesList();
         return;
     }
-    
     var d=doc.data();
     
     if(Array.isArray(d.todos)){
@@ -1219,18 +1284,12 @@ function loadFromCloud(){
     }
     renderTodos();
 
-    if(Array.isArray(d.journals)){
-        state.journals=d.journals;
-    } else if(d.journal && typeof d.journal === 'string' && d.journal.trim()){
-        state.journals=[{id:Date.now().toString(),title:'Aktarılan Günlük',content:d.journal}];
-    }
+    if(Array.isArray(d.journals)){state.journals=d.journals;}
+    else if(d.journal&&typeof d.journal==='string'&&d.journal.trim()){state.journals=[{id:Date.now().toString(),title:'Aktarılan Günlük',content:d.journal}];}
     renderJournalList();
 
-    if(Array.isArray(d.notes)){
-        state.notes=d.notes;
-    } else if(d.notes && typeof d.notes === 'string' && d.notes.trim()){
-        state.notes=[{id:Date.now().toString(),title:'Aktarılan Notlar',content:d.notes}];
-    }
+    if(Array.isArray(d.notes)){state.notes=d.notes;}
+    else if(d.notes&&typeof d.notes==='string'&&d.notes.trim()){state.notes=[{id:Date.now().toString(),title:'Aktarılan Notlar',content:d.notes}];}
     renderNotesList();
 
     if(d.widgets){
@@ -1242,24 +1301,34 @@ function loadFromCloud(){
       if(w.gymTarget!==undefined)gymTarget.value=w.gymTarget;
       updateRun();updateGym();
     }
+
+    // Dashboard Spotify geri yükle
     if(d.dashSpotify&&d.dashSpotify.url){
-      var em=toEmbed(d.dashSpotify.url);
+      var em=toSpotifyEmbed(d.dashSpotify.url);
       if(em&&dashSpEmbed)dashSpEmbed.src=em;
       if(dashSpInput)dashSpInput.value=d.dashSpotify.url;
     }
+    // Dashboard YouTube geri yükle
+    if(d.dashYoutube&&d.dashYoutube.url){
+      var emYt=toYoutubeEmbed(d.dashYoutube.url);
+      if(emYt&&dashYtEmbed)dashYtEmbed.src=emYt;
+      if(dashYtInput)dashYtInput.value=d.dashYoutube.url;
+    }
+
     if(d.vibeData){
       var v=d.vibeData;
       if(v.note&&document.getElementById('vibeNote'))document.getElementById('vibeNote').value=v.note;
       if(v.mood){var mb=document.querySelector('.mood-btn[data-mood="'+v.mood+'"]');if(mb){mb.classList.add('selected');var mm=document.getElementById('moodMessage');if(mm)mm.textContent=mb.dataset.msg;}}
-      if(v.spotifyUrl){var em2=toEmbed(v.spotifyUrl);if(em2&&vibeSpEmbed)vibeSpEmbed.src=em2;if(vibeSpInput)vibeSpInput.value=v.spotifyUrl;}
+      // Vibe Spotify geri yükle
+      if(v.spotifyUrl){var emSp=toSpotifyEmbed(v.spotifyUrl);if(emSp&&vibeSpEmbed)vibeSpEmbed.src=emSp;if(vibeSpInput)vibeSpInput.value=v.spotifyUrl;}
+      // Vibe YouTube geri yükle
+      if(v.youtubeUrl){var emVYt=toYoutubeEmbed(v.youtubeUrl);if(emVYt&&vibeYtEmbed)vibeYtEmbed.src=emVYt;if(vibeYtInput)vibeYtInput.value=v.youtubeUrl;}
     }
   }).catch(function(e){
     console.error("Yükleme Hatası:", e);
-    renderTodos();
-    renderJournalList();
-    renderNotesList();
+    renderTodos();renderJournalList();renderNotesList();
     var ts=document.getElementById('todoStatus');
-    if(ts){ts.querySelector('span').textContent='Cevrimdisi';ts.style.color='#ffaa00';}
+    if(ts){ts.querySelector('span').textContent='Çevrimdışı';ts.style.color='#ffaa00';}
   });
 }
 
@@ -1320,11 +1389,10 @@ function populateDetail(t){
   document.querySelectorAll('.cat-tag').forEach(function(c){c.classList.toggle('active',c.dataset.cat===t.category);});
   document.getElementById('detailNote').value=t.note||'';
   var cr=t.createdAt?new Date(t.createdAt).toLocaleDateString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
-  document.getElementById('detailCreated').textContent='Olusturuldu: '+cr;
+  document.getElementById('detailCreated').textContent='Oluşturuldu: '+cr;
 }
 function getActiveTodo(){return state.activeTodoId?state.todos.find(function(x){return x.id===state.activeTodoId;})||null:null;}
 
-/* Detail bindings */
 document.getElementById('detailTitle').addEventListener('input',function(){var t=getActiveTodo();if(!t)return;t.text=this.value;var r=document.querySelector('.todo-item-row[data-id="'+t.id+'"] .todo-row-text');if(r)r.textContent=t.text;saveTodos();});
 document.getElementById('detailCheck').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.completed=this.checked;document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');renderTodos();saveTodos();});
 document.getElementById('detailStar').addEventListener('click',function(){var t=getActiveTodo();if(!t)return;toggleStarById(t.id);});
@@ -1345,7 +1413,7 @@ document.getElementById('completedToggle').addEventListener('click',function(){c
 var jList=document.getElementById('journalList'),jEditor=document.getElementById('journalEditor'),jTitle=document.getElementById('journalTitle'),jText=document.getElementById('journalText');
 function renderJournalList(){
   jList.innerHTML='';
-  if(!state.journals || !state.journals.length){jList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henuz gunluk yok.</li>';return;}
+  if(!state.journals||!state.journals.length){jList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henüz günlük yok.</li>';return;}
   state.journals.forEach(function(j){
     var li=document.createElement('li');li.className='archive-item'+(j.id===state.activeJournalId?' active':'');li.setAttribute('role','button');li.setAttribute('tabindex','0');
     var ic=document.createElement('div');ic.className='archive-item-icon';ic.textContent='📄';
@@ -1357,7 +1425,7 @@ function renderJournalList(){
     jList.appendChild(li);
   });
 }
-document.getElementById('newJournalBtn').addEventListener('click',function(){var nj={id:Date.now().toString() + Math.random().toString(36).slice(2),title:new Date().toLocaleDateString('tr-TR')+' — Günlük',content:''};state.journals.unshift(nj);state.activeJournalId=nj.id;renderJournalList();jEditor.style.display='flex';jTitle.value=nj.title;jText.value='';saveToCloud('journals',state.journals,'journalStatus');});
+document.getElementById('newJournalBtn').addEventListener('click',function(){var nj={id:Date.now().toString()+Math.random().toString(36).slice(2),title:new Date().toLocaleDateString('tr-TR')+' — Günlük',content:''};state.journals.unshift(nj);state.activeJournalId=nj.id;renderJournalList();jEditor.style.display='flex';jTitle.value=nj.title;jText.value='';saveToCloud('journals',state.journals,'journalStatus');});
 jTitle.addEventListener('input',function(){var j=state.journals.find(function(x){return x.id===state.activeJournalId;});if(!j)return;j.title=this.value;j.content=jText.value;saveToCloud('journals',state.journals,'journalStatus');var a=jList.querySelector('.active .title-text');if(a)a.textContent=j.title||'Başlıksız';});
 jText.addEventListener('input',function(){var j=state.journals.find(function(x){return x.id===state.activeJournalId;});if(!j)return;j.content=this.value;saveToCloud('journals',state.journals,'journalStatus');});
 
@@ -1365,7 +1433,7 @@ jText.addEventListener('input',function(){var j=state.journals.find(function(x){
 var nList=document.getElementById('notesList'),nEditor=document.getElementById('notesEditor'),nTitle=document.getElementById('notesTitle'),nText=document.getElementById('notesText');
 function renderNotesList(){
   nList.innerHTML='';
-  if(!state.notes || !state.notes.length){nList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henuz not yok.</li>';return;}
+  if(!state.notes||!state.notes.length){nList.innerHTML='<li style="padding:20px;text-align:center;color:var(--muted);font-size:.82rem;">Henüz not yok.</li>';return;}
   state.notes.forEach(function(n){
     var li=document.createElement('li');li.className='archive-item'+(n.id===state.activeNoteId?' active':'');li.setAttribute('role','button');li.setAttribute('tabindex','0');
     var ic=document.createElement('div');ic.className='archive-item-icon';ic.textContent='💡';
@@ -1377,7 +1445,7 @@ function renderNotesList(){
     nList.appendChild(li);
   });
 }
-document.getElementById('newNoteBtn').addEventListener('click',function(){var nn={id:Date.now().toString() + Math.random().toString(36).slice(2),title:'Yeni Fikir',content:''};state.notes.unshift(nn);state.activeNoteId=nn.id;renderNotesList();nEditor.style.display='flex';nTitle.value=nn.title;nText.value='';saveToCloud('notes',state.notes,'notesStatus');});
+document.getElementById('newNoteBtn').addEventListener('click',function(){var nn={id:Date.now().toString()+Math.random().toString(36).slice(2),title:'Yeni Fikir',content:''};state.notes.unshift(nn);state.activeNoteId=nn.id;renderNotesList();nEditor.style.display='flex';nTitle.value=nn.title;nText.value='';saveToCloud('notes',state.notes,'notesStatus');});
 nTitle.addEventListener('input',function(){var n=state.notes.find(function(x){return x.id===state.activeNoteId;});if(!n)return;n.title=this.value;saveToCloud('notes',state.notes,'notesStatus');var a=nList.querySelector('.active .title-text');if(a)a.textContent=n.title||'Başlıksız';});
 nText.addEventListener('input',function(){var n=state.notes.find(function(x){return x.id===state.activeNoteId;});if(!n)return;n.content=this.value;saveToCloud('notes',state.notes,'notesStatus');});
 
@@ -1393,7 +1461,7 @@ document.querySelectorAll('.mood-btn').forEach(function(b){
   });
 });
 var quotes=[
-  {t:'"Buyuk isler yapmak icin buyuk emek gerekir."',a:'— Atatürk'},
+  {t:'"Büyük işler yapmak için büyük emek gerekir."',a:'— Atatürk'},
   {t:'"Başarı, her gün tekrarlanan küçük çabaların toplamıdır."',a:'— Robert Collier'},
   {t:'"Gelecek, güzel rüyalarının gerçek olduğuna inananlarındır."',a:'— Eleanor Roosevelt'},
   {t:'"Zorluklar, yeteneklerini fark etmen için var."',a:'— Epiktetos'},
@@ -1418,7 +1486,7 @@ vibeNoteEl.addEventListener('input',function(){
   },900);
 });
 
-/* MINI GAME: KEEPIE UPPIE (TOP SEKTİRME) */
+/* GAME */
 var gCanvas = document.getElementById('gameCanvas');
 if(gCanvas) {
   var gCtx = gCanvas.getContext('2d');
@@ -1427,101 +1495,49 @@ if(gCanvas) {
   var gScore = 0;
   var gBest = parseInt(localStorage.getItem('futbolBestScore')) || 0;
   var gActive = false;
-  
   document.getElementById('gameBest').textContent = gBest;
 
   function drawBall() {
-    gCtx.beginPath();
-    gCtx.arc(gBall.x, gBall.y, gBall.r, 0, Math.PI*2);
-    gCtx.fillStyle = '#ffffff';
-    gCtx.fill();
-    gCtx.lineWidth = 2;
-    gCtx.strokeStyle = '#0f172a';
-    gCtx.stroke();
-    
-    gCtx.beginPath();
-    gCtx.arc(gBall.x, gBall.y, gBall.r * 0.45, 0, Math.PI*2);
-    gCtx.fillStyle = '#1e3c72'; 
-    gCtx.fill();
-    
-    gCtx.beginPath();
-    gCtx.arc(gBall.x - 12, gBall.y - 8, gBall.r * 0.2, 0, Math.PI*2);
-    gCtx.fillStyle = '#1e3c72';
-    gCtx.fill();
-    
-    gCtx.beginPath();
-    gCtx.arc(gBall.x + 10, gBall.y + 12, gBall.r * 0.2, 0, Math.PI*2);
-    gCtx.fillStyle = '#1e3c72';
-    gCtx.fill();
+    gCtx.beginPath();gCtx.arc(gBall.x, gBall.y, gBall.r, 0, Math.PI*2);
+    gCtx.fillStyle = '#ffffff';gCtx.fill();gCtx.lineWidth = 2;gCtx.strokeStyle = '#0f172a';gCtx.stroke();
+    gCtx.beginPath();gCtx.arc(gBall.x, gBall.y, gBall.r * 0.45, 0, Math.PI*2);gCtx.fillStyle = '#1e3c72';gCtx.fill();
+    gCtx.beginPath();gCtx.arc(gBall.x - 12, gBall.y - 8, gBall.r * 0.2, 0, Math.PI*2);gCtx.fillStyle = '#1e3c72';gCtx.fill();
+    gCtx.beginPath();gCtx.arc(gBall.x + 10, gBall.y + 12, gBall.r * 0.2, 0, Math.PI*2);gCtx.fillStyle = '#1e3c72';gCtx.fill();
   }
-
   function gameLoop() {
     gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
-    
     if (gActive) {
-      gBall.dy += gGravity;
-      gBall.x += gBall.dx;
-      gBall.y += gBall.dy;
-
+      gBall.dy += gGravity;gBall.x += gBall.dx;gBall.y += gBall.dy;
       if(gBall.x < gBall.r) { gBall.x = gBall.r; gBall.dx *= -0.8; }
       if(gBall.x > gCanvas.width - gBall.r) { gBall.x = gCanvas.width - gBall.r; gBall.dx *= -0.8; }
-
       if(gBall.y > gCanvas.height - gBall.r) {
-        gBall.y = gCanvas.height - gBall.r;
-        gBall.dy = 0;
-        gBall.dx = 0;
-        gActive = false;
-        if(gScore > 0) {
-          botSay("Top düştü! Skor: " + gScore, 2500);
-        }
-        gScore = 0;
-        document.getElementById('gameScore').textContent = gScore;
+        gBall.y = gCanvas.height - gBall.r;gBall.dy = 0;gBall.dx = 0;gActive = false;
+        if(gScore > 0) botSay("Top düştü! Skor: " + gScore, 2500);
+        gScore = 0;document.getElementById('gameScore').textContent = gScore;
       }
-    } else {
-      gBall.y = 150 + Math.sin(Date.now() / 300) * 10;
-    }
-    
-    drawBall();
-    requestAnimationFrame(gameLoop);
+    } else { gBall.y = 150 + Math.sin(Date.now() / 300) * 10; }
+    drawBall();requestAnimationFrame(gameLoop);
   }
-
   function tapBall(e) {
     var rect = gCanvas.getBoundingClientRect();
-    var clientX = e.clientX;
-    var clientY = e.clientY;
-    if(e.touches && e.touches.length > 0) {
-       clientX = e.touches[0].clientX;
-       clientY = e.touches[0].clientY;
-    }
-    
-    var mx = clientX - rect.left;
-    var my = clientY - rect.top;
+    var clientX = e.clientX, clientY = e.clientY;
+    if(e.touches && e.touches.length > 0) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+    var mx = clientX - rect.left, my = clientY - rect.top;
     var dist = Math.sqrt(Math.pow(mx - gBall.x, 2) + Math.pow(my - gBall.y, 2));
-    
     if (dist < gBall.r + 35) {
       if(!gActive) gActive = true;
-      
-      gBall.dy = -8; 
-      gBall.dx = (gBall.x - mx) * 0.12; 
-      gScore++;
-      
-      if(gScore > gBest) {
-        gBest = gScore;
-        localStorage.setItem('futbolBestScore', gBest);
-        document.getElementById('gameBest').textContent = gBest;
-      }
+      gBall.dy = -8;gBall.dx = (gBall.x - mx) * 0.12;gScore++;
+      if(gScore > gBest) { gBest = gScore; localStorage.setItem('futbolBestScore', gBest); document.getElementById('gameBest').textContent = gBest; }
       document.getElementById('gameScore').textContent = gScore;
       gBall.x += (Math.random() - 0.5) * 4;
     }
   }
-
   gCanvas.addEventListener('mousedown', tapBall);
   gCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); tapBall(e); }, {passive: false});
-  
   gameLoop();
 }
 
-/* APPLE WIDGET STYLE SHOWCASE ROTATION */
+/* SHOWCASE */
 var showcaseIdx = 0;
 var showcaseImgs = document.querySelectorAll('.showcase-img');
 if(showcaseImgs.length > 0) {
