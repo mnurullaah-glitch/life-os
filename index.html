@@ -38,8 +38,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 /* INTRO */
 #intro-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center;transition:opacity 1.2s ease,visibility 1.2s ease;}
-#intro-screen.phase-greeting{background:transparent;cursor:pointer;} /* Video görüneceği için arkasını saydamlaştırdık */
+#intro-screen.phase-greeting{background:transparent;cursor:pointer;}
 #intro-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+
+#greetingPhase { position: absolute; inset: 0; }
+
 .waveform-logo{display:flex;align-items:center;justify-content:center;gap:5px;height:80px;margin-bottom:32px;animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards .2s;opacity:0;transform:translateY(40px);}
 .waveform-logo .bar{width:4px;border-radius:4px;background:linear-gradient(180deg,#c46dff 0%,#7c6aff 50%,#4fd1ff 100%);box-shadow:0 0 16px rgba(124,106,255,.6);animation:waveBounce 1.4s ease-in-out infinite;}
 .bar:nth-child(1){height:14px;animation-delay:0s}.bar:nth-child(2){height:26px;animation-delay:.08s}.bar:nth-child(3){height:42px;animation-delay:.16s}.bar:nth-child(4){height:56px;animation-delay:.24s}.bar:nth-child(5){height:68px;animation-delay:.32s}.bar:nth-child(6){height:56px;animation-delay:.40s}.bar:nth-child(7){height:42px;animation-delay:.48s}.bar:nth-child(8){height:26px;animation-delay:.56s}.bar:nth-child(9){height:14px;animation-delay:.64s}
@@ -54,13 +57,46 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .launch-btn:hover::before{left:100%}
 .launch-btn:active{transform:scale(.96)}
 .launch-btn.hide{opacity:0;transform:translateY(-30px) scale(.9);pointer-events:none;transition:all .6s cubic-bezier(.23,1,.32,1);}
-.intro-text{font-size:3.8rem;font-weight:200;letter-spacing:8px;background:linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow: 0 4px 20px rgba(0,0,0,0.8);}
-.intro-sub{font-size:1.6rem;color:var(--muted);margin-top:16px;font-weight:300;letter-spacing:2px;text-shadow: 0 2px 10px rgba(0,0,0,0.8);}
-.intro-time{margin-top:24px;font-size:1.1rem;color:rgba(255,255,255,.5);letter-spacing:4px;text-shadow: 0 2px 10px rgba(0,0,0,0.8);}
-.intro-skip-hint{position:absolute;bottom:40px;color:rgba(255,255,255,.4);font-size:.8rem;letter-spacing:2px;text-shadow: 0 1px 5px rgba(0,0,0,0.8);}
-.fade-in-up{animation:riseUp 1.4s cubic-bezier(.23,1,.32,1) forwards;opacity:0;transform:translateY(24px);}
-.delay-1{animation-delay:0s}.delay-2{animation-delay:.25s}.delay-3{animation-delay:.5s}.delay-4{animation-delay:.75s}.delay-5{animation-delay:1s;}
+
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
+
+/* SİNEMATİK METİN ANİMASYONLARI */
+.cinematic-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  white-space: nowrap;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+.intro-text { font-size: 3.8rem; font-weight: 200; letter-spacing: 8px; background: linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.intro-sub { font-size: 1.6rem; color: var(--muted); font-weight: 300; letter-spacing: 2px; }
+
+.cine-1 { animation: cineFade 1.6s ease-in-out forwards 3s; }
+.cine-2 { animation: cineFade 1.6s ease-in-out forwards 4.8s; }
+.cine-3 { animation: cineFade 2.0s ease-in-out forwards 6.6s; }
+
+@keyframes cineFade {
+  0% { opacity: 0; filter: blur(8px); transform: translate(-50%, calc(-50% + 15px)); }
+  15% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%); }
+  85% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%); }
+  100% { opacity: 0; filter: blur(8px); transform: translate(-50%, calc(-50% - 15px)); }
+}
+
+.intro-skip-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,.4);
+  font-size: .8rem;
+  letter-spacing: 2px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+  opacity: 0;
+  animation: fadeInHint 2s forwards 3s;
+}
+@keyframes fadeInHint { to { opacity: 1; } }
 
 /* TOP BAR */
 .top-bar{position:sticky;top:0;z-index:100;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 24px;height:64px;background:rgba(4,4,15,.75);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);opacity:0;transition:opacity .8s ease .1s;}
@@ -395,6 +431,7 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
+<!-- LOGIN EKRANI -->
 <div id="login-screen">
   <div class="glass-panel login-panel">
     <div class="panel-icon" style="margin: 0 auto; width: 48px; height: 48px; font-size: 1.5rem;">🔒</div>
@@ -409,8 +446,10 @@ textarea::placeholder{color:var(--muted);}
 <div class="aurora"></div>
 <div class="grid-lines"></div>
 
+<!-- INTRO VİDEOSU (Rastgele yüklenecek, asıl ekranda görünmez) -->
 <video class="video-bg" id="bgVideo" playsinline webkit-playsinline></video>
 
+<!-- ROBOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -438,6 +477,7 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
+<!-- INTRO SİNEMATİK EKRAN -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -451,14 +491,14 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </div>
   <div id="greetingPhase" style="display:none;">
-    <div class="intro-text fade-in-up delay-1">MERHABA, NURULLAH.</div>
-    <div class="intro-sub fade-in-up delay-2" id="dynamicGreeting">İyi Geceler.</div>
-    <div class="intro-sub fade-in-up delay-3" style="margin-top: 8px; font-size: 1.15rem; color: rgba(255,255,255,.5);">Evine hoş geldin.</div>
-    <div class="intro-time fade-in-up delay-4" id="introTime">00:00</div>
-    <div class="intro-skip-hint fade-in-up delay-5">Dokun veya ESC ile geç ›</div>
+    <div class="intro-text cinematic-text cine-1">MERHABA, NURULLAH.</div>
+    <div class="intro-sub cinematic-text cine-2" id="dynamicGreeting">İyi Geceler.</div>
+    <div class="intro-sub cinematic-text cine-3" style="font-size: 1.15rem; color: rgba(255,255,255,.5);">Evine hoş geldin.</div>
+    <div class="intro-skip-hint">Dokun veya ESC ile geç ›</div>
   </div>
 </div>
 
+<!-- TOP BAR -->
 <header class="top-bar" id="topBar">
   <div class="top-logo">
     <div class="top-logo-dot"></div>
@@ -474,10 +514,13 @@ textarea::placeholder{color:var(--muted);}
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
 
+<!-- MAIN -->
 <main id="mainContent">
 
+  <!-- DASHBOARD -->
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
+      <!-- TODO sol -->
       <div>
         <div class="glass-panel">
           <div class="panel-header">
@@ -586,7 +629,9 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
+      <!-- Widgets sağ -->
       <div class="widgets-col">
+        <!-- Film -->
         <div class="widget-card">
           <div class="widget-header">
             <div class="widget-icon film">🎬</div>
@@ -603,6 +648,7 @@ textarea::placeholder{color:var(--muted);}
           <a href="https://letterboxd.com" target="_blank" class="film-link">🎞 Letterboxd'u Aç</a>
         </div>
 
+        <!-- Fitness -->
         <div class="fitness-grid">
           <div class="fitness-widget">
             <div class="fitness-widget-header"><span class="fitness-widget-icon">🏃</span><span class="fitness-widget-title">Koşu</span></div>
@@ -626,6 +672,7 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
+        <!-- Keyfini Getir -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
@@ -646,6 +693,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- JOURNAL -->
   <section id="journal" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -663,6 +711,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- NOTES -->
   <section id="notes" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -680,6 +729,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- VIBE -->
   <section id="vibe" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -726,6 +776,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- OYUN (KEEPIE-UPPIE) -->
   <section id="game" class="tab-content">
     <div class="glass-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
       <div class="panel-header" style="justify-content: center; border-bottom: none; margin-bottom: 5px;">
@@ -963,12 +1014,14 @@ launchBtn.addEventListener('click', function() {
   if(p) {
     p.then(function() {
       bgVideo.classList.add('visible');
-      showGreeting(4800); // Video arkada oynarken 4.8 saniye yazılar görünsün
+      // Video arkada oynarken sinematik sekans tetikleniyor. (Toplam sekans ~8.6sn)
+      showGreeting(8600); 
     }).catch(function() {
-      showGreeting(3200); // Video açılmazsa fallback
+      // Hata olursa videosuz geç
+      showGreeting(8600); 
     });
   } else {
-    showGreeting(3200);
+    showGreeting(8600);
   }
 });
 
@@ -977,11 +1030,10 @@ function showGreeting(duration) {
   introScreen.classList.remove('phase-start');
   introScreen.classList.add('phase-greeting');
   launchPhase.style.display = 'none';
-  greetingPhase.style.display = '';
+  greetingPhase.style.display = 'block'; 
   document.getElementById('dynamicGreeting').textContent = getGreeting(now.getHours()) + '.';
-  document.getElementById('introTime').textContent = fmt(now);
   
-  introTimer = setTimeout(dismissIntro, duration || 4500);
+  introTimer = setTimeout(dismissIntro, duration || 8600);
   introScreen.addEventListener('click', dismissIntro);
   document.addEventListener('keydown', function sk(e){
     if(e.key === 'Escape'){ dismissIntro(); document.removeEventListener('keydown',sk); }
@@ -1305,7 +1357,6 @@ if(gCanvas) {
   document.getElementById('gameBest').textContent = gBest;
 
   function drawBall() {
-    // Top gövdesi (Beyaz)
     gCtx.beginPath();
     gCtx.arc(gBall.x, gBall.y, gBall.r, 0, Math.PI*2);
     gCtx.fillStyle = '#ffffff';
@@ -1314,7 +1365,6 @@ if(gCanvas) {
     gCtx.strokeStyle = '#0f172a';
     gCtx.stroke();
     
-    // Top üzerindeki beşgen detayları (Lacivert tonları)
     gCtx.beginPath();
     gCtx.arc(gBall.x, gBall.y, gBall.r * 0.45, 0, Math.PI*2);
     gCtx.fillStyle = '#1e3c72'; 
@@ -1339,11 +1389,9 @@ if(gCanvas) {
       gBall.x += gBall.dx;
       gBall.y += gBall.dy;
 
-      // Duvara çarpma
       if(gBall.x < gBall.r) { gBall.x = gBall.r; gBall.dx *= -0.8; }
       if(gBall.x > gCanvas.width - gBall.r) { gBall.x = gCanvas.width - gBall.r; gBall.dx *= -0.8; }
 
-      // Yere düşme
       if(gBall.y > gCanvas.height - gBall.r) {
         gBall.y = gCanvas.height - gBall.r;
         gBall.dy = 0;
@@ -1356,7 +1404,6 @@ if(gCanvas) {
         document.getElementById('gameScore').textContent = gScore;
       }
     } else {
-      // Bekleme anında hafif süzülme efekti
       gBall.y = 150 + Math.sin(Date.now() / 300) * 10;
     }
     
@@ -1377,12 +1424,11 @@ if(gCanvas) {
     var my = clientY - rect.top;
     var dist = Math.sqrt(Math.pow(mx - gBall.x, 2) + Math.pow(my - gBall.y, 2));
     
-    // Topa vuruş alanı (biraz esnek)
     if (dist < gBall.r + 35) {
       if(!gActive) gActive = true;
       
-      gBall.dy = -8; // Yukarı zıplat
-      gBall.dx = (gBall.x - mx) * 0.12; // Tıklanan yere göre sağa/sola kavis
+      gBall.dy = -8; 
+      gBall.dx = (gBall.x - mx) * 0.12; 
       gScore++;
       
       if(gScore > gBest) {
@@ -1391,8 +1437,6 @@ if(gCanvas) {
         document.getElementById('gameBest').textContent = gBest;
       }
       document.getElementById('gameScore').textContent = gScore;
-      
-      // Her vuruşta küçük bir rotasyon hissi için x'i minik oynat
       gBall.x += (Math.random() - 0.5) * 4;
     }
   }
