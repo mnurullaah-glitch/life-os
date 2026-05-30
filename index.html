@@ -521,7 +521,6 @@ textarea::placeholder{color:var(--muted);}
 /* RESPONSIVE */
 @media(max-width:1100px){
   .dashboard-grid{grid-template-columns:1fr 300px;}
-  .showcase-col{display:none;}
   .cal-layout{grid-template-columns:1fr 260px;}
 }
 @media(max-width:900px){
@@ -551,6 +550,14 @@ textarea::placeholder{color:var(--muted);}
   #bot-svg{width:52px;height:52px;}
   .cal-days .cal-day{min-height:55px;}
   .dashboard-grid{grid-template-columns:1fr;}
+  
+  /* INTRO TEXT MOBILE FIXES */
+  .intro-text{font-size:1.8rem;letter-spacing:4px;line-height:1.3;}
+  .intro-sub{font-size:1rem;letter-spacing:1px;}
+  .cinematic-text{padding:0 10px;}
+  
+  /* SHOWCASE MOBILE FIX */
+  .showcase-card{height:350px;}
 }
 </style>
 </head>
@@ -571,7 +578,6 @@ textarea::placeholder{color:var(--muted);}
 <div class="grid-lines"></div>
 <video class="video-bg" id="bgVideo" playsinline webkit-playsinline></video>
 
-<!-- BOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -596,7 +602,6 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
-<!-- INTRO -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -636,11 +641,9 @@ textarea::placeholder{color:var(--muted);}
 
 <main id="mainContent">
 
-<!-- ══════════════ DASHBOARD ══════════════ -->
 <section id="dashboard" class="tab-content active">
   <div class="dashboard-grid">
     <div>
-      <!-- QUICK TODOS -->
       <div class="glass-panel">
         <div class="panel-header">
           <div class="panel-icon">✦</div>
@@ -661,7 +664,6 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
-      <!-- DASHBOARD MINI CALENDAR WIDGET -->
       <div class="dash-cal-widget">
         <div class="dash-cal-header">
           <div class="dash-cal-icon">📅</div>
@@ -746,7 +748,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
-<!-- ══════════════ GÖREVLER ══════════════ -->
 <section id="todos" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header">
@@ -873,7 +874,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
-<!-- ══════════════ TAKVİM ══════════════ -->
 <section id="calendar" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header">
@@ -915,7 +915,6 @@ textarea::placeholder{color:var(--muted);}
         <div class="cal-selected-day">
           <div class="cal-selected-title">Seçili Gün</div>
           <div class="cal-selected-date" id="calSelectedDate">Bir gün seç</div>
-          <!-- Takvim Olayları (Todo'dan bağımsız) -->
           <div class="cal-section-label">📅 Etkinlikler</div>
           <div class="cal-own-event-row">
             <input type="text" class="cal-own-event-input" id="calOwnEventInput" placeholder="Etkinlik ekle...">
@@ -923,7 +922,6 @@ textarea::placeholder{color:var(--muted);}
             <button class="cal-own-add-btn" id="calOwnAddBtn">+ Ekle</button>
           </div>
           <div id="calOwnEventsList" style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;max-height:140px;overflow-y:auto;"></div>
-          <!-- Todo görevleri -->
           <div class="cal-section-label">✦ Görevler</div>
           <div class="cal-add-task-row">
             <input type="text" class="cal-add-input" id="calAddInput" placeholder="Bu güne görev ekle...">
@@ -942,7 +940,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
-<!-- ══════════════ GÜNLÜK ══════════════ -->
 <section id="journal" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -960,7 +957,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
-<!-- ══════════════ NOTLAR ══════════════ -->
 <section id="notes" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -978,7 +974,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
-<!-- ══════════════ VİBE ══════════════ -->
 <section id="vibe" class="tab-content">
   <div class="glass-panel">
     <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -1028,7 +1023,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
-<!-- ══════════════ OYUN ══════════════ -->
 <section id="game" class="tab-content">
   <div class="glass-panel" style="text-align:center;max-width:600px;margin:0 auto;">
     <div class="panel-header" style="justify-content:center;border-bottom:none;margin-bottom:5px;">
