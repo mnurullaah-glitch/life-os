@@ -426,7 +426,12 @@ main.visible{opacity:1;}
 .sp-embed-wrap iframe{height:232px;}
 .yt-embed-wrap iframe{height:200px;border-radius:0 0 18px 18px;}
 
-
+/* SHOWCASE */
+.showcase-col{display:flex;flex-direction:column;}
+.showcase-card{padding:0!important;height:680px;position:relative;overflow:hidden;border-radius:18px;background:rgba(0,0,0,.2)!important;display:block;}
+.showcase-slider{position:relative;width:100%;height:100%;}
+.showcase-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;filter:blur(15px) scale(1.06);transition:opacity 1.5s cubic-bezier(.4,0,.2,1),filter 1.5s cubic-bezier(.4,0,.2,1);border-radius:18px;}
+.showcase-img.active{opacity:1;filter:blur(0) scale(1);}
 
 /* JOURNAL & NOTES */
 .split-container{display:grid;grid-template-columns:240px 1fr;gap:18px;}
