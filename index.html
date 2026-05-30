@@ -8,7 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght=200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap');
 :root{
   --bg:#04040f;--border:rgba(255,255,255,.07);--text:#f0f0f8;--muted:rgba(255,255,255,.38);
   --a1:#7c6aff;--a2:#c46dff;--a3:#4fd1ff;--ok:#22d3a0;--err:#ff5566;--warn:#ffb432;
@@ -60,7 +60,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
-/* SİNEMATİK METİN ANİMASYONLARI */
+/* SİNEMATİK METİN ANİMASYONLARI (Smooth) */
 .cinematic-text {
   position: absolute;
   top: 50%;
@@ -75,6 +75,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .intro-text { font-size: 3.8rem; font-weight: 200; letter-spacing: 8px; background: linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .intro-sub { font-size: 1.6rem; color: var(--muted); font-weight: 300; letter-spacing: 2px; }
 
+/* Yumuşatılmış Animasyonlar */
 @keyframes cineFade {
   0% { opacity: 0; filter: blur(15px); transform: translate(-50%, calc(-50% + 15px)) scale(0.95); }
   25% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%) scale(1); }
@@ -118,7 +119,7 @@ nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);bor
 .top-time{font-size:.75rem;font-weight:400;letter-spacing:3px;color:var(--muted);font-variant-numeric:tabular-nums; white-space:nowrap;}
 
 /* MAIN */
-main{max-width:1200px;margin:28px auto 80px;padding:0 20px;opacity:0;transition:opacity .8s ease .3s;}
+main{max-width:1350px;margin:28px auto 80px;padding:0 20px;opacity:0;transition:opacity .8s ease .3s;}
 main.visible{opacity:1;}
 .tab-content{display:none;}
 .tab-content.active{display:block;animation:tabSlide .45s cubic-bezier(.23,1,.32,1);}
@@ -133,8 +134,8 @@ main.visible{opacity:1;}
 .panel-title{font-size:.73rem;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.45);flex:1;}
 .panel-badge{font-size:.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(124,106,255,.15);border:1px solid rgba(124,106,255,.3);color:var(--a1);}
 
-/* DASHBOARD */
-.dashboard-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start;}
+/* YENİ 3 SÜTUNLU DASHBOARD */
+.dashboard-grid{display:grid;grid-template-columns:1fr 320px 280px;gap:18px;align-items:start;}
 
 /* TODO */
 .todo-layout{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:520px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
@@ -244,7 +245,7 @@ main.visible{opacity:1;}
 .cloud-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);flex-shrink:0;animation:blink 2.5s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* WIDGETS */
+/* WIDGETS ORTA SÜTUN */
 .widgets-col{display:flex;flex-direction:column;gap:14px;}
 .widget-card{background:rgba(255,255,255,.025);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:border-color .3s ease,transform .3s ease;}
 .widget-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,106,255,.4),rgba(196,109,255,.4),transparent);opacity:0;transition:opacity .3s ease;}
@@ -295,14 +296,16 @@ main.visible{opacity:1;}
 .sp-hint{font-size:.65rem;color:var(--muted);padding:0 18px 10px;}
 .sp-embed-wrap iframe{border:none;width:100%;display:block;height:232px;}
 
-/* APPLE STYLE SHOWCASE WIDGET CSS */
+/* APPLE STYLE SHOWCASE WIDGET CSS (En Sağ Sütun) */
+.showcase-col { display: flex; flex-direction: column; }
 .showcase-card {
   padding: 0 !important;
-  height: 460px;
+  height: 680px;
   position: relative;
   overflow: hidden;
   border-radius: 18px;
   background: rgba(0,0,0,0.2) !important;
+  display: block; /* mobilde gizlenmesin diye */
 }
 .showcase-slider {
   position: relative;
@@ -366,7 +369,7 @@ textarea::placeholder{color:var(--muted);}
 .vibe-sp-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.82rem;font-family:inherit;outline:none;color-scheme:dark;transition:border-color .2s ease;}
 .vibe-sp-input:focus{border-color:rgba(30,215,96,.4);}
 .vibe-sp-input::placeholder{color:var(--muted);}
-.vibe-sp-btn{background:linear-gradient(135deg,#1db954,#1ed760);border:none;border-radius:10px;padding:10px 18px;color:#000;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .25s ease;}
+.vibe-sp-btn{background:linear-gradient(135deg,#1db954,#1ed760);border:none;border-radius:10px;padding:10px 18px;color:#000;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
 .vibe-sp-btn:hover{opacity:.85;transform:translateY(-1px);}
 .vibe-sp-embed{border-radius:14px;overflow:hidden;border:1px solid var(--border);}
 .vibe-sp-embed iframe{border:none;width:100%;display:block;height:352px;}
@@ -431,8 +434,12 @@ textarea::placeholder{color:var(--muted);}
 .b-ant{animation:bAnt 1.5s ease-in-out infinite alternate;}
 @keyframes bAnt{from{opacity:.35}to{opacity:1}}
 
-/* RESPONSIVE */
-@media(max-width:1024px){.dashboard-grid{grid-template-columns:1fr;}.fitness-grid{grid-template-columns:1fr 1fr;}}
+/* RESPONSIVE (Mobil İyileştirmeler) */
+@media(max-width:1024px){
+  .dashboard-grid{grid-template-columns:1fr;}
+  .fitness-grid{grid-template-columns:1fr 1fr;}
+  .showcase-card { height: 400px; } /* Tablette biraz daha kısa olsun */
+}
 @media(max-width:768px){
   .top-bar { 
     display: flex; 
@@ -444,6 +451,7 @@ textarea::placeholder{color:var(--muted);}
   .top-logo { justify-content: center; width: 100%; margin: 0; }
   .top-right { display: none; }
   
+  /* MOBİL TAB KAYDIRMA */
   nav { 
     width: 100%;
     margin: 0;
@@ -459,6 +467,7 @@ textarea::placeholder{color:var(--muted);}
   nav::-webkit-scrollbar { display: none; }
   .tab-btn{padding:8px 14px;font-size:.75rem;flex-shrink: 0;}
   
+  /* SİNEMATİK METİN MOBİL UYUMU */
   .intro-text.cinematic-text { font-size: 2rem; letter-spacing: 4px; white-space: normal; line-height: 1.3; }
   .intro-sub.cinematic-text { font-size: 1.2rem; white-space: normal; }
 
@@ -467,6 +476,7 @@ textarea::placeholder{color:var(--muted);}
   .todo-right{border-top:1px solid var(--border);min-height:300px;}
   .split-container{grid-template-columns:1fr;}
   
+  /* NOTLAR VE GÜNLÜK KAYDIRMA DÜZELTMESİ (MOBİL) */
   .sidebar-panel{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
   
   .fitness-grid{grid-template-columns:1fr 1fr;}
@@ -560,6 +570,7 @@ textarea::placeholder{color:var(--muted);}
 
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
+      
       <div>
         <div class="glass-panel">
           <div class="panel-header">
@@ -724,15 +735,18 @@ textarea::placeholder{color:var(--muted);}
               allow="encrypted-media" allowfullscreen></iframe>
           </div>
         </div>
-
+      </div>
+      
+      <div class="showcase-col">
         <div class="widget-card showcase-card">
           <div class="showcase-slider">
-            <img src="1.png" class="showcase-img" alt="Showcase 1">
+            <img src="1.png" class="showcase-img active" alt="Showcase 1">
             <img src="2.png" class="showcase-img" alt="Showcase 2">
             <img src="3.png" class="showcase-img" alt="Showcase 3">
           </div>
         </div>
       </div>
+      
     </div>
   </section>
 
@@ -779,7 +793,7 @@ textarea::placeholder{color:var(--muted);}
             <div class="mood-section-title">Şu an nasıl hissediyorsun?</div>
             <div class="mood-grid">
               <button class="mood-btn" data-mood="harika" data-emoji="🤩" data-msg="Harika hissediyorsun! Bu enerjiyle her şeyi başarırsın. 💜"><span class="mood-emoji">🤩</span><span class="mood-label">Harika</span></button>
-              <button class="mood-btn" data-mood="iyi" data-emoji="😊" data-msg="İyi bir দিন! Enerjini müzikle besle. 🎵"><span class="mood-emoji">😊</span><span class="mood-label">İyi</span></button>
+              <button class="mood-btn" data-mood="iyi" data-emoji="😊" data-msg="İyi bir gün! Enerjini müzikle besle. 🎵"><span class="mood-emoji">😊</span><span class="mood-label">İyi</span></button>
               <button class="mood-btn" data-mood="normal" data-emoji="😐" data-msg="Sakin bir gün. Bazen denge en güzel haldir. ✨"><span class="mood-emoji">😐</span><span class="mood-label">Normal</span></button>
               <button class="mood-btn" data-mood="yorgun" data-emoji="😴" data-msg="Yorgunluk geçici, güç kalıcı. Dinlen. 🌙"><span class="mood-emoji">😴</span><span class="mood-label">Yorgun</span></button>
               <button class="mood-btn" data-mood="zor" data-emoji="😤" data-msg="Zor günler geçer. Sen üstesinden gelirsin. 💪"><span class="mood-emoji">😤</span><span class="mood-label">Zor</span></button>
@@ -1502,7 +1516,7 @@ if(showcaseImgs.length > 0) {
     showcaseImgs[showcaseIdx].classList.remove('active');
     showcaseIdx = (showcaseIdx + 1) % showcaseImgs.length;
     showcaseImgs[showcaseIdx].classList.add('active');
-  }, 15000); // Tam 15 saniyede bir rotasyon
+  }, 15000);
 }
 
 })();
