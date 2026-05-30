@@ -18,7 +18,7 @@
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(124,106,255,.3);border-radius:4px}
 
-/* AKAN GRADIENT ARKA PLAN */
+/* AKAN GRADIENT ARKA PLAN (Ana ekran için) */
 .aurora {
   position: fixed; inset: 0; z-index: -3; overflow: hidden;
   background: linear-gradient(135deg, #04040f 0%, #160b29 25%, #08081a 50%, #0a1128 75%, #04040f 100%);
@@ -60,7 +60,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
-/* SİNEMATİK METİN ANİMASYONLARI */
+/* SİNEMATİK METİN ANİMASYONLARI (Smooth) */
 .cinematic-text {
   position: absolute;
   top: 50%;
@@ -75,6 +75,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .intro-text { font-size: 3.8rem; font-weight: 200; letter-spacing: 8px; background: linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .intro-sub { font-size: 1.6rem; color: var(--muted); font-weight: 300; letter-spacing: 2px; }
 
+/* Yumuşatılmış Animasyonlar */
 @keyframes cineFade {
   0% { opacity: 0; filter: blur(15px); transform: translate(-50%, calc(-50% + 15px)) scale(0.95); }
   25% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%) scale(1); }
@@ -439,7 +440,10 @@ textarea::placeholder{color:var(--muted);}
   .dashboard-grid{grid-template-columns:1fr;}.todo-layout{grid-template-columns:1fr;min-height:auto;}
   .todo-right{border-top:1px solid var(--border);min-height:300px;}
   .split-container{grid-template-columns:1fr;}
-  .sidebar-panel{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:12px;max-height:160px;}
+  
+  /* NOTLAR VE GÜNLÜK KAYDIRMA DÜZELTMESİ (MOBİL) */
+  .sidebar-panel{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  
   .fitness-grid{grid-template-columns:1fr 1fr;}
   textarea{height:260px;}.vibe-grid{grid-template-columns:1fr;}
   #bot{bottom:14px;right:12px;}#bot-svg{width:52px;height:52px;}
@@ -449,6 +453,7 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
+<!-- LOGIN EKRANI -->
 <div id="login-screen">
   <div class="glass-panel login-panel">
     <div class="panel-icon" style="margin: 0 auto; width: 48px; height: 48px; font-size: 1.5rem;">🔒</div>
@@ -463,8 +468,10 @@ textarea::placeholder{color:var(--muted);}
 <div class="aurora"></div>
 <div class="grid-lines"></div>
 
+<!-- INTRO VİDEOSU (Rastgele yüklenecek, asıl ekranda görünmez) -->
 <video class="video-bg" id="bgVideo" playsinline webkit-playsinline></video>
 
+<!-- ROBOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -492,6 +499,7 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
+<!-- INTRO SİNEMATİK EKRAN -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -512,6 +520,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </div>
 
+<!-- TOP BAR -->
 <header class="top-bar" id="topBar">
   <div class="top-logo">
     <div class="top-logo-dot"></div>
@@ -527,10 +536,13 @@ textarea::placeholder{color:var(--muted);}
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
 
+<!-- MAIN -->
 <main id="mainContent">
 
+  <!-- DASHBOARD -->
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
+      <!-- TODO sol -->
       <div>
         <div class="glass-panel">
           <div class="panel-header">
@@ -639,7 +651,9 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
+      <!-- Widgets sağ -->
       <div class="widgets-col">
+        <!-- Film -->
         <div class="widget-card">
           <div class="widget-header">
             <div class="widget-icon film">🎬</div>
@@ -656,6 +670,7 @@ textarea::placeholder{color:var(--muted);}
           <a href="https://letterboxd.com" target="_blank" class="film-link">🎞 Letterboxd'u Aç</a>
         </div>
 
+        <!-- Fitness -->
         <div class="fitness-grid">
           <div class="fitness-widget">
             <div class="fitness-widget-header"><span class="fitness-widget-icon">🏃</span><span class="fitness-widget-title">Koşu</span></div>
@@ -679,6 +694,7 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
+        <!-- Keyfini Getir -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
@@ -699,6 +715,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- JOURNAL -->
   <section id="journal" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -716,6 +733,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- NOTES -->
   <section id="notes" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -733,6 +751,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- VIBE -->
   <section id="vibe" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -779,6 +798,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- OYUN (KEEPIE-UPPIE) -->
   <section id="game" class="tab-content">
     <div class="glass-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
       <div class="panel-header" style="justify-content: center; border-bottom: none; margin-bottom: 5px;">
@@ -1141,7 +1161,6 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 /* YENİLENMİŞ LOAD FROM CLOUD (Hata Korumalı) */
 function loadFromCloud(){
   userDoc.get().then(function(doc){
-    // Eğer doküman henüz yoksa (yeni hesapsa) listeleri boş render et.
     if(!doc.exists) {
         renderTodos();
         renderJournalList();
@@ -1162,7 +1181,6 @@ function loadFromCloud(){
     }
     renderTodos();
 
-    // Veri yapısı bozuksa çökmeyi önleyen yeni katman
     if(Array.isArray(d.journals)){
         state.journals=d.journals;
     } else if(d.journal && typeof d.journal === 'string' && d.journal.trim()){
@@ -1199,7 +1217,6 @@ function loadFromCloud(){
     }
   }).catch(function(e){
     console.error("Yükleme Hatası:", e);
-    // Hata olsa bile arayüzü çiz
     renderTodos();
     renderJournalList();
     renderNotesList();
