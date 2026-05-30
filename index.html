@@ -8,7 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght=200;300;400;500;600;700&display=swap');
 :root{
   --bg:#04040f;--border:rgba(255,255,255,.07);--text:#f0f0f8;--muted:rgba(255,255,255,.38);
   --a1:#7c6aff;--a2:#c46dff;--a3:#4fd1ff;--ok:#22d3a0;--err:#ff5566;--warn:#ffb432;
@@ -60,7 +60,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 
 @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
 
-/* SİNEMATİK METİN ANİMASYONLARI (Smooth) */
+/* SİNEMATİK METİN ANİMASYONLARI */
 .cinematic-text {
   position: absolute;
   top: 50%;
@@ -75,7 +75,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .intro-text { font-size: 3.8rem; font-weight: 200; letter-spacing: 8px; background: linear-gradient(135deg,#fff 0%,#c46dff 50%,#7c6aff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .intro-sub { font-size: 1.6rem; color: var(--muted); font-weight: 300; letter-spacing: 2px; }
 
-/* Yumuşatılmış Animasyonlar */
 @keyframes cineFade {
   0% { opacity: 0; filter: blur(15px); transform: translate(-50%, calc(-50% + 15px)) scale(0.95); }
   25% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%) scale(1); }
@@ -296,6 +295,36 @@ main.visible{opacity:1;}
 .sp-hint{font-size:.65rem;color:var(--muted);padding:0 18px 10px;}
 .sp-embed-wrap iframe{border:none;width:100%;display:block;height:232px;}
 
+/* APPLE STYLE SHOWCASE WIDGET CSS */
+.showcase-card {
+  padding: 0 !important;
+  height: 460px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.2) !important;
+}
+.showcase-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.showcase-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: blur(15px) scale(1.06);
+  transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), filter 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 18px;
+}
+.showcase-img.active {
+  opacity: 1;
+  filter: blur(0) scale(1);
+}
+
 /* JOURNAL & NOTES */
 .split-container{display:grid;grid-template-columns:240px 1fr;gap:18px;}
 .sidebar-panel{border-right:1px solid var(--border);padding-right:18px;display:flex;flex-direction:column;gap:7px;max-height:500px;overflow-y:auto;}
@@ -337,7 +366,7 @@ textarea::placeholder{color:var(--muted);}
 .vibe-sp-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.82rem;font-family:inherit;outline:none;color-scheme:dark;transition:border-color .2s ease;}
 .vibe-sp-input:focus{border-color:rgba(30,215,96,.4);}
 .vibe-sp-input::placeholder{color:var(--muted);}
-.vibe-sp-btn{background:linear-gradient(135deg,#1db954,#1ed760);border:none;border-radius:10px;padding:10px 18px;color:#000;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
+.vibe-sp-btn{background:linear-gradient(135deg,#1db954,#1ed760);border:none;border-radius:10px;padding:10px 18px;color:#000;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .25s ease;}
 .vibe-sp-btn:hover{opacity:.85;transform:translateY(-1px);}
 .vibe-sp-embed{border-radius:14px;overflow:hidden;border:1px solid var(--border);}
 .vibe-sp-embed iframe{border:none;width:100%;display:block;height:352px;}
@@ -402,10 +431,9 @@ textarea::placeholder{color:var(--muted);}
 .b-ant{animation:bAnt 1.5s ease-in-out infinite alternate;}
 @keyframes bAnt{from{opacity:.35}to{opacity:1}}
 
-/* RESPONSIVE (Mobil İyileştirmeler) */
+/* RESPONSIVE */
 @media(max-width:1024px){.dashboard-grid{grid-template-columns:1fr;}.fitness-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:768px){
-  /* TOP BAR MOBİL DÜZENİ */
   .top-bar { 
     display: flex; 
     flex-direction: column; 
@@ -416,7 +444,6 @@ textarea::placeholder{color:var(--muted);}
   .top-logo { justify-content: center; width: 100%; margin: 0; }
   .top-right { display: none; }
   
-  /* MOBİL TAB KAYDIRMA */
   nav { 
     width: 100%;
     margin: 0;
@@ -432,7 +459,6 @@ textarea::placeholder{color:var(--muted);}
   nav::-webkit-scrollbar { display: none; }
   .tab-btn{padding:8px 14px;font-size:.75rem;flex-shrink: 0;}
   
-  /* SİNEMATİK METİN MOBİL UYUMU */
   .intro-text.cinematic-text { font-size: 2rem; letter-spacing: 4px; white-space: normal; line-height: 1.3; }
   .intro-sub.cinematic-text { font-size: 1.2rem; white-space: normal; }
 
@@ -441,7 +467,6 @@ textarea::placeholder{color:var(--muted);}
   .todo-right{border-top:1px solid var(--border);min-height:300px;}
   .split-container{grid-template-columns:1fr;}
   
-  /* NOTLAR VE GÜNLÜK KAYDIRMA DÜZELTMESİ (MOBİL) */
   .sidebar-panel{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
   
   .fitness-grid{grid-template-columns:1fr 1fr;}
@@ -453,7 +478,6 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
-<!-- LOGIN EKRANI -->
 <div id="login-screen">
   <div class="glass-panel login-panel">
     <div class="panel-icon" style="margin: 0 auto; width: 48px; height: 48px; font-size: 1.5rem;">🔒</div>
@@ -468,10 +492,8 @@ textarea::placeholder{color:var(--muted);}
 <div class="aurora"></div>
 <div class="grid-lines"></div>
 
-<!-- INTRO VİDEOSU (Rastgele yüklenecek, asıl ekranda görünmez) -->
 <video class="video-bg" id="bgVideo" playsinline webkit-playsinline></video>
 
-<!-- ROBOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -499,7 +521,6 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
-<!-- INTRO SİNEMATİK EKRAN -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -520,7 +541,6 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </div>
 
-<!-- TOP BAR -->
 <header class="top-bar" id="topBar">
   <div class="top-logo">
     <div class="top-logo-dot"></div>
@@ -536,13 +556,10 @@ textarea::placeholder{color:var(--muted);}
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
 
-<!-- MAIN -->
 <main id="mainContent">
 
-  <!-- DASHBOARD -->
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
-      <!-- TODO sol -->
       <div>
         <div class="glass-panel">
           <div class="panel-header">
@@ -651,9 +668,7 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
-      <!-- Widgets sağ -->
       <div class="widgets-col">
-        <!-- Film -->
         <div class="widget-card">
           <div class="widget-header">
             <div class="widget-icon film">🎬</div>
@@ -670,7 +685,6 @@ textarea::placeholder{color:var(--muted);}
           <a href="https://letterboxd.com" target="_blank" class="film-link">🎞 Letterboxd'u Aç</a>
         </div>
 
-        <!-- Fitness -->
         <div class="fitness-grid">
           <div class="fitness-widget">
             <div class="fitness-widget-header"><span class="fitness-widget-icon">🏃</span><span class="fitness-widget-title">Koşu</span></div>
@@ -694,7 +708,6 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
-        <!-- Keyfini Getir -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
@@ -711,11 +724,18 @@ textarea::placeholder{color:var(--muted);}
               allow="encrypted-media" allowfullscreen></iframe>
           </div>
         </div>
+
+        <div class="widget-card showcase-card">
+          <div class="showcase-slider">
+            <img src="1.png" class="showcase-img" alt="Showcase 1">
+            <img src="2.png" class="showcase-img" alt="Showcase 2">
+            <img src="3.png" class="showcase-img" alt="Showcase 3">
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- JOURNAL -->
   <section id="journal" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -733,7 +753,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- NOTES -->
   <section id="notes" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -751,7 +770,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- VIBE -->
   <section id="vibe" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -761,7 +779,7 @@ textarea::placeholder{color:var(--muted);}
             <div class="mood-section-title">Şu an nasıl hissediyorsun?</div>
             <div class="mood-grid">
               <button class="mood-btn" data-mood="harika" data-emoji="🤩" data-msg="Harika hissediyorsun! Bu enerjiyle her şeyi başarırsın. 💜"><span class="mood-emoji">🤩</span><span class="mood-label">Harika</span></button>
-              <button class="mood-btn" data-mood="iyi" data-emoji="😊" data-msg="İyi bir gün! Enerjini müzikle besle. 🎵"><span class="mood-emoji">😊</span><span class="mood-label">İyi</span></button>
+              <button class="mood-btn" data-mood="iyi" data-emoji="😊" data-msg="İyi bir দিন! Enerjini müzikle besle. 🎵"><span class="mood-emoji">😊</span><span class="mood-label">İyi</span></button>
               <button class="mood-btn" data-mood="normal" data-emoji="😐" data-msg="Sakin bir gün. Bazen denge en güzel haldir. ✨"><span class="mood-emoji">😐</span><span class="mood-label">Normal</span></button>
               <button class="mood-btn" data-mood="yorgun" data-emoji="😴" data-msg="Yorgunluk geçici, güç kalıcı. Dinlen. 🌙"><span class="mood-emoji">😴</span><span class="mood-label">Yorgun</span></button>
               <button class="mood-btn" data-mood="zor" data-emoji="😤" data-msg="Zor günler geçer. Sen üstesinden gelirsin. 💪"><span class="mood-emoji">😤</span><span class="mood-label">Zor</span></button>
@@ -774,7 +792,7 @@ textarea::placeholder{color:var(--muted);}
             <div class="quote-author" id="quoteAuthor">— Atatürk</div>
           </div>
           <div>
-            <div class="mood-section-title">Bugünkü düşüncelerin</div>
+            <div class="mood-section-title">Bugünkü Düşüncelerin</div>
             <textarea class="vibe-note-area" id="vibeNote" placeholder="Bugün aklından geçenler..."></textarea>
             <div class="status-bar-mini" style="margin-top:6px;"><div class="cloud-status" id="vibeStatus"><div class="cloud-dot"></div><span>Senkronize</span></div></div>
           </div>
@@ -798,7 +816,6 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
-  <!-- OYUN (KEEPIE-UPPIE) -->
   <section id="game" class="tab-content">
     <div class="glass-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
       <div class="panel-header" style="justify-content: center; border-bottom: none; margin-bottom: 5px;">
@@ -959,17 +976,15 @@ var db=firebase.firestore();
 var userDoc=db.collection('users').doc('nurullah');
 var state={todos:[],journals:[],notes:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
 
-/* ÇOKLU ZAMANLAYICI (Veri Kayıplarını ve Çakışmaları Engeller) */
+/* ÇOKLU ZAMANLAYICI */
 var saveTimers = {};
 
 function saveToCloud(field, value, statusId){
   var el = document.getElementById(statusId);
   if(el){el.querySelector('span').textContent='Kaydediliyor...'; el.style.color='rgba(255,255,255,.5)';}
   
-  // O alana ait eski kaydetme isteğini iptal et
   if(saveTimers[field]) clearTimeout(saveTimers[field]);
   
-  // 800ms bekleyip o alanı güvenle kaydet
   saveTimers[field] = setTimeout(function(){
     var p = {}; p[field] = value;
     userDoc.set(p, {merge:true})
@@ -1001,7 +1016,6 @@ auth.onAuthStateChanged(function(user) {
   }
 });
 
-// Giriş Butonuna Basıldığında
 loginBtn.addEventListener('click', function() {
   var email = document.getElementById('loginEmail').value.trim();
   var pass = document.getElementById('loginPass').value.trim();
@@ -1032,7 +1046,6 @@ var videoList = ['arkaplan.mp4', 'arkaplan2.mp4', 'arkaplan3.mp4', 'arkaplan4.mp
 launchBtn.addEventListener('click', function() {
   launchBtn.classList.add('hide');
 
-  // Rastgele video seç ve başlat
   var randomVideo = videoList[Math.floor(Math.random() * videoList.length)];
   bgVideo.src = randomVideo;
   bgVideo.muted = false;
@@ -1041,7 +1054,6 @@ launchBtn.addEventListener('click', function() {
   if(p) {
     p.then(function() {
       bgVideo.classList.add('visible');
-      // Video arkada oynarken sinematik sekans tetikleniyor. (Toplam sekans ~9.5sn)
       showGreeting(9600); 
     }).catch(function() {
       showGreeting(9600); 
@@ -1058,7 +1070,6 @@ function showGreeting(duration) {
   launchPhase.style.display = 'none';
   greetingPhase.style.display = 'block'; 
   
-  // Dinamik selamlama metni ve saat entegrasyonu (Örn: "Tünaydın, saat 14:53")
   document.getElementById('dynamicGreeting').textContent = getGreeting(now.getHours()) + ', saat ' + fmt(now);
   
   introTimer = setTimeout(dismissIntro, duration || 9600);
@@ -1072,9 +1083,8 @@ function dismissIntro() {
   if(introTimer){ clearTimeout(introTimer); introTimer=null; }
   introScreen.classList.add('hidden');
   
-  // Videoyu gizle ve durdur
   bgVideo.classList.remove('visible');
-  setTimeout(function(){ bgVideo.pause(); }, 1500); // Kararma efekti bitene kadar bekle
+  setTimeout(function(){ bgVideo.pause(); }, 1500);
 
   setTimeout(function(){
     document.getElementById('topBar').classList.add('visible');
@@ -1158,7 +1168,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
   });
 });
 
-/* YENİLENMİŞ LOAD FROM CLOUD (Hata Korumalı) */
+/* LOAD FROM CLOUD */
 function loadFromCloud(){
   userDoc.get().then(function(doc){
     if(!doc.exists) {
@@ -1481,6 +1491,18 @@ if(gCanvas) {
   gCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); tapBall(e); }, {passive: false});
   
   gameLoop();
+}
+
+/* APPLE WIDGET STYLE SHOWCASE ROTATION */
+var showcaseIdx = 0;
+var showcaseImgs = document.querySelectorAll('.showcase-img');
+if(showcaseImgs.length > 0) {
+  showcaseImgs[showcaseIdx].classList.add('active');
+  setInterval(function() {
+    showcaseImgs[showcaseIdx].classList.remove('active');
+    showcaseIdx = (showcaseIdx + 1) % showcaseImgs.length;
+    showcaseImgs[showcaseIdx].classList.add('active');
+  }, 15000); // Tam 15 saniyede bir rotasyon
 }
 
 })();
