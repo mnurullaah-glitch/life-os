@@ -317,7 +317,7 @@ textarea::placeholder{color:var(--muted);}
 .vibe-note-area:focus{border-color:rgba(124,106,255,.4);background:rgba(124,106,255,.03);}
 .vibe-note-area::placeholder{color:var(--muted);}
 
-/* LOGIN EKRANI CSS (Sadece buraya eklendi) */
+/* LOGIN EKRANI CSS */
 #login-screen {
   position: fixed; inset: 0; z-index: 10000; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease;
 }
@@ -390,6 +390,7 @@ textarea::placeholder{color:var(--muted);}
 </head>
 <body>
 
+<!-- LOGIN EKRANI -->
 <div id="login-screen">
   <div class="glass-panel login-panel">
     <div class="panel-icon" style="margin: 0 auto; width: 48px; height: 48px; font-size: 1.5rem;">🔒</div>
@@ -410,6 +411,7 @@ textarea::placeholder{color:var(--muted);}
   <source src="arkaplan.mp4" type="video/mp4">
 </video>
 
+<!-- ROBOT -->
 <div id="bot">
   <div id="bot-bubble"></div>
   <svg id="bot-svg" viewBox="0 0 80 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -437,6 +439,7 @@ textarea::placeholder{color:var(--muted);}
   </svg>
 </div>
 
+<!-- INTRO -->
 <div id="intro-screen" class="phase-start" style="display:none;">
   <div id="launchPhase">
     <div class="glow-ring"></div>
@@ -457,6 +460,7 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </div>
 
+<!-- TOP BAR -->
 <header class="top-bar" id="topBar">
   <div class="top-logo">
     <div class="top-logo-dot"></div>
@@ -468,14 +472,18 @@ textarea::placeholder{color:var(--muted);}
     <button class="tab-btn" data-tab="notes"><span>Notlar</span></button>
     <button class="tab-btn" data-tab="media"><span>Medya</span></button>
     <button class="tab-btn" data-tab="vibe"><span>✨ Vibe</span></button>
+    <button class="tab-btn" data-tab="game"><span>⚽ Oyun</span></button>
   </nav>
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
 
+<!-- MAIN -->
 <main id="mainContent">
 
+  <!-- DASHBOARD -->
   <section id="dashboard" class="tab-content active">
     <div class="dashboard-grid">
+      <!-- TODO sol -->
       <div>
         <div class="glass-panel">
           <div class="panel-header">
@@ -584,7 +592,9 @@ textarea::placeholder{color:var(--muted);}
         </div>
       </div>
 
+      <!-- Widgets sağ -->
       <div class="widgets-col">
+        <!-- Film -->
         <div class="widget-card">
           <div class="widget-header">
             <div class="widget-icon film">🎬</div>
@@ -601,6 +611,7 @@ textarea::placeholder{color:var(--muted);}
           <a href="https://letterboxd.com" target="_blank" class="film-link">🎞 Letterboxd'u Aç</a>
         </div>
 
+        <!-- Fitness -->
         <div class="fitness-grid">
           <div class="fitness-widget">
             <div class="fitness-widget-header"><span class="fitness-widget-icon">🏃</span><span class="fitness-widget-title">Koşu</span></div>
@@ -624,6 +635,7 @@ textarea::placeholder{color:var(--muted);}
           </div>
         </div>
 
+        <!-- Keyfini Getir -->
         <div class="vibe-widget">
           <div class="vibe-widget-header">
             <div class="vibe-widget-icon">🎵</div>
@@ -644,6 +656,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- JOURNAL -->
   <section id="journal" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📓</div><span class="panel-title">Kişisel Günlük Arşivi</span></div>
@@ -661,6 +674,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- NOTES -->
   <section id="notes" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">📝</div><span class="panel-title">Fikirler & Gözlemler Deposu</span></div>
@@ -678,6 +692,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- MEDIA -->
   <section id="media" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">🎵</div><span class="panel-title">Medya</span></div>
@@ -694,6 +709,7 @@ textarea::placeholder{color:var(--muted);}
     </div>
   </section>
 
+  <!-- VIBE -->
   <section id="vibe" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header"><div class="panel-icon">✨</div><span class="panel-title">Bugün Keyfini Nasıl?</span></div>
@@ -736,6 +752,32 @@ textarea::placeholder{color:var(--muted);}
             <div style="margin-top:8px;font-size:.68rem;color:var(--muted);">Playlist, albüm veya şarkı linki — kaydedilir.</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OYUN (KEEPIE-UPPIE) -->
+  <section id="game" class="tab-content">
+    <div class="glass-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
+      <div class="panel-header" style="justify-content: center; border-bottom: none; margin-bottom: 5px;">
+        <div class="panel-icon">⚽</div>
+        <span class="panel-title" style="flex: none;">Kafa Dağıtma: Top Sektirme</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--muted); margin-bottom: 20px;">Topu havada tutmak için üzerine tıkla veya dokun. Yere düşürme!</p>
+      
+      <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 20px;">
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px 24px; border-radius: 12px;">
+          <div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">Skor</div>
+          <div id="gameScore" style="font-size: 2rem; font-weight: 200; color: var(--a3); line-height: 1;">0</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px 24px; border-radius: 12px;">
+          <div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 1px;">Rekor</div>
+          <div id="gameBest" style="font-size: 2rem; font-weight: 200; color: var(--warn); line-height: 1;">0</div>
+        </div>
+      </div>
+      
+      <div style="display:flex; justify-content:center;">
+        <canvas id="gameCanvas" width="340" height="400" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 18px; cursor: pointer; box-shadow: inset 0 0 40px rgba(0,0,0,0.5);"></canvas>
       </div>
     </div>
   </section>
@@ -787,7 +829,8 @@ var tabLines={
   journal:'Günlüğünü yaz 📓',
   notes:'Fikirlerin nerede? 💡',
   media:'İyi seyirler! 🎬',
-  vibe:'Keyfin nasıl bugün? ✨'
+  vibe:'Keyfin nasıl bugün? ✨',
+  game:'Biraz kafa dağıtalım! ⚽'
 };
 
 function botSay(txt,ms){
@@ -896,7 +939,7 @@ auth.onAuthStateChanged(function(user) {
     loginScreen.style.opacity = '0';
     setTimeout(function() { 
       loginScreen.style.display = 'none'; 
-      // 2. Senin o harika Intro (Sistemi Başlat) ekranını göster
+      // 2. Intro ekranını göster
       introScreen.style.display = 'flex';
       introScreen.classList.remove('hidden');
     }, 800);
@@ -1267,6 +1310,117 @@ vibeNoteEl.addEventListener('input',function(){
       .catch(function(){});
   },900);
 });
+
+/* MINI GAME: KEEPIE UPPIE (TOP SEKTİRME) */
+var gCanvas = document.getElementById('gameCanvas');
+if(gCanvas) {
+  var gCtx = gCanvas.getContext('2d');
+  var gBall = { x: 170, y: 150, r: 22, dx: 0, dy: 0 };
+  var gGravity = 0.45;
+  var gScore = 0;
+  var gBest = parseInt(localStorage.getItem('futbolBestScore')) || 0;
+  var gActive = false;
+  
+  document.getElementById('gameBest').textContent = gBest;
+
+  function drawBall() {
+    // Top gövdesi (Beyaz)
+    gCtx.beginPath();
+    gCtx.arc(gBall.x, gBall.y, gBall.r, 0, Math.PI*2);
+    gCtx.fillStyle = '#ffffff';
+    gCtx.fill();
+    gCtx.lineWidth = 2;
+    gCtx.strokeStyle = '#0f172a';
+    gCtx.stroke();
+    
+    // Top üzerindeki beşgen detayları (Lacivert tonları)
+    gCtx.beginPath();
+    gCtx.arc(gBall.x, gBall.y, gBall.r * 0.45, 0, Math.PI*2);
+    gCtx.fillStyle = '#1e3c72'; 
+    gCtx.fill();
+    
+    gCtx.beginPath();
+    gCtx.arc(gBall.x - 12, gBall.y - 8, gBall.r * 0.2, 0, Math.PI*2);
+    gCtx.fillStyle = '#1e3c72';
+    gCtx.fill();
+    
+    gCtx.beginPath();
+    gCtx.arc(gBall.x + 10, gBall.y + 12, gBall.r * 0.2, 0, Math.PI*2);
+    gCtx.fillStyle = '#1e3c72';
+    gCtx.fill();
+  }
+
+  function gameLoop() {
+    gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+    
+    if (gActive) {
+      gBall.dy += gGravity;
+      gBall.x += gBall.dx;
+      gBall.y += gBall.dy;
+
+      // Duvara çarpma
+      if(gBall.x < gBall.r) { gBall.x = gBall.r; gBall.dx *= -0.8; }
+      if(gBall.x > gCanvas.width - gBall.r) { gBall.x = gCanvas.width - gBall.r; gBall.dx *= -0.8; }
+
+      // Yere düşme
+      if(gBall.y > gCanvas.height - gBall.r) {
+        gBall.y = gCanvas.height - gBall.r;
+        gBall.dy = 0;
+        gBall.dx = 0;
+        gActive = false;
+        if(gScore > 0) {
+          botSay("Top düştü! Skor: " + gScore, 2500);
+        }
+        gScore = 0;
+        document.getElementById('gameScore').textContent = gScore;
+      }
+    } else {
+      // Bekleme anında hafif süzülme efekti
+      gBall.y = 150 + Math.sin(Date.now() / 300) * 10;
+    }
+    
+    drawBall();
+    requestAnimationFrame(gameLoop);
+  }
+
+  function tapBall(e) {
+    var rect = gCanvas.getBoundingClientRect();
+    var clientX = e.clientX;
+    var clientY = e.clientY;
+    if(e.touches && e.touches.length > 0) {
+       clientX = e.touches[0].clientX;
+       clientY = e.touches[0].clientY;
+    }
+    
+    var mx = clientX - rect.left;
+    var my = clientY - rect.top;
+    var dist = Math.sqrt(Math.pow(mx - gBall.x, 2) + Math.pow(my - gBall.y, 2));
+    
+    // Topa vuruş alanı (biraz esnek)
+    if (dist < gBall.r + 35) {
+      if(!gActive) gActive = true;
+      
+      gBall.dy = -8; // Yukarı zıplat
+      gBall.dx = (gBall.x - mx) * 0.12; // Tıklanan yere göre sağa/sola kavis
+      gScore++;
+      
+      if(gScore > gBest) {
+        gBest = gScore;
+        localStorage.setItem('futbolBestScore', gBest);
+        document.getElementById('gameBest').textContent = gBest;
+      }
+      document.getElementById('gameScore').textContent = gScore;
+      
+      // Her vuruşta küçük bir rotasyon hissi için x'i minik oynat
+      gBall.x += (Math.random() - 0.5) * 4;
+    }
+  }
+
+  gCanvas.addEventListener('mousedown', tapBall);
+  gCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); tapBall(e); }, {passive: false});
+  
+  gameLoop();
+}
 
 })();
 </script>
