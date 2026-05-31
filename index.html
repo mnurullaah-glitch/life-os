@@ -2028,19 +2028,24 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     }catch(e){}
   }
 
-  /* ─ video carousel için başlangıç ─ */
+ /* ─ video carousel için başlangıç ─ */
   var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
   var actionVideoEl=null;
   function startActionVideo(){
     actionVideoEl=document.createElement('video');
     actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
-    actionVideoEl.muted=true;actionVideoEl.loop=true;actionVideoEl.playsinline=true;
+    
+    // TELEFONLAR İÇİN KRİTİK DÜZELTME (Tam ekrana geçmesini engeller)
+    actionVideoEl.muted = true;
+    actionVideoEl.loop = true;
+    actionVideoEl.setAttribute('muted', '');
+    actionVideoEl.setAttribute('playsinline', ''); 
+    actionVideoEl.setAttribute('webkit-playsinline', ''); // iOS Safari için şart
+    actionVideoEl.setAttribute('autoplay', '');
+    
     actionVideoEl.src=actionVideos[Math.floor(Math.random()*actionVideos.length)];
     document.getElementById('aksiyon-overlay').appendChild(actionVideoEl);
     actionVideoEl.play().catch(function(){});
-  }
-  function stopActionVideo(){
-    if(actionVideoEl){actionVideoEl.pause();actionVideoEl.remove();actionVideoEl=null;}
   }
  
   /* ─ countdown logic ─ */
