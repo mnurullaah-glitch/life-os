@@ -2068,12 +2068,16 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     titleEl.textContent=titles[0];
     subEl.textContent=subs[0];
     
-    // Daireyi animasyona hazırlayıp pürüzsüz tetikliyoruz (Tam 5s)
+    // 1. ADIM: Daireyi anında %100 dolu ve animasyonsuz hale getiriyoruz
     ringFill.style.transition = 'none';
     ringFill.style.strokeDashoffset = '0';
-    void ringFill.offsetWidth; // Tarayıcıyı zorla yenile (Reflow - KİLİT NOKTA)
-    ringFill.style.transition = 'stroke-dashoffset 5s linear';
-    ringFill.style.strokeDashoffset = '591'; // CSS'teki değere doğru erir
+    
+    // 2. ADIM: Tarayıcıya bu "dolu" hali ekrana çizmesi için 50ms süre veriyoruz, 
+    // ardından erime animasyonunu tetikliyoruz (İkinci açılıştaki sorunun KESİN çözümü)
+    setTimeout(function(){
+      ringFill.style.transition = 'stroke-dashoffset 5s linear';
+      ringFill.style.strokeDashoffset = '591'; 
+    }, 50);
     
     playTick(5);
     tickAnim(5);
@@ -2109,7 +2113,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     initAudio();
     var ov=document.getElementById('aksiyon-overlay');
     
-    // Tıklandığı an dairenin sıfır (tam dolu) olduğuna emin oluyoruz
+    // Menü açılır açılmaz daireyi her ihtimale karşı sıfırlıyoruz
     if(ringFill){
       ringFill.style.transition = 'none';
       ringFill.style.strokeDashoffset = '0';
@@ -2119,6 +2123,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     startActionVideo();
     ov.classList.add('visible');
     playRingTone();
+    
     setTimeout(function(){startCountdown();},400);
   }
  
@@ -2133,58 +2138,28 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       clearInterval(countTimer);
       numEl.textContent='5';numEl.style.fontSize='7rem';
       
-      // Menü kapandığında daireyi sonraki kullanım için tam dolu hale getir
+      // Menü tamamen kapandığında daireyi arka planda doldur (hazır beklesin)
       if(ringFill){
         ringFill.style.transition = 'none';
         ringFill.style.strokeDashoffset = '0';
       }
     },800);
   }
- 
-  function launchAksiyon(){
-    initAudio(); // TIKLANDIĞI AN SES KİLİDİNİ AÇIYORUZ
-    var ov=document.getElementById('aksiyon-overlay');
-    spawnP();drawP();
-    startActionVideo();
-    ov.classList.add('visible');
-    playRingTone();
-    setTimeout(function(){startCountdown();},400);
-  }
- 
-  function dismissAksiyon(){
-    var ov=document.getElementById('aksiyon-overlay');
-    ov.classList.add('fade-out');
-    setTimeout(function(){
-      ov.classList.remove('visible','fade-out');
-      ov.style.background='#000';
-      cancelAnimationFrame(animP);particles=[];
-      stopActionVideo();
-      clearInterval(countTimer);
-      numEl.textContent='5';numEl.style.fontSize='7rem';
-      
-      // Daireyi sonraki kullanımlar için sıfırla
-      ringFill.style.transition = 'none';
-      ringFill.style.strokeDashoffset = '0';
-    },800);
-  }
- 
+
   /* escape key */
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'&&document.getElementById('aksiyon-overlay').classList.contains('visible')){
       clearInterval(countTimer);dismissAksiyon();
     }
   });
- 
+
   /* expose globally so the trigger button can call it */
   window.launchAksiyon=launchAksiyon;
- 
+
   /* ─ INJECT TRIGGER BUTTON into Dashboard ─ */
-  /* dashboard glass-panel hızlı görevler kutusunun altına bir satır ekle */
   function injectTriggerBtn(){
-    /* dashboard section'ın sonuna — todo-status-row'dan sonra */
     var dashSection=document.getElementById('dashboard');
     if(!dashSection)return;
-    /* wrapper div oluştur */
     var wrap=document.createElement('div');
     wrap.style.cssText='display:flex;justify-content:center;padding:10px 0 4px;';
     var btn=document.createElement('button');
@@ -2195,7 +2170,6 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       '<span class="aksiyon-work-badge">İş</span>';
     btn.addEventListener('click',function(){window.launchAksiyon();});
     wrap.appendChild(btn);
-    /* dashboard-grid'in ilk çocuğunun sonuna (sol kolon) ekle */
     var dashGrid=dashSection.querySelector('.dashboard-grid');
     if(dashGrid&&dashGrid.children[0]){
       dashGrid.children[0].appendChild(wrap);
@@ -2203,8 +2177,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       dashSection.appendChild(wrap);
     }
   }
- 
-  /* DOM hazır olunca inject et */
+
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',injectTriggerBtn);
   }else{
