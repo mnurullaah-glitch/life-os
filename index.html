@@ -1962,10 +1962,23 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     animP=requestAnimationFrame(drawP);
   }
  
-  /* ─ ring audio (Web Audio API — dosya gerekmez) ─ */
+ /* ─ AUDIO CONTEXT KİLİDİNİ AÇMA (CRITICAL FIX) ─ */
+  var sharedAudioCtx = null;
+  function initAudio(){
+    if(!sharedAudioCtx) {
+      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    // Eğer tarayıcı sesi uyku moduna aldıysa, tıklamayla uyandırıyoruz
+    if(sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume();
+    }
+  }
+
+  /* ─ ring audio ─ */
   function playRingTone(){
     try{
-      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      if(!sharedAudioCtx) return;
+      var ctx = sharedAudioCtx;
       function beep(freq,start,dur,vol,type){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -1975,20 +1988,19 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
         gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+dur);
         osc.start(ctx.currentTime+start);osc.stop(ctx.currentTime+start+dur+.02);
       }
-      /* ring pattern: üç kısa yüksek ton → kısa sessizlik → tekrar */
       [0,.12,.24,.5,.62,.74,1.4,1.52,1.64].forEach(function(t){
         beep(1200,t,.09,.18,'triangle');
         beep(800,t+.04,.06,.08,'sine');
       });
-      /* deep rumble altında */
       beep(120,0,2.2,.05,'sawtooth');
     }catch(e){}
   }
- 
+
   /* ─ tick beep (her saniye) ─ */
   function playTick(n){
     try{
-      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      if(!sharedAudioCtx) return;
+      var ctx = sharedAudioCtx;
       var osc=ctx.createOscillator(),gain=ctx.createGain();
       osc.connect(gain);gain.connect(ctx.destination);
       osc.type='sine';
@@ -1998,11 +2010,12 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       osc.start(ctx.currentTime);osc.stop(ctx.currentTime+.2);
     }catch(e){}
   }
- 
+
   /* ─ finish chime ─ */
   function playFinish(){
     try{
-      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      if(!sharedAudioCtx) return;
+      var ctx = sharedAudioCtx;
       [[523,.0],[659,.12],[784,.24],[1047,.38]].forEach(function(p){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2014,7 +2027,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       });
     }catch(e){}
   }
- 
+
   /* ─ video carousel için başlangıç ─ */
   var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
   var actionVideoEl=null;
@@ -2089,6 +2102,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
  
   function launchAksiyon(){
+    initAudio(); // TIKLANDIĞI AN SES KİLİDİNİ AÇIYORUZ
     var ov=document.getElementById('aksiyon-overlay');
     spawnP();drawP();
     startActionVideo();
