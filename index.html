@@ -559,9 +559,40 @@ textarea::placeholder{color:var(--muted);}
   /* SHOWCASE MOBILE FIX */
   .showcase-card{height:350px;}
 }
+  
 </style>
 </head>
 <body>
+  <!-- ══════════════ 2. HTML — <body> açılışından hemen sonra ══════════════ -->
+<div id="aksiyon-overlay">
+  <canvas id="aksiyon-particles"></canvas>
+  <div class="aksiyon-content">
+    <div class="aksiyon-eyebrow">Hazırlanıyor — Nurullah</div>
+    <div class="aksiyon-ring-wrap" id="aksiyonRingWrap">
+      <div class="aksiyon-pulse"></div>
+      <div class="aksiyon-pulse"></div>
+      <svg class="aksiyon-ring-svg" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c6aff"/>
+            <stop offset="50%" stop-color="#c46dff"/>
+            <stop offset="100%" stop-color="#4fd1ff"/>
+          </linearGradient>
+        </defs>
+        <circle class="aksiyon-ring-track" cx="100" cy="100" r="94"/>
+        <circle class="aksiyon-ring-fill" id="aksiyonRingFill" cx="100" cy="100" r="94"/>
+      </svg>
+      <div class="aksiyon-number-wrap">
+        <span class="aksiyon-number" id="aksiyonNumber">5</span>
+      </div>
+    </div>
+    <div class="aksiyon-bottom">
+      <div class="aksiyon-title" id="aksiyonTitle">Nurullah</div>
+      <div class="aksiyon-sub" id="aksiyonSub">Başarılar seni bekliyor</div>
+    </div>
+  </div>
+</div>
+ 
 
 <div id="login-screen">
   <div class="glass-panel login-panel">
@@ -1731,7 +1762,232 @@ if(gCanvas){
 /* ══ SHOWCASE ══ */
 var showcaseIdx=0,showcaseImgs=document.querySelectorAll('.showcase-img');
 if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(function(){showcaseImgs[showcaseIdx].classList.remove('active');showcaseIdx=(showcaseIdx+1)%showcaseImgs.length;showcaseImgs[showcaseIdx].classList.add('active');},15000);}
-
+<!-- ══════════════ 3. JS — mevcut script closure'ının sonuna ekle ══════════════ -->
+<script id="aksiyon-js-snippet">
+/* ══ AKSİYON SAYAÇ ══ */
+(function(){
+  /* ─ particles ─ */
+  var pc=document.getElementById('aksiyon-particles'),pCtx=pc.getContext('2d');
+  var particles=[];
+  function resizePC(){pc.width=window.innerWidth;pc.height=window.innerHeight;}
+  resizePC();window.addEventListener('resize',resizePC);
+  function spawnP(){
+    for(var i=0;i<80;i++){
+      particles.push({
+        x:Math.random()*pc.width,y:Math.random()*pc.height,
+        vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,
+        r:Math.random()*1.5+.5,
+        alpha:Math.random()*.5+.1,
+        color:['rgba(124,106,255,','rgba(196,109,255,','rgba(79,209,255,'][Math.floor(Math.random()*3)]
+      });
+    }
+  }
+  var animP=null;
+  function drawP(){
+    pCtx.clearRect(0,0,pc.width,pc.height);
+    particles.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=pc.width;if(p.x>pc.width)p.x=0;
+      if(p.y<0)p.y=pc.height;if(p.y>pc.height)p.y=0;
+      pCtx.beginPath();pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      pCtx.fillStyle=p.color+p.alpha+')';pCtx.fill();
+    });
+    animP=requestAnimationFrame(drawP);
+  }
+ 
+  /* ─ ring audio (Web Audio API — dosya gerekmez) ─ */
+  function playRingTone(){
+    try{
+      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      function beep(freq,start,dur,vol,type){
+        var osc=ctx.createOscillator(),gain=ctx.createGain();
+        osc.connect(gain);gain.connect(ctx.destination);
+        osc.type=type||'sine';osc.frequency.value=freq;
+        gain.gain.setValueAtTime(0,ctx.currentTime+start);
+        gain.gain.linearRampToValueAtTime(vol,ctx.currentTime+start+.015);
+        gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+dur);
+        osc.start(ctx.currentTime+start);osc.stop(ctx.currentTime+start+dur+.02);
+      }
+      /* ring pattern: üç kısa yüksek ton → kısa sessizlik → tekrar */
+      [0,.12,.24,.5,.62,.74,1.4,1.52,1.64].forEach(function(t){
+        beep(1200,t,.09,.18,'triangle');
+        beep(800,t+.04,.06,.08,'sine');
+      });
+      /* deep rumble altında */
+      beep(120,0,2.2,.05,'sawtooth');
+    }catch(e){}
+  }
+ 
+  /* ─ tick beep (her saniye) ─ */
+  function playTick(n){
+    try{
+      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      var osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';
+      osc.frequency.value=n===1?880:600;
+      gain.gain.setValueAtTime(.14,ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.18);
+      osc.start(ctx.currentTime);osc.stop(ctx.currentTime+.2);
+    }catch(e){}
+  }
+ 
+  /* ─ finish chime ─ */
+  function playFinish(){
+    try{
+      var ctx=new(window.AudioContext||window.webkitAudioContext)();
+      [[523,.0],[659,.12],[784,.24],[1047,.38]].forEach(function(p){
+        var osc=ctx.createOscillator(),gain=ctx.createGain();
+        osc.connect(gain);gain.connect(ctx.destination);
+        osc.type='triangle';osc.frequency.value=p[0];
+        gain.gain.setValueAtTime(.0,ctx.currentTime+p[1]);
+        gain.gain.linearRampToValueAtTime(.2,ctx.currentTime+p[1]+.03);
+        gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+p[1]+.5);
+        osc.start(ctx.currentTime+p[1]);osc.stop(ctx.currentTime+p[1]+.6);
+      });
+    }catch(e){}
+  }
+ 
+  /* ─ video carousel için başlangıç ─ */
+  var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
+  var actionVideoEl=null;
+  function startActionVideo(){
+    actionVideoEl=document.createElement('video');
+    actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
+    actionVideoEl.muted=true;actionVideoEl.loop=true;actionVideoEl.playsinline=true;
+    actionVideoEl.src=actionVideos[Math.floor(Math.random()*actionVideos.length)];
+    document.getElementById('aksiyon-overlay').appendChild(actionVideoEl);
+    actionVideoEl.play().catch(function(){});
+  }
+  function stopActionVideo(){
+    if(actionVideoEl){actionVideoEl.pause();actionVideoEl.remove();actionVideoEl=null;}
+  }
+ 
+  /* ─ countdown logic ─ */
+  var countTimer=null,countCurrent=5;
+  var circumference=2*Math.PI*94; /* r=94 */
+  var ringFill=document.getElementById('aksiyonRingFill');
+  var numEl=document.getElementById('aksiyonNumber');
+  var titleEl=document.getElementById('aksiyonTitle');
+  var subEl=document.getElementById('aksiyonSub');
+ 
+  var titles=['Hazır mısın?','Odaklan…','Zamanın değerli','Konsantre ol…','Başlıyoruz!'];
+  var subs=['Büyük işler seni bekliyor','Her saniye bir fırsat','Sen bunu yapabilirsin','Zihnini hazırla','Nurullah, başarılar!'];
+ 
+  function setRing(n){
+    /* n: 5..1 → doluluk yüzdesi */
+    var pct=n/5;
+    var offset=circumference*(1-pct);
+    ringFill.style.strokeDashoffset=offset;
+  }
+ 
+  function tickAnim(n){
+    numEl.classList.add('tick');
+    setTimeout(function(){numEl.classList.remove('tick');},160);
+  }
+ 
+  function startCountdown(){
+    countCurrent=5;
+    numEl.textContent='5';
+    titleEl.textContent=titles[0];
+    subEl.textContent=subs[0];
+    setRing(5);
+    playTick(5);
+    tickAnim(5);
+    countTimer=setInterval(function(){
+      countCurrent--;
+      if(countCurrent<=0){
+        clearInterval(countTimer);
+        numEl.textContent='✓';
+        numEl.style.fontSize='4rem';
+        titleEl.textContent='Başarılar!';
+        subEl.textContent='Nurullah ✦';
+        playFinish();
+        /* flash */
+        var ov=document.getElementById('aksiyon-overlay');
+        ov.style.background='rgba(124,106,255,.15)';
+        setTimeout(function(){ov.style.background='#000';},250);
+        /* dismiss after 1.5s */
+        setTimeout(function(){dismissAksiyon();},1500);
+        return;
+      }
+      numEl.textContent=countCurrent;
+      numEl.style.fontSize='7rem';
+      titleEl.textContent=titles[5-countCurrent]||titles[0];
+      subEl.textContent=subs[5-countCurrent]||subs[0];
+      setRing(countCurrent);
+      playTick(countCurrent);
+      tickAnim(countCurrent);
+    },1000);
+  }
+ 
+  function launchAksiyon(){
+    var ov=document.getElementById('aksiyon-overlay');
+    spawnP();drawP();
+    startActionVideo();
+    ov.classList.add('visible');
+    playRingTone();
+    setTimeout(function(){startCountdown();},400);
+  }
+ 
+  function dismissAksiyon(){
+    var ov=document.getElementById('aksiyon-overlay');
+    ov.classList.add('fade-out');
+    setTimeout(function(){
+      ov.classList.remove('visible','fade-out');
+      ov.style.background='#000';
+      cancelAnimationFrame(animP);particles=[];
+      stopActionVideo();
+      clearInterval(countTimer);
+      numEl.textContent='5';numEl.style.fontSize='7rem';
+    },800);
+  }
+ 
+  /* escape key */
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&document.getElementById('aksiyon-overlay').classList.contains('visible')){
+      clearInterval(countTimer);dismissAksiyon();
+    }
+  });
+ 
+  /* expose globally so the trigger button can call it */
+  window.launchAksiyon=launchAksiyon;
+ 
+  /* ─ INJECT TRIGGER BUTTON into Dashboard ─ */
+  /* dashboard glass-panel hızlı görevler kutusunun altına bir satır ekle */
+  function injectTriggerBtn(){
+    /* dashboard section'ın sonuna — todo-status-row'dan sonra */
+    var dashSection=document.getElementById('dashboard');
+    if(!dashSection)return;
+    /* wrapper div oluştur */
+    var wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;justify-content:center;padding:10px 0 4px;';
+    var btn=document.createElement('button');
+    btn.className='aksiyon-trigger-btn';
+    btn.innerHTML=
+      '<div class="aksiyon-btn-icon">⚡</div>'+
+      '<span>Aksiyona Geç</span>'+
+      '<span class="aksiyon-work-badge">İş</span>';
+    btn.addEventListener('click',function(){window.launchAksiyon();});
+    wrap.appendChild(btn);
+    /* dashboard-grid'in ilk çocuğunun sonuna (sol kolon) ekle */
+    var dashGrid=dashSection.querySelector('.dashboard-grid');
+    if(dashGrid&&dashGrid.children[0]){
+      dashGrid.children[0].appendChild(wrap);
+    }else{
+      dashSection.appendChild(wrap);
+    }
+  }
+ 
+  /* DOM hazır olunca inject et */
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',injectTriggerBtn);
+  }else{
+    injectTriggerBtn();
+  }
+})();
+</script>
+ 
 })();
 </script>
 </body>
