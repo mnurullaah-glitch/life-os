@@ -2049,7 +2049,6 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
  
   /* ─ countdown logic ─ */
   var countTimer=null,countCurrent=5;
-  var circumference=2*Math.PI*94; /* 590.6... -> 591 */
   var ringFill=document.getElementById('aksiyonRingFill');
   var numEl=document.getElementById('aksiyonNumber');
   var titleEl=document.getElementById('aksiyonTitle');
@@ -2069,12 +2068,12 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     titleEl.textContent=titles[0];
     subEl.textContent=subs[0];
     
-    // Daire animasyonunu 5 saniyelik pürüzsüz (linear) erime moduna alıyoruz
+    // Daireyi animasyona hazırlayıp pürüzsüz tetikliyoruz (Tam 5s)
     ringFill.style.transition = 'none';
     ringFill.style.strokeDashoffset = '0';
-    void ringFill.offsetWidth; // Animasyonu tetiklemek için reflow (kritik)
+    void ringFill.offsetWidth; // Tarayıcıyı zorla yenile (Reflow - KİLİT NOKTA)
     ringFill.style.transition = 'stroke-dashoffset 5s linear';
-    ringFill.style.strokeDashoffset = circumference; // 5 saniye boyunca sıfıra erir
+    ringFill.style.strokeDashoffset = '591'; // CSS'teki değere doğru erir
     
     playTick(5);
     tickAnim(5);
@@ -2088,11 +2087,11 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
         titleEl.textContent='Başarılar!';
         subEl.textContent='Nurullah ✦';
         playFinish();
-        /* flash */
+        
         var ov=document.getElementById('aksiyon-overlay');
         ov.style.background='rgba(124,106,255,.15)';
         setTimeout(function(){ov.style.background='#000';},250);
-        /* dismiss after 1.5s */
+        
         setTimeout(function(){dismissAksiyon();},1500);
         return;
       }
@@ -2104,6 +2103,42 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       playTick(countCurrent);
       tickAnim(countCurrent);
     },1000);
+  }
+ 
+  function launchAksiyon(){
+    initAudio();
+    var ov=document.getElementById('aksiyon-overlay');
+    
+    // Tıklandığı an dairenin sıfır (tam dolu) olduğuna emin oluyoruz
+    if(ringFill){
+      ringFill.style.transition = 'none';
+      ringFill.style.strokeDashoffset = '0';
+    }
+
+    spawnP();drawP();
+    startActionVideo();
+    ov.classList.add('visible');
+    playRingTone();
+    setTimeout(function(){startCountdown();},400);
+  }
+ 
+  function dismissAksiyon(){
+    var ov=document.getElementById('aksiyon-overlay');
+    ov.classList.add('fade-out');
+    setTimeout(function(){
+      ov.classList.remove('visible','fade-out');
+      ov.style.background='#000';
+      cancelAnimationFrame(animP);particles=[];
+      stopActionVideo();
+      clearInterval(countTimer);
+      numEl.textContent='5';numEl.style.fontSize='7rem';
+      
+      // Menü kapandığında daireyi sonraki kullanım için tam dolu hale getir
+      if(ringFill){
+        ringFill.style.transition = 'none';
+        ringFill.style.strokeDashoffset = '0';
+      }
+    },800);
   }
  
   function launchAksiyon(){
