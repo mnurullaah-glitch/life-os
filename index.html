@@ -609,9 +609,8 @@ textarea::placeholder{color:var(--muted);}
   fill:none;stroke-width:3;
   stroke:url(#ringGrad);
   stroke-linecap:round;
-  stroke-dasharray:628;
+  stroke-dasharray:591;
   stroke-dashoffset:0;
-  transition:stroke-dashoffset 1s linear;
   filter:drop-shadow(0 0 6px rgba(124,106,255,.8));
 }
 
@@ -2050,7 +2049,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
  
   /* ─ countdown logic ─ */
   var countTimer=null,countCurrent=5;
-  var circumference=2*Math.PI*94; /* r=94 */
+  var circumference=2*Math.PI*94; /* 590.6... -> 591 */
   var ringFill=document.getElementById('aksiyonRingFill');
   var numEl=document.getElementById('aksiyonNumber');
   var titleEl=document.getElementById('aksiyonTitle');
@@ -2058,13 +2057,6 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
  
   var titles=['Hazır mısın?','Odaklan…','Zamanın değerli','Konsantre ol…','Başlıyoruz!'];
   var subs=['Büyük işler seni bekliyor','Her saniye bir fırsat','Sen bunu yapabilirsin','Zihnini hazırla','Nurullah, başarılar!'];
- 
-  function setRing(n){
-    /* n: 5..1 → doluluk yüzdesi */
-    var pct=n/5;
-    var offset=circumference*(1-pct);
-    ringFill.style.strokeDashoffset=offset;
-  }
  
   function tickAnim(n){
     numEl.classList.add('tick');
@@ -2076,9 +2068,17 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     numEl.textContent='5';
     titleEl.textContent=titles[0];
     subEl.textContent=subs[0];
-    setRing(5);
+    
+    // Daire animasyonunu 5 saniyelik pürüzsüz (linear) erime moduna alıyoruz
+    ringFill.style.transition = 'none';
+    ringFill.style.strokeDashoffset = '0';
+    void ringFill.offsetWidth; // Animasyonu tetiklemek için reflow (kritik)
+    ringFill.style.transition = 'stroke-dashoffset 5s linear';
+    ringFill.style.strokeDashoffset = circumference; // 5 saniye boyunca sıfıra erir
+    
     playTick(5);
     tickAnim(5);
+    
     countTimer=setInterval(function(){
       countCurrent--;
       if(countCurrent<=0){
@@ -2100,7 +2100,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       numEl.style.fontSize='7rem';
       titleEl.textContent=titles[5-countCurrent]||titles[0];
       subEl.textContent=subs[5-countCurrent]||subs[0];
-      setRing(countCurrent);
+      
       playTick(countCurrent);
       tickAnim(countCurrent);
     },1000);
@@ -2126,6 +2126,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       stopActionVideo();
       clearInterval(countTimer);
       numEl.textContent='5';numEl.style.fontSize='7rem';
+      
+      // Daireyi sonraki kullanımlar için sıfırla
+      ringFill.style.transition = 'none';
+      ringFill.style.strokeDashoffset = '0';
     },800);
   }
  
