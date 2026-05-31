@@ -60,35 +60,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .intro-skip-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.3);font-size:.8rem;letter-spacing:2px;text-shadow:0 1px 5px rgba(0,0,0,.8);opacity:0;animation:fadeInHint 2s forwards 3s;}
 @keyframes fadeInHint{to{opacity:1}}
 
-/* TOP BAR & COMBO BADGE */
+/* TOP BAR — scrollable nav */
 .top-bar{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:0 24px;height:64px;background:rgba(4,4,15,.75);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);opacity:0;transition:opacity .8s ease .1s;}
 .top-bar.visible{opacity:1;}
 .top-logo{font-size:.8rem;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
 .top-logo-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:0 0 12px var(--g1);animation:dotPulse 2s ease-in-out infinite;flex-shrink:0;}
 @keyframes dotPulse{0%,100%{box-shadow:0 0 12px var(--g1)}50%{box-shadow:0 0 24px var(--g1),0 0 48px rgba(124,106,255,.15)}}
-
-/* MOMENTUM (COMBO) ANIMATIONS */
-.combo-badge {
-  margin-left: 10px; padding: 4px 10px; border-radius: 8px; font-size: .68rem; font-weight: 800;
-  letter-spacing: 1.5px; text-transform: uppercase; background: rgba(255,255,255,.03);
-  color: var(--muted); border: 1px solid var(--border);
-  transition: all .4s cubic-bezier(.23,1,.32,1); opacity: 0; transform: translateX(-10px);
-  display: inline-block; pointer-events: none;
-}
-.combo-badge.show { opacity: 1; transform: translateX(0); }
-.combo-lvl-1 { color: #4fd1ff; border-color: rgba(79,209,255,.4); background: rgba(79,209,255,.1); box-shadow: 0 0 12px rgba(79,209,255,.2); }
-.combo-lvl-2 { color: #c46dff; border-color: rgba(196,109,255,.5); background: rgba(196,109,255,.15); box-shadow: 0 0 18px rgba(196,109,255,.3); }
-.combo-lvl-3 { color: #ffb432; border-color: rgba(255,180,50,.6); background: rgba(255,180,50,.2); box-shadow: 0 0 24px rgba(255,180,50,.4); }
-.combo-lvl-4 { color: #ff5566; border-color: #ff5566; background: rgba(255,85,102,.25); box-shadow: 0 0 30px rgba(255,85,102,.6); animation: comboPulse 1.2s infinite; }
-@keyframes comboPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
-
-.spark-anim {
-  position: fixed; pointer-events: none; z-index: 10001;
-  font-size: .85rem; font-weight: 800; color: #ff5566; text-shadow: 0 0 15px #ff5566;
-  animation: flyUp 1s cubic-bezier(.23,1,.32,1) forwards;
-}
-@keyframes flyUp { 0%{opacity:1;transform:translate(-50%,0) scale(1)} 100%{opacity:0;transform:translate(-50%,-70px) scale(1.6)} }
-
 nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1;margin:0 16px;}
 nav::-webkit-scrollbar{display:none;}
 .tab-btn{position:relative;overflow:hidden;padding:8px 16px;border-radius:32px;border:none;font-size:.78rem;font-weight:500;color:var(--muted);cursor:pointer;background:transparent;transition:all .35s cubic-bezier(.23,1,.32,1);letter-spacing:.3px;font-family:inherit;white-space:nowrap;flex-shrink:0;}
@@ -649,7 +626,6 @@ textarea::placeholder{color:var(--muted);}
   <div class="top-logo">
     <div class="top-logo-dot"></div>
     <span id="topGreeting">Merhaba, Nurullah</span>
-    <div id="comboBadge" class="combo-badge hidden">İVME x0</div>
   </div>
   <nav id="mainNav">
     <button class="tab-btn active" data-tab="dashboard"><span>Dashboard</span></button>
@@ -1120,50 +1096,6 @@ var db=firebase.firestore();
 var userDoc=db.collection('users').doc('nurullah');
 var state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
 var saveTimers={};
-
-/* ══ COMBO (MOMENTUM) SYSTEM ══ */
-var currentCombo = 0;
-var lastComboDate = getTodayStr();
-
-function updateComboUI() {
-  var badge = document.getElementById('comboBadge');
-  if(!badge) return;
-  if(currentCombo > 0) {
-    badge.textContent = 'İVME x' + currentCombo + ' 🔥';
-    badge.className = 'combo-badge show'; 
-    if(currentCombo <= 2) badge.classList.add('combo-lvl-1');
-    else if(currentCombo <= 4) badge.classList.add('combo-lvl-2');
-    else if(currentCombo <= 6) badge.classList.add('combo-lvl-3');
-    else badge.classList.add('combo-lvl-4');
-  } else {
-    badge.classList.remove('show');
-  }
-}
-
-function triggerSpark(x, y) {
-  var spark = document.createElement('div');
-  spark.className = 'spark-anim';
-  spark.textContent = '+1 İVME';
-  spark.style.left = (x - 30) + 'px';
-  spark.style.top = (y - 30) + 'px';
-  document.body.appendChild(spark);
-  setTimeout(function(){ spark.remove(); }, 1000);
-}
-
-function processCombo(isCompleted, e) {
-  if(getTodayStr() !== lastComboDate) { currentCombo = 0; lastComboDate = getTodayStr(); }
-  if(isCompleted) {
-    currentCombo++;
-    var msgs = ['İvme artıyor! x', 'Yanıyorsun! x', 'Durdurulamazsın! x'];
-    botSay(msgs[Math.floor(Math.random()*msgs.length)] + currentCombo + ' 🔥', 2500);
-    if(e) triggerSpark(e.clientX || window.innerWidth/2, e.clientY || window.innerHeight/2);
-  } else {
-    if(currentCombo > 0) currentCombo--;
-  }
-  updateComboUI();
-  userDoc.set({comboData: {count: currentCombo, date: lastComboDate}}, {merge: true}).catch(function(){});
-}
-
 function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
   if(el){el.querySelector('span').textContent='Kaydediliyor...';el.style.color='rgba(255,255,255,.5)';}
@@ -1218,6 +1150,17 @@ function dismissIntro(){
   setTimeout(function(){document.getElementById('topBar').classList.add('visible');document.getElementById('mainContent').classList.add('visible');startBot();},300);
 }
 
+/* ══ TABS ══ */
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var name=this.getAttribute('data-tab');
+    document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('active');});
+    document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');var t=document.getElementById(name);if(t)t.classList.add('active');
+    if(name==='calendar'){renderCalendar();renderMiniCal();}
+  });
+});
+
 /* ══ WIDGETS ══ */
 var filmInput=document.getElementById('filmCountInput'),filmDisplay=document.getElementById('filmCountDisplay');
 filmInput.addEventListener('input',function(){filmDisplay.textContent=this.value||'0';saveWidgets();});
@@ -1260,16 +1203,6 @@ function loadFromCloud(){
     var d=doc.data();
     if(Array.isArray(d.todos)){state.todos=d.todos.map(function(t){if(!t.id)t.id=Date.now().toString()+Math.random().toString(36).slice(2);t.priority=t.priority||'none';t.category=t.category||'';t.note=t.note||'';t.repeat=t.repeat||'none';t.dueDate=t.dueDate||'';t.dueTime=t.dueTime||'';t.starred=t.starred||false;t.createdAt=t.createdAt||Date.now();return t;});}
     if(Array.isArray(d.calEvents)){state.calEvents=d.calEvents;}
-    
-    if(d.comboData && d.comboData.date === getTodayStr()) {
-      currentCombo = d.comboData.count || 0;
-      lastComboDate = d.comboData.date;
-      updateComboUI();
-    } else {
-      currentCombo = 0;
-      updateComboUI();
-    }
-
     renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();
     if(Array.isArray(d.journals))state.journals=d.journals;else if(d.journal&&typeof d.journal==='string'&&d.journal.trim())state.journals=[{id:Date.now().toString(),title:'Aktarılan Günlük',content:d.journal}];
     renderJournalList();
@@ -1413,7 +1346,7 @@ function buildTodoRow(t,listEl){
   li.dataset.id=t.id;
   var ck=document.createElement('label');ck.className='td-check';ck.onclick=function(e){e.stopPropagation();};
   var ci=document.createElement('input');ci.type='checkbox';ci.checked=t.completed;
-  ci.addEventListener('change',function(e){e.stopPropagation();toggleTodoById(t.id, e);});
+  ci.addEventListener('change',function(e){e.stopPropagation();toggleTodoById(t.id);});
   var cb=document.createElement('div');cb.className='td-check-box';ck.appendChild(ci);ck.appendChild(cb);
   var dot=document.createElement('div');dot.className='prio-dot '+(t.priority||'none');
   var sp=document.createElement('span');sp.className='todo-row-text';sp.textContent=t.text;
@@ -1456,20 +1389,7 @@ function addTodo(txt,dueDate){
   state.todos.unshift(t);renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();
   selectTodo(t.id);saveTodos();return t;
 }
-function toggleTodoById(id, e){
-  var t=state.todos.find(function(x){return x.id===id;});
-  if(!t)return;
-  
-  var wasCompleted = t.completed;
-  t.completed=!t.completed;
-  
-  if (t.completed !== wasCompleted) {
-    processCombo(t.completed, e);
-  }
-
-  if(t.completed&&state.activeTodoId===id){closeTodoDetail();state.activeTodoId=null;}
-  renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();
-}
+function toggleTodoById(id){var t=state.todos.find(function(x){return x.id===id;});if(!t)return;t.completed=!t.completed;if(t.completed&&state.activeTodoId===id){closeTodoDetail();state.activeTodoId=null;}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
 function toggleStarById(id){var t=state.todos.find(function(x){return x.id===id;});if(!t)return;t.starred=!t.starred;renderTodos();if(state.activeTodoId===id)populateDetail(t);saveTodos();}
 function deleteTodoById(id){state.todos=state.todos.filter(function(x){return x.id!==id;});if(state.activeTodoId===id){state.activeTodoId=null;closeTodoDetail();}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
 function selectTodo(id){state.activeTodoId=id;var t=state.todos.find(function(x){return x.id===id;});if(!t)return;document.getElementById('todoDetailEmpty').style.display='none';document.getElementById('todoDetail').style.display='flex';populateDetail(t);renderTodos();}
@@ -1489,17 +1409,7 @@ function populateDetail(t){
 }
 function getActiveTodo(){return state.activeTodoId?state.todos.find(function(x){return x.id===state.activeTodoId;})||null:null;}
 document.getElementById('detailTitle').addEventListener('input',function(){var t=getActiveTodo();if(!t)return;t.text=this.value;var r=document.querySelector('.todo-item-row[data-id="'+t.id+'"] .todo-row-text');if(r)r.textContent=t.text;saveTodos();});
-
-document.getElementById('detailCheck').addEventListener('change',function(e){
-  var t=getActiveTodo();
-  if(!t)return;
-  var wasCompleted = t.completed;
-  t.completed=this.checked;
-  if(t.completed !== wasCompleted) { processCombo(t.completed, e); }
-  document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');
-  renderTodos();renderDashTodos();saveTodos();
-});
-
+document.getElementById('detailCheck').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.completed=this.checked;document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');renderTodos();renderDashTodos();saveTodos();});
 document.getElementById('detailStar').addEventListener('click',function(){var t=getActiveTodo();if(!t)return;toggleStarById(t.id);});
 document.querySelectorAll('.prio-pill').forEach(function(p){p.addEventListener('click',function(){var t=getActiveTodo();if(!t)return;t.priority=this.dataset.prio;document.querySelectorAll('.prio-pill').forEach(function(x){x.classList.remove('active');});this.classList.add('active');renderTodos();saveTodos();});});
 document.getElementById('detailDueDate').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.dueDate=this.value;renderTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();});
@@ -1529,7 +1439,7 @@ function renderDashTodos(){
     var dot=document.createElement('div');dot.className='prio-dot '+(t.priority||'none');dot.style.flexShrink='0';
     var txt=document.createElement('span');txt.style.cssText='flex:1;font-size:.82rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';txt.textContent=t.text;
     var ck=document.createElement('button');ck.style.cssText='background:none;border:1px solid rgba(124,106,255,.35);border-radius:50%;width:18px;height:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(124,106,255,.8);transition:all .2s;';ck.textContent='✓';
-    ck.onclick=function(e){e.stopPropagation();toggleTodoById(t.id, e);};
+    ck.onclick=function(e){e.stopPropagation();toggleTodoById(t.id);};
     row.appendChild(dot);row.appendChild(txt);row.appendChild(ck);
     row.onclick=function(){document.querySelector('.tab-btn[data-tab="todos"]').click();setTimeout(function(){selectTodo(t.id);},100);};
     dl.appendChild(row);
@@ -1681,7 +1591,7 @@ function renderCalDayTasks(dateStr){
     var row=document.createElement('div');row.className='cal-task-item';
     var ck=document.createElement('label');ck.className='cal-task-check';
     var ci=document.createElement('input');ci.type='checkbox';ci.checked=t.completed;
-    ci.addEventListener('change',function(e){toggleTodoById(t.id, e);setTimeout(function(){renderCalDayTasks(dateStr);},50);});
+    ci.addEventListener('change',function(){toggleTodoById(t.id);setTimeout(function(){renderCalDayTasks(dateStr);},50);});
     var cb=document.createElement('div');cb.className='cal-task-check-box';ck.appendChild(ci);ck.appendChild(cb);
     var txt=document.createElement('span');txt.className='cal-task-text'+(t.completed?' done':'');txt.textContent=t.text;
     var del=document.createElement('button');del.className='cal-task-delete';del.textContent='✕';
