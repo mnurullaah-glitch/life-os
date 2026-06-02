@@ -2,7 +2,11 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04040f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <title>NURULLAH // CLOUD OS</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -15,7 +19,10 @@
   --g1:rgba(124,106,255,.35);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+/* iOS safe area padding */
+.top-bar{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));}
+main{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right));}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(124,106,255,.3);border-radius:4px}
 
 .aurora{position:fixed;inset:0;z-index:-3;overflow:hidden;background:linear-gradient(135deg,#04040f 0%,#160b29 25%,#08081a 50%,#0a1128 75%,#04040f 100%);background-size:400% 400%;animation:flowBg 24s ease infinite;}
@@ -531,14 +538,14 @@ textarea::placeholder{color:var(--muted);}
 }
 @media(max-width:768px){
   /* TOP BAR — single row with scrollable nav */
-  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:8px;overflow:hidden;}
+  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:6px;overflow:hidden;}
   .top-logo{font-size:.72rem;letter-spacing:1px;gap:6px;}
   .top-logo span{display:none;}
   .top-right{display:none;}
   nav{flex:1;margin:0;padding:4px;border-radius:28px;min-width:0;}
-  .tab-btn{padding:6px 11px;font-size:.7rem;}
-  main{margin:12px auto 60px;padding:0 10px;}
-  .glass-panel{padding:16px 14px;}
+  .tab-btn{padding:6px 10px;font-size:.68rem;}
+  main{margin:12px auto 48px;padding:0 10px;}
+  .glass-panel{padding:14px 12px;}
   .todo-layout{grid-template-columns:1fr;}
   .todo-right{border-top:1px solid var(--border);min-height:280px;}
   .split-container{grid-template-columns:1fr;}
@@ -546,7 +553,7 @@ textarea::placeholder{color:var(--muted);}
   .fitness-grid{grid-template-columns:1fr 1fr;}
   textarea{height:220px;}
   .vibe-grid{grid-template-columns:1fr;}
-  #bot{bottom:14px;right:12px;}
+  #bot{bottom:80px;right:12px;}
   #bot-svg{width:52px;height:52px;}
   .cal-days .cal-day{min-height:55px;}
   .dashboard-grid{grid-template-columns:1fr;}
@@ -557,7 +564,75 @@ textarea::placeholder{color:var(--muted);}
   .cinematic-text{padding:0 10px;}
 
   /* SHOWCASE MOBILE FIX */
-  .showcase-card{height:350px;}
+  .showcase-card{height:260px;}
+
+  /* ── v2.0 MOBILE FIXES ── */
+
+  /* Toast */
+  #toast-container{width:calc(100vw - 24px);right:12px;top:68px;}
+  .toast{border-radius:12px;}
+
+  /* Command Palette */
+  #cmd-palette{width:96vw;top:12%;}
+  .cmd-input-wrap{padding:12px 14px;}
+  #cmd-input{font-size:.88rem;}
+  .cmd-item{padding:9px 10px;}
+
+  /* Activity Panel — tam ekran */
+  #activity-panel{width:100vw;right:-100vw;border-left:none;border-top:1px solid rgba(255,255,255,.07);}
+  #activity-panel.open{right:0;}
+
+  /* Top bar extras */
+  .top-bar-extras{gap:5px;}
+  .top-bar-extras .kb-badge{display:none;}
+  .bell-btn{width:30px;height:30px;border-radius:8px;font-size:.8rem;}
+
+  /* Status bar — gizle */
+  #status-bar{display:none;}
+
+  /* Focus Overlay */
+  .focus-clock{font-size:3.5rem;letter-spacing:4px;}
+  .focus-timer-ring{width:130px;height:130px;}
+  .focus-timer-num{font-size:1.8rem;}
+  .focus-task-display{font-size:.85rem;padding:10px 16px;max-width:92vw;}
+  .focus-controls{gap:6px;flex-wrap:wrap;justify-content:center;}
+  .focus-ctrl-btn{padding:8px 14px;font-size:.72rem;}
+  .focus-exit{top:16px;right:12px;padding:6px 10px;font-size:.65rem;}
+
+  /* Context Menu */
+  #ctx-menu{min-width:160px;}
+  .ctx-item{padding:9px 10px;font-size:.74rem;}
+
+  /* Cal layout mobil */
+  .cal-side{display:none;}
+
+  /* Login panel */
+  .login-panel{width:92vw;padding:28px 20px;}
+
+  /* Dashboard cal widget */
+  .dash-cal-widget{padding:14px 12px;}
+  .dash-mini-day{font-size:.68rem;padding:4px 1px;}
+
+  /* Cursor glow — kapat (parmak yok) */
+  #cursor-glow{display:none;}
+
+  /* Header progress — daha ince */
+  #header-progress{height:2px;}
+
+  /* Bot bubble daha küçük */
+  #bot-bubble{max-width:150px;font-size:.72rem;padding:7px 11px;}
+
+  /* Vibe embeds */
+  .vibe-sp-embed iframe{height:240px;}
+  .vibe-yt-embed iframe{height:200px;}
+
+  /* Aksiyon overlay font */
+  .aksiyon-number{font-size:5rem;}
+  .aksiyon-title{font-size:1.2rem;letter-spacing:4px;}
+
+  /* Fitness grid */
+  .fitness-widget{padding:12px;}
+  .fitness-num{font-size:1.8rem;}
 }
 
 /* ══════════════ AKSİYON CSS ══════════════ */
@@ -726,6 +801,593 @@ textarea::placeholder{color:var(--muted);}
   transition:left .6s ease;
 }
 .aksiyon-trigger-btn:hover::after{left:100%;}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CLOUD OS — GELİŞMİŞ UI KATEKLERİ & BİLDİRİM SİSTEMİ
+═══════════════════════════════════════════════════════════════════════ */
+
+/* ── CURSOR GLOW ── */
+#cursor-glow{
+  position:fixed;width:320px;height:320px;border-radius:50%;
+  pointer-events:none;z-index:9997;
+  background:radial-gradient(circle,rgba(124,106,255,.07) 0%,transparent 70%);
+  transform:translate(-50%,-50%);
+  transition:opacity .4s ease;
+  mix-blend-mode:screen;
+}
+
+/* ── SCANLINES OVERLAY ── */
+.scanlines{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,transparent 2px,
+    rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px
+  );
+  opacity:.4;
+}
+
+/* ══════════════════════════════════════════════════
+   TOAST BİLDİRİM SİSTEMİ
+══════════════════════════════════════════════════ */
+#toast-container{
+  position:fixed;top:80px;right:20px;z-index:999999;
+  display:flex;flex-direction:column;gap:10px;
+  pointer-events:none;
+  width:320px;
+}
+.toast{
+  position:relative;overflow:hidden;
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(10,8,30,.92);
+  backdrop-filter:blur(28px);
+  box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.07);
+  pointer-events:auto;
+  transform:translateX(340px);
+  opacity:0;
+  transition:transform .45s cubic-bezier(.23,1,.32,1),opacity .45s ease;
+}
+.toast.show{transform:translateX(0);opacity:1;}
+.toast.hide{transform:translateX(340px);opacity:0;}
+
+/* progress bar */
+.toast::after{
+  content:'';position:absolute;bottom:0;left:0;height:2px;
+  background:var(--toast-color,var(--a1));
+  border-radius:0 0 16px 16px;
+  animation:toastProgress var(--toast-dur,4s) linear forwards;
+}
+@keyframes toastProgress{from{width:100%}to{width:0%}}
+
+/* top gradient line */
+.toast::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--toast-color,var(--a1)),transparent);
+}
+.toast-icon{
+  width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+}
+.toast-body{flex:1;min-width:0;}
+.toast-title{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:2px;letter-spacing:.3px;}
+.toast-msg{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.45;}
+.toast-close{
+  background:none;border:none;color:rgba(255,255,255,.3);
+  cursor:pointer;font-size:.85rem;padding:0 2px;flex-shrink:0;
+  transition:color .2s;line-height:1;
+}
+.toast-close:hover{color:rgba(255,255,255,.8);}
+.toast-action{
+  margin-top:8px;
+  padding:4px 10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;
+  color:var(--toast-color,var(--a1));
+  font-size:.68rem;font-weight:700;letter-spacing:.5px;
+  cursor:pointer;font-family:inherit;
+  transition:all .2s;
+}
+.toast-action:hover{background:rgba(255,255,255,.12);}
+
+/* Türlere göre renkler */
+.toast.success{--toast-color:#22d3a0;}
+.toast.error{--toast-color:#ff5566;}
+.toast.warn{--toast-color:#ffb432;}
+.toast.info{--toast-color:#7c6aff;}
+.toast.cyan{--toast-color:#4fd1ff;}
+
+/* ══════════════════════════════════════════════════
+   COMMAND PALETTE  (Cmd+K)
+══════════════════════════════════════════════════ */
+#cmd-palette-backdrop{
+  position:fixed;inset:0;z-index:99990;
+  background:rgba(4,4,15,.7);backdrop-filter:blur(12px);
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+#cmd-palette-backdrop.open{opacity:1;pointer-events:auto;}
+#cmd-palette{
+  position:absolute;top:22%;left:50%;transform:translateX(-50%) scale(.94);
+  width:min(560px,92vw);
+  background:rgba(10,8,30,.97);
+  border:1px solid rgba(124,106,255,.35);
+  border-radius:20px;
+  box-shadow:0 0 80px rgba(124,106,255,.25),0 24px 80px rgba(0,0,0,.8);
+  overflow:hidden;
+  transition:transform .35s cubic-bezier(.23,1,.32,1);
+}
+#cmd-palette-backdrop.open #cmd-palette{transform:translateX(-50%) scale(1);}
+.cmd-input-wrap{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.cmd-kb{
+  font-size:.6rem;font-weight:700;letter-spacing:1px;
+  padding:3px 7px;border-radius:6px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:var(--muted);white-space:nowrap;flex-shrink:0;
+}
+#cmd-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:.95rem;font-family:inherit;
+}
+#cmd-input::placeholder{color:var(--muted);}
+#cmd-results{max-height:340px;overflow-y:auto;padding:8px;}
+.cmd-group-title{
+  font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);padding:8px 12px 4px;
+}
+.cmd-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:10px;
+  cursor:pointer;transition:all .18s ease;
+}
+.cmd-item:hover,.cmd-item.selected{background:rgba(124,106,255,.15);}
+.cmd-item-icon{
+  width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.88rem;flex-shrink:0;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+}
+.cmd-item-label{flex:1;font-size:.82rem;color:var(--text);}
+.cmd-item-hint{font-size:.62rem;color:var(--muted);letter-spacing:.5px;}
+.cmd-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.cmd-footer-hint{font-size:.62rem;color:rgba(255,255,255,.25);display:flex;gap:12px;}
+.cmd-footer-hint span{display:flex;align-items:center;gap:4px;}
+
+/* ══════════════════════════════════════════════════
+   GLOBAL ACTIVITY FEED (sağ panel)
+══════════════════════════════════════════════════ */
+#activity-panel{
+  position:fixed;top:0;right:-360px;width:340px;height:100vh;
+  z-index:9990;
+  background:rgba(6,5,20,.97);
+  border-left:1px solid rgba(255,255,255,.07);
+  box-shadow:-20px 0 80px rgba(0,0,0,.5);
+  display:flex;flex-direction:column;
+  transition:right .5s cubic-bezier(.23,1,.32,1);
+  backdrop-filter:blur(24px);
+}
+#activity-panel.open{right:0;}
+.activity-header{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 20px 14px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.activity-title{
+  flex:1;font-size:.75rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.activity-close{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);cursor:pointer;font-size:.8rem;
+  transition:all .2s;
+}
+.activity-close:hover{background:rgba(255,85,102,.15);border-color:rgba(255,85,102,.3);color:var(--err);}
+.activity-tabs{
+  display:flex;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.activity-tab{
+  flex:1;padding:10px;background:transparent;border:none;
+  border-bottom:2px solid transparent;
+  color:var(--muted);font-size:.65rem;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;
+  cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.activity-tab.active{color:var(--a1);border-bottom-color:var(--a1);}
+.activity-body{flex:1;overflow-y:auto;padding:12px;}
+.activity-feed{display:flex;flex-direction:column;gap:6px;}
+.activity-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 12px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:11px;
+  transition:all .2s;
+}
+.activity-item:hover{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.09);}
+.activity-dot{
+  width:8px;height:8px;border-radius:50%;
+  flex-shrink:0;margin-top:4px;
+}
+.activity-content{flex:1;}
+.activity-text{font-size:.75rem;color:rgba(255,255,255,.75);line-height:1.45;}
+.activity-time{font-size:.62rem;color:var(--muted);margin-top:3px;}
+.activity-empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;height:120px;
+  color:var(--muted);font-size:.78rem;gap:8px;
+  opacity:.4;
+}
+
+/* ══════════════════════════════════════════════════
+   KEYBOARD SHORTCUT BADGE (top-bar'a eklenir)
+══════════════════════════════════════════════════ */
+.kb-badge{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;color:var(--muted);font-size:.62rem;
+  cursor:pointer;transition:all .25s;white-space:nowrap;
+  font-family:inherit;
+}
+.kb-badge:hover{background:rgba(124,106,255,.12);border-color:rgba(124,106,255,.35);color:#c8b8ff;}
+.kb-badge kbd{
+  font-size:.58rem;font-weight:700;
+  padding:1px 5px;border-radius:4px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  font-family:inherit;
+}
+
+/* activity bell */
+.bell-btn{
+  position:relative;width:34px;height:34px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.9rem;transition:all .25s;flex-shrink:0;
+}
+.bell-btn:hover{background:rgba(124,106,255,.15);border-color:rgba(124,106,255,.4);}
+.bell-btn.ringing{animation:bellRing .5s ease;}
+@keyframes bellRing{
+  0%{transform:rotate(0)}20%{transform:rotate(-12deg)}40%{transform:rotate(14deg)}
+  60%{transform:rotate(-10deg)}80%{transform:rotate(8deg)}100%{transform:rotate(0)}
+}
+.bell-badge{
+  position:absolute;top:-4px;right:-4px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--err);border:2px solid var(--bg);
+  font-size:.5rem;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(0);
+  transition:all .3s cubic-bezier(.23,1,.32,1);
+}
+.bell-badge.show{opacity:1;transform:scale(1);}
+
+/* ══════════════════════════════════════════════════
+   FOCUS MODE OVERLAY
+══════════════════════════════════════════════════ */
+#focus-overlay{
+  position:fixed;inset:0;z-index:99980;
+  background:rgba(4,4,15,.96);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .6s ease;
+  backdrop-filter:blur(40px);
+}
+#focus-overlay.active{opacity:1;pointer-events:auto;}
+.focus-content{text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px;}
+.focus-clock{
+  font-size:5rem;font-weight:200;letter-spacing:8px;
+  font-variant-numeric:tabular-nums;
+  background:linear-gradient(135deg,#fff,#c46dff,#7c6aff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.focus-label{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.focus-task-display{
+  padding:14px 28px;
+  background:rgba(124,106,255,.08);
+  border:1px solid rgba(124,106,255,.25);
+  border-radius:14px;
+  font-size:.95rem;color:rgba(255,255,255,.75);
+  max-width:400px;text-align:center;line-height:1.5;
+}
+.focus-timer{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.focus-timer-ring{position:relative;width:160px;height:160px;}
+.focus-timer-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);}
+.ftr-track{fill:none;stroke:rgba(255,255,255,.05);stroke-width:4;}
+.ftr-fill{fill:none;stroke:var(--a1);stroke-width:4;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear;}
+.focus-timer-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;font-weight:200;color:rgba(255,255,255,.9);
+}
+.focus-controls{display:flex;gap:10px;}
+.focus-ctrl-btn{
+  padding:10px 22px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.7);font-size:.78rem;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:all .25s;
+}
+.focus-ctrl-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:#fff;}
+.focus-ctrl-btn.primary{
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  border-color:transparent;color:#fff;
+  box-shadow:0 0 20px rgba(124,106,255,.4);
+}
+.focus-ctrl-btn.primary:hover{opacity:.85;}
+.focus-exit{
+  position:absolute;top:24px;right:24px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:8px 14px;color:var(--muted);
+  font-size:.7rem;font-weight:600;letter-spacing:1px;
+  cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.focus-exit:hover{background:rgba(255,85,102,.1);border-color:rgba(255,85,102,.3);color:var(--err);}
+
+/* ══════════════════════════════════════════════════
+   STATUS BAR (bottom)
+══════════════════════════════════════════════════ */
+#status-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:90;
+  height:30px;
+  background:rgba(4,4,15,.88);
+  border-top:1px solid rgba(255,255,255,.05);
+  backdrop-filter:blur(16px);
+  display:flex;align-items:center;
+  padding:0 16px;
+  gap:16px;
+  opacity:0;transition:opacity .8s ease .4s;
+}
+#status-bar.visible{opacity:1;}
+.sb-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:.58rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+  color:rgba(255,255,255,.3);white-space:nowrap;
+}
+.sb-dot{width:5px;height:5px;border-radius:50%;}
+.sb-dot.green{background:#22d3a0;box-shadow:0 0 5px rgba(34,211,160,.5);}
+.sb-dot.yellow{background:#ffb432;}
+.sb-dot.purple{background:#7c6aff;}
+.sb-sep{width:1px;height:14px;background:rgba(255,255,255,.08);}
+.sb-spacer{flex:1;}
+.sb-version{font-size:.54rem;color:rgba(255,255,255,.15);letter-spacing:.5px;}
+.sb-focus-btn{
+  padding:2px 8px;border-radius:6px;
+  background:rgba(124,106,255,.1);border:1px solid rgba(124,106,255,.2);
+  color:rgba(124,106,255,.8);font-size:.58rem;font-weight:700;letter-spacing:.5px;
+  cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.sb-focus-btn:hover{background:rgba(124,106,255,.2);color:#c8b8ff;}
+
+/* ══════════════════════════════════════════════════
+   NAV TAB — UNREADs DOT
+══════════════════════════════════════════════════ */
+.tab-notif{
+  position:absolute;top:4px;right:4px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--err);border:1.5px solid var(--bg);
+  opacity:0;transform:scale(0);
+  transition:all .3s cubic-bezier(.23,1,.32,1);
+}
+.tab-notif.show{opacity:1;transform:scale(1);}
+
+/* ══════════════════════════════════════════════════
+   ENHANCED TOP BAR
+══════════════════════════════════════════════════ */
+.top-bar-extras{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+
+/* ══════════════════════════════════════════════════
+   PANEL GLOW EFFECTS
+══════════════════════════════════════════════════ */
+.glass-panel:hover{
+  border-color:rgba(124,106,255,.18);
+}
+.glass-panel.glow-ok{border-color:rgba(34,211,160,.3)!important;box-shadow:0 4px 32px rgba(0,0,0,.45),0 0 20px rgba(34,211,160,.1),inset 0 1px 0 rgba(255,255,255,.04)!important;}
+.glass-panel.glow-warn{border-color:rgba(255,180,50,.3)!important;box-shadow:0 4px 32px rgba(0,0,0,.45),0 0 20px rgba(255,180,50,.08),inset 0 1px 0 rgba(255,255,255,.04)!important;}
+
+/* ══════════════════════════════════════════════════
+   RIPPLE EFFECT
+══════════════════════════════════════════════════ */
+.ripple-host{position:relative;overflow:hidden;}
+.ripple-circle{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.12);
+  transform:scale(0);animation:rippleAnim .5s linear;
+  pointer-events:none;
+}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}
+
+/* ══════════════════════════════════════════════════
+   SKELETON LOADER
+══════════════════════════════════════════════════ */
+.skeleton{
+  background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);
+  background-size:200% 100%;
+  animation:skeletonShimmer 1.6s ease-in-out infinite;
+  border-radius:8px;
+}
+@keyframes skeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ══════════════════════════════════════════════════
+   CONTEXT MENU
+══════════════════════════════════════════════════ */
+#ctx-menu{
+  position:fixed;z-index:999995;
+  background:rgba(10,8,30,.96);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  padding:6px;
+  box-shadow:0 16px 60px rgba(0,0,0,.7),0 0 0 1px rgba(124,106,255,.15);
+  backdrop-filter:blur(24px);
+  min-width:180px;
+  opacity:0;transform:scale(.9) translateY(-8px);
+  pointer-events:none;
+  transition:all .2s cubic-bezier(.23,1,.32,1);
+}
+#ctx-menu.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto;}
+.ctx-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;border-radius:8px;
+  font-size:.78rem;color:rgba(255,255,255,.75);
+  cursor:pointer;transition:all .15s;
+}
+.ctx-item:hover{background:rgba(124,106,255,.15);color:#fff;}
+.ctx-item.danger{color:var(--err);}
+.ctx-item.danger:hover{background:rgba(255,85,102,.12);}
+.ctx-item-icon{width:18px;text-align:center;font-size:.85rem;flex-shrink:0;}
+.ctx-sep{height:1px;background:rgba(255,255,255,.06);margin:4px 0;}
+
+/* ══════════════════════════════════════════════════
+   ENHANCED LOGIN SCREEN
+══════════════════════════════════════════════════ */
+#login-screen{
+  background:radial-gradient(ellipse at 30% 50%,rgba(124,106,255,.12) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 50%,rgba(196,109,255,.08) 0%,transparent 60%),
+             var(--bg);
+}
+.login-panel{
+  position:relative;
+}
+.login-logo-anim{
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  height:48px;margin-bottom:4px;
+}
+.login-logo-anim .lb{
+  width:3px;border-radius:3px;
+  background:linear-gradient(180deg,#c46dff,#7c6aff);
+  box-shadow:0 0 10px rgba(124,106,255,.5);
+  animation:loginWave 1.2s ease-in-out infinite;
+}
+.lb:nth-child(1){height:10px;animation-delay:0s}
+.lb:nth-child(2){height:18px;animation-delay:.1s}
+.lb:nth-child(3){height:28px;animation-delay:.2s}
+.lb:nth-child(4){height:36px;animation-delay:.3s}
+.lb:nth-child(5){height:28px;animation-delay:.4s}
+.lb:nth-child(6){height:18px;animation-delay:.5s}
+.lb:nth-child(7){height:10px;animation-delay:.6s}
+@keyframes loginWave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.5)}}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE ek — küçük telefon (480px altı)
+══════════════════════════════════════════════════ */
+@media(max-width:480px){
+  .tab-btn{padding:5px 8px;font-size:.62rem;letter-spacing:0;}
+  .tab-btn span{white-space:nowrap;}
+  .glass-panel{padding:12px 10px;border-radius:14px;}
+  .top-bar{height:50px;padding:0 8px;gap:4px;}
+  main{margin:10px auto 40px;padding:0 8px;}
+
+  /* Command Palette küçük ekran */
+  #cmd-palette{width:98vw;top:5%;}
+  #cmd-results{max-height:240px;}
+
+  /* Toast */
+  #toast-container{width:calc(100vw - 16px);right:8px;top:60px;}
+  .toast-title{font-size:.72rem;}
+  .toast-msg{font-size:.66rem;}
+
+  /* Focus overlay küçük */
+  .focus-timer-ring{width:110px;height:110px;}
+  .focus-timer-num{font-size:1.5rem;}
+  .focus-clock{font-size:2.8rem;}
+  .focus-content{gap:16px;}
+  .focus-ctrl-btn{padding:6px 10px;font-size:.68rem;}
+
+  /* Bot gizle küçük ekranda */
+  #bot{bottom:60px;right:8px;}
+  #bot-svg{width:44px;height:44px;}
+  #bot-bubble{max-width:130px;font-size:.68rem;}
+
+  /* Aksiyon */
+  .aksiyon-number{font-size:4rem;}
+  .aksiyon-ring-wrap{width:160px;height:160px;}
+  .aksiyon-title{font-size:1rem;letter-spacing:3px;}
+
+  /* Dashboard grid tam tek kolon */
+  .dashboard-grid{grid-template-columns:1fr;gap:12px;}
+  .widgets-col{gap:10px;}
+  .fitness-grid{grid-template-columns:1fr 1fr;gap:8px;}
+
+  /* Showcase */
+  .showcase-card{height:200px;}
+
+  /* Todo */
+  .todo-layout{min-height:auto;}
+  .todo-filters{overflow-x:auto;}
+  .todo-filter-btn{padding:8px 5px;font-size:.6rem;}
+
+  /* Journal/Notes */
+  .sidebar-panel{max-height:160px;}
+  .title-input{font-size:1rem;padding:9px 12px;}
+  textarea{height:180px;font-size:.85rem;}
+
+  /* Vibe */
+  .mood-grid{grid-template-columns:repeat(5,1fr);gap:4px;}
+  .mood-btn{padding:8px 2px;}
+  .mood-emoji{font-size:1.3rem;}
+  .mood-label{font-size:.52rem;}
+
+  /* Cal */
+  .cal-nav-btn{width:26px;height:26px;font-size:.85rem;}
+  .cal-month-title{font-size:.9rem;}
+  .cal-day{min-height:44px;padding:4px 2px;border-radius:6px;}
+  .cal-day-num{font-size:.7rem;}
+  .cal-event-dot{font-size:.58rem;padding:1px 3px;}
+
+  /* Game canvas */
+  #gameCanvas{width:100%;height:auto;max-width:320px;}
+}
+
+/* ══════════════════════════════════════════════════
+   ENHANCED CLOCK (top-right)
+══════════════════════════════════════════════════ */
+.top-clock-wrap{
+  display:flex;flex-direction:column;align-items:flex-end;gap:1px;
+}
+.top-time-main{font-size:.8rem;font-weight:500;letter-spacing:3px;color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;}
+.top-time-date{font-size:.58rem;color:rgba(255,255,255,.25);letter-spacing:.8px;}
+
+/* ══════════════════════════════════════════════════
+   HEADER PROGRESS BAR
+══════════════════════════════════════════════════ */
+#header-progress{
+  position:fixed;top:0;left:0;z-index:200;
+  height:2px;
+  background:linear-gradient(90deg,var(--a1),var(--a2),var(--a3));
+  box-shadow:0 0 10px rgba(124,106,255,.6);
+  transition:width .5s cubic-bezier(.23,1,.32,1);
+  border-radius:0 2px 2px 0;
+}
+
+/* ══════════════════════════════════════════════════
+   SEARCH HIGHLIGHT in TABS
+══════════════════════════════════════════════════ */
+.tab-btn[data-tab] .tab-pulse{
+  position:absolute;inset:0;border-radius:32px;
+  background:var(--a1);opacity:0;
+  animation:tabPulseAnim .6s ease forwards;
+}
+@keyframes tabPulseAnim{0%{opacity:.25}100%{opacity:0;transform:scale(1.15)}}
+
 </style>
 </head>
 <body>
@@ -761,7 +1423,11 @@ textarea::placeholder{color:var(--muted);}
 
 <div id="login-screen">
   <div class="glass-panel login-panel">
-    <div class="panel-icon" style="margin:0 auto;width:48px;height:48px;font-size:1.5rem;">🔒</div>
+    <div class="login-logo-anim">
+  <div class="lb"></div><div class="lb"></div><div class="lb"></div>
+  <div class="lb"></div><div class="lb"></div><div class="lb"></div><div class="lb"></div>
+</div>
+<div class="panel-icon" style="margin:0 auto;width:48px;height:48px;font-size:1.5rem;">🔒</div>
     <h2 style="font-size:.9rem;color:var(--text);letter-spacing:3px;font-weight:600;">SİSTEME GİRİŞ</h2>
     <input type="email" id="loginEmail" class="login-input" placeholder="E-posta adresi">
     <input type="password" id="loginPass" class="login-input" placeholder="Şifre">
@@ -832,7 +1498,20 @@ textarea::placeholder{color:var(--muted);}
     <button class="tab-btn" data-tab="vibe"><span>✨ Vibe</span></button>
     <button class="tab-btn" data-tab="game"><span>⚽ Oyun</span></button>
   </nav>
-  <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
+  <div class="top-bar-extras">
+  <button class="kb-badge" id="cmdPaletteBtn" title="Komut Paleti">
+    <kbd>⌘</kbd><kbd>K</kbd>
+  </button>
+  <button class="bell-btn" id="bellBtn" title="Aktivite">
+    🔔<span class="bell-badge" id="bellBadge">0</span>
+  </button>
+</div>
+<div class="top-right">
+  <div class="top-clock-wrap">
+    <div class="top-time-main" id="liveClock">--:--</div>
+    <div class="top-time-date" id="liveDate">--</div>
+  </div>
+</div>
 </header>
 
 <main id="mainContent">
@@ -2227,5 +2906,872 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 })();
 </script>
-</body>
+
+<!-- CURSOR GLOW -->
+<div id="cursor-glow"></div>
+
+<!-- SCANLINES -->
+<div class="scanlines"></div>
+
+<!-- HEADER PROGRESS BAR -->
+<div id="header-progress" style="width:0%"></div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- COMMAND PALETTE -->
+<div id="cmd-palette-backdrop">
+  <div id="cmd-palette">
+    <div class="cmd-input-wrap">
+      <span class="cmd-kb">⌘K</span>
+      <input id="cmd-input" type="text" placeholder="Bir komut veya sekme ara..." autocomplete="off">
+    </div>
+    <div id="cmd-results"></div>
+    <div class="cmd-footer">
+      <div class="cmd-footer-hint">
+        <span><kbd>↑↓</kbd> Gezin</span>
+        <span><kbd>↵</kbd> Seç</span>
+        <span><kbd>ESC</kbd> Kapat</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVITY PANEL -->
+<div id="activity-panel">
+  <div class="activity-header">
+    <span style="font-size:1rem;">🔔</span>
+    <span class="activity-title">Aktivite & Bildirimler</span>
+    <button class="activity-close" id="activityClose">✕</button>
+  </div>
+  <div class="activity-tabs">
+    <button class="activity-tab active" data-atab="feed">Akış</button>
+    <button class="activity-tab" data-atab="notifs">Bildirimler</button>
+    <button class="activity-tab" data-atab="stats">İstatistik</button>
+  </div>
+  <div class="activity-body">
+    <div class="activity-feed" id="activityFeed"></div>
+    <div id="activityNotifs" style="display:none;"></div>
+    <div id="activityStats" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- CONTEXT MENU -->
+<div id="ctx-menu"></div>
+
+<!-- FOCUS MODE -->
+<div id="focus-overlay">
+  <button class="focus-exit" id="focusExit">✕ Çıkış (ESC)</button>
+  <div class="focus-content">
+    <div>
+      <div class="focus-label">Odak Modu — Pomodoro</div>
+    </div>
+    <div class="focus-timer">
+      <div class="focus-timer-ring">
+        <svg viewBox="0 0 150 150">
+          <circle class="ftr-track" cx="75" cy="75" r="70"/>
+          <circle class="ftr-fill" id="focusRingFill" cx="75" cy="75" r="70"/>
+        </svg>
+        <div class="focus-timer-num" id="focusTimerNum">25:00</div>
+      </div>
+    </div>
+    <div class="focus-task-display" id="focusTaskDisplay">
+      Odaklanacak görev seçilmedi
+    </div>
+    <div class="focus-controls">
+      <button class="focus-ctrl-btn" id="focusReset">↺ Sıfırla</button>
+      <button class="focus-ctrl-btn primary" id="focusStartStop">▶ Başlat</button>
+      <button class="focus-ctrl-btn" id="focusBreak">☕ 5dk Mola</button>
+    </div>
+    <div class="focus-label" id="focusSessionLabel" style="color:rgba(124,106,255,.6);">Pomodoro #1</div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div id="status-bar">
+  <div class="sb-item">
+    <div class="sb-dot green"></div>
+    <span id="sb-cloud">Buluta Bağlı</span>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-item">
+    <div class="sb-dot purple"></div>
+    <span id="sb-tasks">0 görev</span>
+  </div>
+  <div class="sb-sep"></div>
+  <div class="sb-item">
+    <div class="sb-dot yellow"></div>
+    <span id="sb-today">Bugün 0 etkinlik</span>
+  </div>
+  <div class="sb-spacer"></div>
+  <button class="sb-focus-btn" id="sbFocusBtn">⚡ Odak Modu</button>
+  <div class="sb-sep"></div>
+  <span class="sb-version">CLOUD OS v2.0</span>
+</div>
+
+
+<script>
+
+/* ══════════════════════════════════════════════════════════════════════
+   CLOUD OS v2.0 — GELİŞMİŞ UI + BİLDİRİM MOTORU
+══════════════════════════════════════════════════════════════════════ */
+(function(){
+'use strict';
+
+/* ── 1. CURSOR GLOW ──────────────────────────────────────────────── */
+var cg = document.getElementById('cursor-glow');
+if(cg){
+  document.addEventListener('mousemove', function(e){
+    cg.style.left = e.clientX + 'px';
+    cg.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mouseleave', function(){ cg.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function(){ cg.style.opacity = '1'; });
+}
+
+/* ── 2. HEADER PROGRESS BAR (görev tamamlama oranı) ─────────────── */
+var hpBar = document.getElementById('header-progress');
+function updateHeaderProgress(){
+  try{
+    var todos = window._cloudState && window._cloudState.todos ? window._cloudState.todos : [];
+    if(!todos.length){ if(hpBar)hpBar.style.width='0%'; return; }
+    var done = todos.filter(function(t){return t.completed;}).length;
+    var pct  = Math.round(done / todos.length * 100);
+    if(hpBar) hpBar.style.width = pct + '%';
+  }catch(e){}
+}
+setInterval(updateHeaderProgress, 2000);
+
+/* ── 3. CLOCK + DATE (genişletilmiş) ────────────────────────────── */
+var TR_DAYS_LONG = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+var TR_MON_SHORT = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+function updateEnhancedClock(){
+  var now = new Date();
+  var ld  = document.getElementById('liveDate');
+  if(ld){
+    ld.textContent = TR_DAYS_LONG[now.getDay()] + ', ' + now.getDate() + ' ' + TR_MON_SHORT[now.getMonth()];
+  }
+  // status bar today events
+  updateStatusBar();
+}
+updateEnhancedClock();
+setInterval(updateEnhancedClock, 30000);
+
+/* ── 4. STATUS BAR ───────────────────────────────────────────────── */
+function updateStatusBar(){
+  var sb = document.getElementById('status-bar');
+  if(!sb) return;
+  sb.classList.add('visible');
+  try{
+    var todos = window._cloudState && window._cloudState.todos ? window._cloudState.todos : [];
+    var pending = todos.filter(function(t){return !t.completed;}).length;
+    var sbT = document.getElementById('sb-tasks');
+    if(sbT) sbT.textContent = pending + ' görev';
+    // today events
+    var today = (function(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');})();
+    var evs = window._cloudState && window._cloudState.calEvents ? window._cloudState.calEvents : [];
+    var todayEvs = evs.filter(function(e){return e.date===today;}).length;
+    var sbE = document.getElementById('sb-today');
+    if(sbE) sbE.textContent = 'Bugün ' + todayEvs + ' etkinlik';
+  }catch(e){}
+}
+setInterval(updateStatusBar, 5000);
+
+/* ── 5. TOAST SİSTEMİ ───────────────────────────────────────────── */
+var toastQ = [];
+var toastActive = 0;
+var MAX_TOASTS = 4;
+
+window.showToast = function(opts){
+  /* opts: {title, msg, type:'success|error|warn|info|cyan', icon, dur, action:{label,fn}} */
+  opts = opts || {};
+  var type  = opts.type  || 'info';
+  var title = opts.title || '';
+  var msg   = opts.msg   || '';
+  var icon  = opts.icon  || {success:'✓',error:'✕',warn:'⚠',info:'✦',cyan:'◈'}[type] || '•';
+  var dur   = opts.dur   || 4000;
+
+  if(toastActive >= MAX_TOASTS){ toastQ.push(opts); return; }
+  toastActive++;
+
+  var tc = document.getElementById('toast-container');
+  if(!tc) return;
+
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.style.setProperty('--toast-dur', (dur/1000) + 's');
+
+  var actionHTML = '';
+  if(opts.action){
+    actionHTML = '<button class="toast-action" id="ta_' + Date.now() + '">' + opts.action.label + '</button>';
+  }
+
+  el.innerHTML =
+    '<div class="toast-icon">' + icon + '</div>' +
+    '<div class="toast-body">' +
+      (title ? '<div class="toast-title">' + title + '</div>' : '') +
+      '<div class="toast-msg">' + msg + '</div>' +
+      actionHTML +
+    '</div>' +
+    '<button class="toast-close">✕</button>';
+
+  tc.appendChild(el);
+
+  // action btn
+  if(opts.action){
+    var ab = el.querySelector('.toast-action');
+    if(ab) ab.addEventListener('click', function(){
+      opts.action.fn && opts.action.fn();
+      dismiss();
+    });
+  }
+
+  // close btn
+  el.querySelector('.toast-close').addEventListener('click', dismiss);
+
+  // auto dismiss
+  var dismissTimer = setTimeout(dismiss, dur + 400);
+
+  function dismiss(){
+    clearTimeout(dismissTimer);
+    el.classList.add('hide');
+    setTimeout(function(){
+      if(el.parentNode) el.parentNode.removeChild(el);
+      toastActive--;
+      if(toastQ.length) window.showToast(toastQ.shift());
+    }, 500);
+  }
+
+  // show
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ el.classList.add('show'); });
+  });
+
+  // bump bell
+  bumpBell();
+};
+
+/* shorthand helpers */
+window.toastOk   = function(msg,title){ window.showToast({type:'success',title:title||'Başarılı',msg:msg,icon:'✓'}); };
+window.toastErr  = function(msg,title){ window.showToast({type:'error',title:title||'Hata',msg:msg,icon:'✕',dur:6000}); };
+window.toastWarn = function(msg,title){ window.showToast({type:'warn',title:title||'Dikkat',msg:msg,icon:'⚠',dur:5000}); };
+window.toastInfo = function(msg,title){ window.showToast({type:'info',title:title||'Bilgi',msg:msg,icon:'✦'}); };
+window.toastCyan = function(msg,title){ window.showToast({type:'cyan',title:title||'Takvim',msg:msg,icon:'📅'}); };
+
+/* ── 6. BELL (bildirim sayacı) ──────────────────────────────────── */
+var bellCount = 0;
+function bumpBell(){
+  bellCount++;
+  var bb = document.getElementById('bellBadge');
+  var btn = document.getElementById('bellBtn');
+  if(bb){
+    bb.textContent = bellCount > 9 ? '9+' : bellCount;
+    bb.classList.add('show');
+  }
+  if(btn){ btn.classList.add('ringing'); setTimeout(function(){ btn.classList.remove('ringing'); }, 600); }
+}
+function resetBell(){
+  bellCount = 0;
+  var bb = document.getElementById('bellBadge');
+  if(bb){ bb.classList.remove('show'); bb.textContent = '0'; }
+}
+
+var bellBtn = document.getElementById('bellBtn');
+if(bellBtn){
+  bellBtn.addEventListener('click', function(){
+    var ap = document.getElementById('activity-panel');
+    if(ap){ ap.classList.toggle('open'); }
+    if(ap && ap.classList.contains('open')) resetBell();
+  });
+}
+var actClose = document.getElementById('activityClose');
+if(actClose){
+  actClose.addEventListener('click', function(){
+    var ap = document.getElementById('activity-panel');
+    if(ap) ap.classList.remove('open');
+  });
+}
+
+/* ── 7. AKTİVİTE FEED ───────────────────────────────────────────── */
+var activityLog = [];
+function logActivity(text, color, tabKey){
+  color = color || '#7c6aff';
+  var now = new Date();
+  var timeStr = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  var entry = {text:text, color:color, time:timeStr, tab:tabKey||''};
+  activityLog.unshift(entry);
+  if(activityLog.length > 50) activityLog.pop();
+  renderActivityFeed();
+  // also show dot on tab
+  if(tabKey){
+    var tb = document.querySelector('.tab-btn[data-tab="'+tabKey+'"]');
+    if(tb){
+      var nd = tb.querySelector('.tab-notif');
+      if(!nd){ nd = document.createElement('div'); nd.className='tab-notif'; tb.appendChild(nd); }
+      nd.classList.add('show');
+      setTimeout(function(){ nd.classList.remove('show'); }, 4000);
+    }
+  }
+}
+window.logActivity = logActivity;
+
+function renderActivityFeed(){
+  var feed = document.getElementById('activityFeed');
+  if(!feed) return;
+  feed.innerHTML = '';
+  if(!activityLog.length){
+    feed.innerHTML = '<div class="activity-empty"><span style="font-size:1.5rem;">🌑</span>Henüz aktivite yok</div>';
+    return;
+  }
+  activityLog.slice(0,20).forEach(function(e){
+    var item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML =
+      '<div class="activity-dot" style="background:'+e.color+'"></div>'+
+      '<div class="activity-content">'+
+        '<div class="activity-text">'+e.text+'</div>'+
+        '<div class="activity-time">'+e.time+'</div>'+
+      '</div>';
+    feed.appendChild(item);
+  });
+}
+
+/* activity tabs */
+document.querySelectorAll('.activity-tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.activity-tab').forEach(function(b){ b.classList.remove('active'); });
+    this.classList.add('active');
+    var tab = this.dataset.atab;
+    document.getElementById('activityFeed').style.display    = tab==='feed'  ? '' : 'none';
+    document.getElementById('activityNotifs').style.display  = tab==='notifs'? '' : 'none';
+    document.getElementById('activityStats').style.display   = tab==='stats' ? '' : 'none';
+    if(tab==='stats') renderActivityStats();
+    if(tab==='notifs') renderActivityNotifs();
+  });
+});
+
+function renderActivityNotifs(){
+  var el = document.getElementById('activityNotifs');
+  if(!el) return;
+  var todos = window._cloudState && window._cloudState.todos ? window._cloudState.todos : [];
+  var today = (function(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');})();
+  var overdue = todos.filter(function(t){return !t.completed && t.dueDate && t.dueDate < today;});
+  var dueToday = todos.filter(function(t){return !t.completed && t.dueDate === today;});
+  var html = '<div class="activity-feed">';
+  if(overdue.length){
+    html += '<div class="activity-item"><div class="activity-dot" style="background:#ff5566"></div><div class="activity-content"><div class="activity-text" style="color:var(--err);font-weight:600;">'+overdue.length+' gecikmiş görev</div><div class="activity-time">Acil dikkat gerekiyor</div></div></div>';
+  }
+  if(dueToday.length){
+    html += '<div class="activity-item"><div class="activity-dot" style="background:#ffb432"></div><div class="activity-content"><div class="activity-text">Bugün '+dueToday.length+' görev var</div><div class="activity-time">'+today+'</div></div></div>';
+  }
+  if(!overdue.length && !dueToday.length){
+    html += '<div class="activity-empty"><span style="font-size:1.5rem;">✨</span>Harika! Her şey yolunda</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderActivityStats(){
+  var el = document.getElementById('activityStats');
+  if(!el) return;
+  var todos = window._cloudState && window._cloudState.todos ? window._cloudState.todos : [];
+  var done  = todos.filter(function(t){return t.completed;}).length;
+  var total = todos.length;
+  var pct   = total ? Math.round(done/total*100) : 0;
+  var high  = todos.filter(function(t){return t.priority==='high' && !t.completed;}).length;
+  var journals = window._cloudState && window._cloudState.journals ? window._cloudState.journals : [];
+  var notes    = window._cloudState && window._cloudState.notes    ? window._cloudState.notes    : [];
+  el.innerHTML =
+    '<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0;">'+
+    statRow('Görev Tamamlama',''+pct+'%','linear-gradient(90deg,#7c6aff,#c46dff)',pct)+
+    statRow('Yüksek Öncelik',''+high+' görev','linear-gradient(90deg,#ff5566,#ff8899)',Math.min(100,high*20))+
+    statRow('Günlük Sayısı',''+journals.length+' sayfa','linear-gradient(90deg,#22d3a0,#4fd1ff)',Math.min(100,journals.length*10))+
+    statRow('Not Sayısı',''+notes.length+' not','linear-gradient(90deg,#ffb432,#ff8c42)',Math.min(100,notes.length*10))+
+    '</div>';
+}
+
+function statRow(label,val,grad,pct){
+  return '<div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px;">'+
+    '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">'+
+    '<span style="font-size:.72rem;color:rgba(255,255,255,.55);">'+label+'</span>'+
+    '<span style="font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);">'+val+'</span>'+
+    '</div>'+
+    '<div style="height:3px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;">'+
+    '<div style="height:100%;width:'+pct+'%;background:'+grad+';border-radius:4px;transition:width .6s;"></div>'+
+    '</div>'+
+    '</div>';
+}
+
+/* ── 8. COMMAND PALETTE ──────────────────────────────────────────── */
+var cmdOpen = false;
+var cmdSelectedIdx = 0;
+
+var CMD_ITEMS = [
+  {icon:'🏠', label:'Dashboard',       hint:'Ana ekran',           fn:function(){ gotoTab('dashboard'); }},
+  {icon:'✦',  label:'Görevler',         hint:'Todo listesi',        fn:function(){ gotoTab('todos'); }},
+  {icon:'📅', label:'Takvim',           hint:'Etkinlikler',         fn:function(){ gotoTab('calendar'); }},
+  {icon:'📓', label:'Günlük',           hint:'Kişisel günlük',      fn:function(){ gotoTab('journal'); }},
+  {icon:'📝', label:'Notlar',           hint:'Fikirler & Notlar',   fn:function(){ gotoTab('notes'); }},
+  {icon:'✨', label:'Vibe',             hint:'Ruh hali & Müzik',    fn:function(){ gotoTab('vibe'); }},
+  {icon:'⚽', label:'Oyun',             hint:'Top sektirme',        fn:function(){ gotoTab('game'); }},
+  {icon:'⚡', label:'Aksiyona Geç',     hint:'Motivasyon sayacı',   fn:function(){ closeCmdPalette(); if(window.launchAksiyon) window.launchAksiyon(); }},
+  {icon:'🎯', label:'Odak Modu',        hint:'Pomodoro zamanlayıcı',fn:function(){ closeCmdPalette(); openFocusMode(); }},
+  {icon:'🔔', label:'Aktivite Paneli',  hint:'Bildirimler',         fn:function(){ closeCmdPalette(); document.getElementById('activity-panel').classList.toggle('open'); }},
+  {icon:'🌙', label:'Yeni Günlük',      hint:'Günlük sayfası ekle', fn:function(){ closeCmdPalette(); gotoTab('journal'); setTimeout(function(){ document.getElementById('newJournalBtn').click(); },300); }},
+  {icon:'💡', label:'Yeni Not',         hint:'Not oluştur',         fn:function(){ closeCmdPalette(); gotoTab('notes'); setTimeout(function(){ document.getElementById('newNoteBtn').click(); },300); }},
+  {icon:'➕', label:'Hızlı Görev Ekle', hint:'Enter ile ekle',      fn:function(){ closeCmdPalette(); gotoTab('todos'); setTimeout(function(){ document.getElementById('todoInput').focus(); },300); }},
+];
+
+function gotoTab(name){
+  closeCmdPalette();
+  var btn = document.querySelector('.tab-btn[data-tab="'+name+'"]');
+  if(btn) btn.click();
+}
+
+function openCmdPalette(){
+  cmdOpen = true;
+  var bd = document.getElementById('cmd-palette-backdrop');
+  var inp = document.getElementById('cmd-input');
+  if(bd){ bd.classList.add('open'); }
+  if(inp){ inp.value = ''; inp.focus(); }
+  renderCmdResults('');
+  cmdSelectedIdx = 0;
+}
+function closeCmdPalette(){
+  cmdOpen = false;
+  var bd = document.getElementById('cmd-palette-backdrop');
+  if(bd) bd.classList.remove('open');
+}
+
+function renderCmdResults(query){
+  var res = document.getElementById('cmd-results');
+  if(!res) return;
+  var q = query.toLowerCase().trim();
+  var filtered = CMD_ITEMS.filter(function(it){
+    return !q || it.label.toLowerCase().includes(q) || (it.hint||'').toLowerCase().includes(q);
+  });
+  if(!filtered.length){
+    res.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:.78rem;">Sonuç bulunamadı</div>';
+    return;
+  }
+  res.innerHTML = '<div class="cmd-group-title">Komutlar</div>';
+  filtered.forEach(function(item, i){
+    var div = document.createElement('div');
+    div.className = 'cmd-item' + (i===cmdSelectedIdx?' selected':'');
+    div.innerHTML =
+      '<div class="cmd-item-icon">'+item.icon+'</div>'+
+      '<span class="cmd-item-label">'+item.label+'</span>'+
+      '<span class="cmd-item-hint">'+item.hint+'</span>';
+    div.addEventListener('click', function(){ item.fn(); });
+    res.appendChild(div);
+  });
+  window._cmdFiltered = filtered;
+}
+
+var cmdBtn = document.getElementById('cmdPaletteBtn');
+if(cmdBtn) cmdBtn.addEventListener('click', openCmdPalette);
+
+var cmdInput = document.getElementById('cmd-input');
+if(cmdInput){
+  cmdInput.addEventListener('input', function(){
+    cmdSelectedIdx = 0;
+    renderCmdResults(this.value);
+  });
+  cmdInput.addEventListener('keydown', function(e){
+    var items = window._cmdFiltered || CMD_ITEMS;
+    if(e.key === 'ArrowDown'){
+      e.preventDefault();
+      cmdSelectedIdx = Math.min(cmdSelectedIdx+1, items.length-1);
+      renderCmdResults(this.value);
+    } else if(e.key === 'ArrowUp'){
+      e.preventDefault();
+      cmdSelectedIdx = Math.max(cmdSelectedIdx-1, 0);
+      renderCmdResults(this.value);
+    } else if(e.key === 'Enter'){
+      if(items[cmdSelectedIdx]) items[cmdSelectedIdx].fn();
+    }
+  });
+}
+
+var cmdBd = document.getElementById('cmd-palette-backdrop');
+if(cmdBd) cmdBd.addEventListener('click', function(e){ if(e.target===cmdBd) closeCmdPalette(); });
+
+document.addEventListener('keydown', function(e){
+  if((e.metaKey||e.ctrlKey) && e.key==='k'){
+    e.preventDefault();
+    if(cmdOpen) closeCmdPalette(); else openCmdPalette();
+  }
+  if(e.key==='Escape'){
+    closeCmdPalette();
+    closeFocusMode();
+    var ap = document.getElementById('activity-panel');
+    if(ap && ap.classList.contains('open')){ ap.classList.remove('open'); resetBell(); }
+  }
+});
+
+/* ── 9. CONTEXT MENU ────────────────────────────────────────────── */
+var ctxMenu = document.getElementById('ctx-menu');
+var ctxActions = [];
+
+function showCtxMenu(x, y, actions){
+  ctxActions = actions || [];
+  if(!ctxMenu) return;
+  ctxMenu.innerHTML = '';
+  actions.forEach(function(a){
+    if(a.sep){ var s=document.createElement('div');s.className='ctx-sep';ctxMenu.appendChild(s);return; }
+    var d = document.createElement('div');
+    d.className = 'ctx-item' + (a.danger?' danger':'');
+    d.innerHTML = '<span class="ctx-item-icon">'+(a.icon||'•')+'</span><span>'+a.label+'</span>';
+    d.addEventListener('click', function(){ hideCtxMenu(); if(a.fn) a.fn(); });
+    ctxMenu.appendChild(d);
+  });
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var mx = Math.min(x, vw - 200);
+  var my = Math.min(y, vh - (actions.length * 38 + 20));
+  ctxMenu.style.left = mx + 'px';
+  ctxMenu.style.top  = my + 'px';
+  ctxMenu.classList.add('open');
+}
+function hideCtxMenu(){
+  if(ctxMenu) ctxMenu.classList.remove('open');
+}
+document.addEventListener('click', function(e){
+  if(ctxMenu && !ctxMenu.contains(e.target)) hideCtxMenu();
+});
+document.addEventListener('contextmenu', function(e){
+  // glass-panel sağ tık
+  var panel = e.target.closest('.glass-panel,.widget-card,.fitness-widget');
+  if(panel){
+    e.preventDefault();
+    showCtxMenu(e.clientX, e.clientY, [
+      {icon:'⚡', label:'Aksiyona Geç',  fn:function(){ if(window.launchAksiyon) window.launchAksiyon(); }},
+      {icon:'🎯', label:'Odak Modu Aç',  fn:function(){ openFocusMode(); }},
+      {icon:'🔔', label:'Bildirim Paneli',fn:function(){ document.getElementById('activity-panel').classList.toggle('open'); }},
+      {sep:true},
+      {icon:'⌘',  label:'Komut Paleti',  fn:function(){ openCmdPalette(); }},
+    ]);
+    return;
+  }
+  // todo item sağ tık
+  var todoRow = e.target.closest('.todo-item-row');
+  if(todoRow){
+    e.preventDefault();
+    var tid = todoRow.dataset.id;
+    var todos = window._cloudState && window._cloudState.todos ? window._cloudState.todos : [];
+    var t = todos.find(function(x){return x.id===tid;});
+    if(!t) return;
+    showCtxMenu(e.clientX, e.clientY, [
+      {icon:'✓',  label:'Tamamla',        fn:function(){ if(window._toggleTodoById) window._toggleTodoById(tid); window.toastOk('Görev tamamlandı','✓'); }},
+      {icon:'⭐', label:t.starred?'Yıldız Kaldır':'Yıldız Ekle', fn:function(){ if(window._toggleStarById) window._toggleStarById(tid); }},
+      {icon:'🎯', label:'Odak: Bu Görev', fn:function(){ openFocusMode(t.text); }},
+      {sep:true},
+      {icon:'🗑', label:'Sil', danger:true, fn:function(){
+        if(!confirm('Bu görevi silmek istiyor musun?')) return;
+        if(window._deleteTodoById) window._deleteTodoById(tid);
+        window.toastWarn('Görev silindi');
+      }},
+    ]);
+  }
+});
+
+/* ── 10. RIPPLE EFFECT ──────────────────────────────────────────── */
+document.addEventListener('click', function(e){
+  var host = e.target.closest('.tab-btn, .launch-btn, .aksiyon-trigger-btn, .cal-add-btn, .todo-quick-add-btn');
+  if(!host) return;
+  var r = document.createElement('div');
+  r.className = 'ripple-circle';
+  var rect = host.getBoundingClientRect();
+  var size = Math.max(rect.width, rect.height) * 2;
+  r.style.width = r.style.height = size + 'px';
+  r.style.left  = (e.clientX - rect.left - size/2) + 'px';
+  r.style.top   = (e.clientY - rect.top  - size/2) + 'px';
+  host.classList.add('ripple-host');
+  host.appendChild(r);
+  setTimeout(function(){ if(r.parentNode) r.parentNode.removeChild(r); }, 600);
+});
+
+/* ── 11. FOCUS MODE (Pomodoro) ──────────────────────────────────── */
+var focusRunning = false;
+var focusPaused  = false;
+var focusSecs    = 25 * 60;
+var focusTotal   = 25 * 60;
+var focusTimer   = null;
+var focusSession = 1;
+var focusBreakMode = false;
+var CIRC = 440; // 2*PI*70
+
+function openFocusMode(taskText){
+  var fo = document.getElementById('focus-overlay');
+  if(!fo) return;
+  fo.classList.add('active');
+  if(taskText){
+    var td = document.getElementById('focusTaskDisplay');
+    if(td) td.textContent = taskText;
+  } else {
+    // Seçili görev varsa onu al
+    try{
+      var activeTodo = window._cloudState && window._cloudState.activeTodoId;
+      if(activeTodo){
+        var t = (window._cloudState.todos||[]).find(function(x){return x.id===activeTodo;});
+        if(t){ var td2=document.getElementById('focusTaskDisplay'); if(td2) td2.textContent=t.text; }
+      }
+    }catch(e){}
+  }
+  updateFocusDisplay();
+  window.toastInfo('Odak modu açıldı. Başlamak için ▶ tıkla.','🎯 Odak Modu');
+  logActivity('Odak modu başlatıldı','#7c6aff');
+}
+function closeFocusMode(){
+  var fo = document.getElementById('focus-overlay');
+  if(fo) fo.classList.remove('active');
+  if(focusRunning){ clearInterval(focusTimer); focusRunning=false; }
+}
+
+function updateFocusDisplay(){
+  var mins = Math.floor(focusSecs/60);
+  var secs = focusSecs % 60;
+  var tn = document.getElementById('focusTimerNum');
+  var rf = document.getElementById('focusRingFill');
+  if(tn) tn.textContent = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+  if(rf){
+    var pct = focusSecs / focusTotal;
+    rf.style.strokeDashoffset = (CIRC * (1 - pct)) + '';
+    rf.style.stroke = focusBreakMode ? '#22d3a0' : '#7c6aff';
+  }
+  var sl = document.getElementById('focusSessionLabel');
+  if(sl) sl.textContent = (focusBreakMode ? '☕ Mola ' : '🎯 Pomodoro #') + focusSession;
+}
+
+var fsBtn = document.getElementById('focusStartStop');
+if(fsBtn) fsBtn.addEventListener('click', function(){
+  if(!focusRunning){
+    focusRunning = true; focusPaused = false;
+    this.textContent = '⏸ Duraklat';
+    focusTimer = setInterval(focusTick, 1000);
+    logActivity((focusBreakMode?'Mola':'Pomodoro')+' başladı 🎯','#22d3a0');
+  } else {
+    focusRunning = false; clearInterval(focusTimer);
+    this.textContent = '▶ Devam Et';
+  }
+});
+
+var frBtn = document.getElementById('focusReset');
+if(frBtn) frBtn.addEventListener('click', function(){
+  clearInterval(focusTimer); focusRunning=false; focusBreakMode=false;
+  focusSecs = 25*60; focusTotal = 25*60;
+  var ss = document.getElementById('focusStartStop');
+  if(ss) ss.textContent = '▶ Başlat';
+  updateFocusDisplay();
+});
+
+var fbBtn = document.getElementById('focusBreak');
+if(fbBtn) fbBtn.addEventListener('click', function(){
+  clearInterval(focusTimer); focusRunning=false; focusBreakMode=true;
+  focusSecs = 5*60; focusTotal = 5*60;
+  var ss = document.getElementById('focusStartStop');
+  if(ss) ss.textContent = '▶ Başlat';
+  updateFocusDisplay();
+  window.toastCyan('5 dakika mola zamanı! ☕','Mola');
+});
+
+var feBtn = document.getElementById('focusExit');
+if(feBtn) feBtn.addEventListener('click', closeFocusMode);
+
+function focusTick(){
+  if(focusSecs > 0){
+    focusSecs--;
+    updateFocusDisplay();
+  } else {
+    clearInterval(focusTimer); focusRunning = false;
+    if(focusBreakMode){
+      window.showToast({type:'success',title:'Mola Bitti!',msg:'Çalışmaya hazır mısın? 💪',icon:'⚡',dur:6000});
+      focusBreakMode = false; focusSecs = 25*60; focusTotal = 25*60;
+    } else {
+      focusSession++;
+      window.showToast({type:'cyan',title:'Pomodoro Tamamlandı!',msg:focusSession-1+'. seans bitti. Harika iş! 🎉',icon:'✓',dur:8000,
+        action:{label:'Molaya Geç', fn:function(){ fbBtn && fbBtn.click(); }}
+      });
+      logActivity('Pomodoro #'+(focusSession-1)+' tamamlandı 🎉','#22d3a0');
+    }
+    var ss = document.getElementById('focusStartStop');
+    if(ss) ss.textContent = '▶ Başlat';
+    updateFocusDisplay();
+    // Play a sound cue
+    try{
+      var ctx = new (window.AudioContext||window.webkitAudioContext)();
+      [[523,.0],[659,.15],[784,.3],[1047,.45],[784,.6]].forEach(function(p){
+        var o=ctx.createOscillator(),g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.type='triangle';o.frequency.value=p[0];
+        g.gain.setValueAtTime(0,ctx.currentTime+p[1]);
+        g.gain.linearRampToValueAtTime(.2,ctx.currentTime+p[1]+.02);
+        g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+p[1]+.4);
+        o.start(ctx.currentTime+p[1]);o.stop(ctx.currentTime+p[1]+.5);
+      });
+    }catch(e){}
+  }
+}
+
+/* status bar focus btn */
+var sbFocus = document.getElementById('sbFocusBtn');
+if(sbFocus) sbFocus.addEventListener('click', function(){
+  openFocusMode();
+});
+
+window.openFocusMode = openFocusMode;
+
+/* ── 12. TODO EYLEM TAKIBI (intercept) ─────────────────────────── */
+/* Orijinal kodun state'ine ulaşmak için polling */
+setInterval(function(){
+  try{
+    // window._cloudState'i state ile senkronize et
+    if(!window._cloudState) window._cloudState = {};
+    // state objesi orijinal IIFE içinde tanımlı, ona doğrudan erişemeyiz.
+    // Ama DOM'dan okuyabiliriz.
+    var badge = document.getElementById('todoBadge');
+    if(badge){
+      var n = parseInt(badge.textContent);
+      if(!isNaN(n) && window._cloudState.pendingCount !== n){
+        window._cloudState.pendingCount = n;
+        updateStatusBar();
+        updateHeaderProgress();
+      }
+    }
+  }catch(e){}
+}, 1500);
+
+/* ── 13. SAYFA GELİŞTİRMELERİ ──────────────────────────────────── */
+
+// Hoşgeldin toast (sisteme girişten sonra)
+document.addEventListener('cloudos:ready', function(){
+  var h = new Date().getHours();
+  var gr = h>=5&&h<12?'Günaydın':h>=12&&h<17?'Tünaydın':h>=17&&h<22?'İyi Akşamlar':'İyi Geceler';
+  setTimeout(function(){
+    window.showToast({type:'info',title:gr+', Nurullah! ✨',msg:'Cloud OS hazır. Cmd+K ile komut paletini aç.',icon:'🚀',dur:5000});
+  }, 1500);
+  setTimeout(function(){ checkOverdueTasks(); }, 3000);
+});
+
+// Gecikmiş görev kontrolü
+function checkOverdueTasks(){
+  try{
+    var todos = window._cloudState && window._cloudState.todos ? window._cloudState.todos : [];
+    if(!todos.length) return;
+    var today = (function(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');})();
+    var ov = todos.filter(function(t){return !t.completed && t.dueDate && t.dueDate < today;});
+    if(ov.length){
+      window.toastWarn(ov.length+' görevin süresi geçmiş! Görevler sekmesine bak.','⚠ Gecikmiş Görev',{dur:7000});
+      logActivity(ov.length+' gecikmiş görev tespit edildi','#ff5566','todos');
+      bumpBell();
+    }
+    var dueToday = todos.filter(function(t){return !t.completed && t.dueDate===today;});
+    if(dueToday.length){
+      window.toastCyan('Bugün '+dueToday.length+' görev var: "'+dueToday[0].text+'"','📅 Bugünün Görevleri');
+    }
+  }catch(e){}
+}
+
+// Tab değişim toastları
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var tab = this.dataset.tab;
+    var msgs = {
+      dashboard: null, // sessiz
+      todos:     {msg:'Görevlerin burada! Odaklan ve tamamla. 💪', type:'info'},
+      calendar:  {msg:'Takvimini kontrol et, planını yap. 📅',     type:'cyan'},
+      journal:   {msg:'Bugünü yaz, yarın hatırla. 📓',              type:'info'},
+      notes:     {msg:'Fikirlerini kaybet, not al! 💡',             type:'info'},
+      vibe:      {msg:'Enerjini yönet, müziği aç. ✨',              type:'success'},
+      game:      {msg:'Kısa bir mola hak ettin! ⚽',               type:'warn'},
+    };
+    var m = msgs[tab];
+    if(m) setTimeout(function(){ window.showToast({type:m.type||'info',msg:m.msg,icon:{dashboard:'🏠',todos:'✦',calendar:'📅',journal:'📓',notes:'📝',vibe:'✨',game:'⚽'}[tab]||'◈',dur:2800}); }, 400);
+    // pulse anim on tab
+    var existing = btn.querySelector('.tab-pulse');
+    if(existing) existing.remove();
+    var pulse = document.createElement('div'); pulse.className='tab-pulse'; btn.appendChild(pulse);
+    setTimeout(function(){ if(pulse.parentNode) pulse.parentNode.removeChild(pulse); }, 700);
+  });
+});
+
+/* ── 14. GLOBAL EXPOSE (orijinal JS ile köprü) ─────────────────── */
+// Orijinal kod yüklendikten sonra tetiklenir
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    document.dispatchEvent(new CustomEvent('cloudos:ready'));
+    logActivity('Cloud OS başlatıldı','#7c6aff');
+    logActivity('Sistem hazır — Hoşgeldin Nurullah','#22d3a0');
+  }, 2000);
+});
+
+// Intercept auth success — intro dismiss'den sonra çalışacak
+var origDismiss = window.dismissIntro;
+// Orijinal intro dismiss'i wrap etmeye çalış (en iyi ihtimalle)
+document.addEventListener('DOMContentLoaded', function(){
+  var mainContent = document.getElementById('mainContent');
+  if(mainContent){
+    var observer = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        if(m.type==='attributes' && m.attributeName==='class'){
+          if(mainContent.classList.contains('visible')){
+            updateStatusBar();
+            observer.disconnect();
+          }
+        }
+      });
+    });
+    observer.observe(mainContent, {attributes:true});
+  }
+});
+
+/* ── 15. KEYBOARD SHORTCUTS HELP ───────────────────────────────── */
+document.addEventListener('keydown', function(e){
+  // Ctrl+F → Focus Mode
+  if((e.ctrlKey||e.metaKey) && e.key==='f' && !e.target.closest('input,textarea')){
+    e.preventDefault();
+    openFocusMode();
+  }
+  // Ctrl+B → Bell/Activity Panel
+  if((e.ctrlKey||e.metaKey) && e.key==='b'){
+    e.preventDefault();
+    var ap = document.getElementById('activity-panel');
+    if(ap){ ap.classList.toggle('open'); if(ap.classList.contains('open')) resetBell(); }
+  }
+  // Ctrl+1..7 → Sekme geçiş
+  if((e.ctrlKey||e.metaKey) && e.key>='1' && e.key<='7' && !e.target.closest('input,textarea')){
+    var tabs = ['dashboard','todos','calendar','journal','notes','vibe','game'];
+    var idx = parseInt(e.key)-1;
+    if(tabs[idx]){ e.preventDefault(); gotoTab(tabs[idx]); }
+  }
+});
+
+/* ── 16. OVERDUE CHECKER (periyodik) ───────────────────────────── */
+setInterval(function(){
+  var now = new Date();
+  // Her gün saat 09:00'da gecikmiş görevleri bildir
+  if(now.getHours()===9 && now.getMinutes()===0){
+    checkOverdueTasks();
+  }
+}, 60000);
+
+/* ── 17. EXPOSE STATE BRIDGE ────────────────────────────────────── */
+// Orijinal state'e köprü (DOM polling yerine window properties)
+// Orijinal JS kodu IIFE içinde — doğrudan erişemiyoruz.
+// Bu yüzden DOM gözlemcisiyle syncronize oluyoruz.
+if(!window._cloudState) window._cloudState = {todos:[],journals:[],notes:[],calEvents:[],activeTodoId:null};
+
+// Her 3 saniyede progress sync
+setInterval(function(){
+  updateHeaderProgress();
+  updateStatusBar();
+}, 3000);
+
+console.log('%c⬢ CLOUD OS v2.0 %c Enhanced UI + Notification System Active ', 
+  'background:linear-gradient(135deg,#7c6aff,#c46dff);color:white;font-weight:700;padding:4px 8px;border-radius:6px 0 0 6px;',
+  'background:rgba(124,106,255,.2);color:#c8b8ff;padding:4px 8px;border-radius:0 6px 6px 0;');
+
+})();
+
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a056c442b90c4131',t:'MTc4MDQwNjU0Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
