@@ -550,12 +550,12 @@ textarea::placeholder{color:var(--muted);}
   #bot-svg{width:52px;height:52px;}
   .cal-days .cal-day{min-height:55px;}
   .dashboard-grid{grid-template-columns:1fr;}
-  
+
   /* INTRO TEXT MOBILE FIXES */
   .intro-text{font-size:1.8rem;letter-spacing:4px;line-height:1.3;}
   .intro-sub{font-size:1rem;letter-spacing:1px;}
   .cinematic-text{padding:0 10px;}
-  
+
   /* SHOWCASE MOBILE FIX */
   .showcase-card{height:350px;}
 }
@@ -1960,7 +1960,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     });
     animP=requestAnimationFrame(drawP);
   }
- 
+
  /* ─ AUDIO CONTEXT KİLİDİNİ AÇMA (CRITICAL FIX) ─ */
   var sharedAudioCtx = null;
   function initAudio(){
@@ -2033,7 +2033,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   function startActionVideo(){
     actionVideoEl=document.createElement('video');
     actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
-    
+
     // TELEFONLAR İÇİN KRİTİK DÜZELTME (Tam ekrana geçmesini engeller)
     actionVideoEl.muted = true;
     actionVideoEl.loop = true;
@@ -2041,36 +2041,40 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     actionVideoEl.setAttribute('playsinline', ''); 
     actionVideoEl.setAttribute('webkit-playsinline', ''); // iOS Safari için şart
     actionVideoEl.setAttribute('autoplay', '');
-    
+
     actionVideoEl.src=actionVideos[Math.floor(Math.random()*actionVideos.length)];
     document.getElementById('aksiyon-overlay').appendChild(actionVideoEl);
     actionVideoEl.play().catch(function(){});
   }
- 
+
   /* ─ countdown logic ─ */
   var countTimer=null,countCurrent=5;
   var ringFill=document.getElementById('aksiyonRingFill');
   var numEl=document.getElementById('aksiyonNumber');
   var titleEl=document.getElementById('aksiyonTitle');
   var subEl=document.getElementById('aksiyonSub');
- 
+
   var titles=['Hazır mısın?','Odaklan…','Zamanın değerli','Konsantre ol…','Başlıyoruz!'];
   var subs=['Büyük işler seni bekliyor','Her saniye bir fırsat','Sen bunu yapabilirsin','Zihnini hazırla','Nurullah, başarılar!'];
- 
+
   function tickAnim(n){
     numEl.classList.add('tick');
     setTimeout(function(){numEl.classList.remove('tick');},160);
   }
- 
+
   function startCountdown(){
     countCurrent=5;
     numEl.textContent='5';
     titleEl.textContent=titles[0];
     subEl.textContent=subs[0];
-    
+
+    // Daireyi animasyona hazırlayıp pürüzsüz tetikliyoruz (Tam 5s)
     // 1. ADIM: Daireyi anında %100 dolu ve animasyonsuz hale getiriyoruz
     ringFill.style.transition = 'none';
     ringFill.style.strokeDashoffset = '0';
+    void ringFill.offsetWidth; // Tarayıcıyı zorla yenile (Reflow - KİLİT NOKTA)
+    ringFill.style.transition = 'stroke-dashoffset 5s linear';
+    ringFill.style.strokeDashoffset = '591'; // CSS'teki değere doğru erir
     
     // 2. ADIM: Tarayıcıya bu "dolu" hali ekrana çizmesi için 50ms süre veriyoruz, 
     // ardından erime animasyonunu tetikliyoruz (İkinci açılıştaki sorunun KESİN çözümü)
@@ -2078,10 +2082,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       ringFill.style.transition = 'stroke-dashoffset 5s linear';
       ringFill.style.strokeDashoffset = '591'; 
     }, 50);
-    
+
     playTick(5);
     tickAnim(5);
-    
+
     countTimer=setInterval(function(){
       countCurrent--;
       if(countCurrent<=0){
@@ -2091,11 +2095,11 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
         titleEl.textContent='Başarılar!';
         subEl.textContent='Nurullah ✦';
         playFinish();
-        
+
         var ov=document.getElementById('aksiyon-overlay');
         ov.style.background='rgba(124,106,255,.15)';
         setTimeout(function(){ov.style.background='#000';},250);
-        
+
         setTimeout(function(){dismissAksiyon();},1500);
         return;
       }
@@ -2103,16 +2107,17 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       numEl.style.fontSize='7rem';
       titleEl.textContent=titles[5-countCurrent]||titles[0];
       subEl.textContent=subs[5-countCurrent]||subs[0];
-      
+
       playTick(countCurrent);
       tickAnim(countCurrent);
     },1000);
   }
- 
+
   function launchAksiyon(){
     initAudio();
     var ov=document.getElementById('aksiyon-overlay');
-    
+
+    // Tıklandığı an dairenin sıfır (tam dolu) olduğuna emin oluyoruz
     // Menü açılır açılmaz daireyi her ihtimale karşı sıfırlıyoruz
     if(ringFill){
       ringFill.style.transition = 'none';
@@ -2124,6 +2129,36 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     ov.classList.add('visible');
     playRingTone();
     
+    setTimeout(function(){startCountdown();},400);
+  }
+
+  function dismissAksiyon(){
+    var ov=document.getElementById('aksiyon-overlay');
+    ov.classList.add('fade-out');
+    setTimeout(function(){
+      ov.classList.remove('visible','fade-out');
+      ov.style.background='#000';
+      cancelAnimationFrame(animP);particles=[];
+      stopActionVideo();
+      clearInterval(countTimer);
+      numEl.textContent='5';numEl.style.fontSize='7rem';
+
+      // Menü kapandığında daireyi sonraki kullanım için tam dolu hale getir
+      // Menü tamamen kapandığında daireyi arka planda doldur (hazır beklesin)
+      if(ringFill){
+        ringFill.style.transition = 'none';
+        ringFill.style.strokeDashoffset = '0';
+      }
+    },800);
+  }
+ 
+  function launchAksiyon(){
+    initAudio(); // TIKLANDIĞI AN SES KİLİDİNİ AÇIYORUZ
+    var ov=document.getElementById('aksiyon-overlay');
+    spawnP();drawP();
+    startActionVideo();
+    ov.classList.add('visible');
+    playRingTone();
     setTimeout(function(){startCountdown();},400);
   }
  
@@ -2138,13 +2173,12 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       clearInterval(countTimer);
       numEl.textContent='5';numEl.style.fontSize='7rem';
       
-      // Menü tamamen kapandığında daireyi arka planda doldur (hazır beklesin)
-      if(ringFill){
-        ringFill.style.transition = 'none';
-        ringFill.style.strokeDashoffset = '0';
-      }
+      // Daireyi sonraki kullanımlar için sıfırla
+      ringFill.style.transition = 'none';
+      ringFill.style.strokeDashoffset = '0';
     },800);
   }
+ 
 
   /* escape key */
   document.addEventListener('keydown',function(e){
@@ -2152,14 +2186,19 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       clearInterval(countTimer);dismissAksiyon();
     }
   });
+ 
 
   /* expose globally so the trigger button can call it */
   window.launchAksiyon=launchAksiyon;
+ 
 
   /* ─ INJECT TRIGGER BUTTON into Dashboard ─ */
+  /* dashboard glass-panel hızlı görevler kutusunun altına bir satır ekle */
   function injectTriggerBtn(){
+    /* dashboard section'ın sonuna — todo-status-row'dan sonra */
     var dashSection=document.getElementById('dashboard');
     if(!dashSection)return;
+    /* wrapper div oluştur */
     var wrap=document.createElement('div');
     wrap.style.cssText='display:flex;justify-content:center;padding:10px 0 4px;';
     var btn=document.createElement('button');
@@ -2170,6 +2209,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       '<span class="aksiyon-work-badge">İş</span>';
     btn.addEventListener('click',function(){window.launchAksiyon();});
     wrap.appendChild(btn);
+    /* dashboard-grid'in ilk çocuğunun sonuna (sol kolon) ekle */
     var dashGrid=dashSection.querySelector('.dashboard-grid');
     if(dashGrid&&dashGrid.children[0]){
       dashGrid.children[0].appendChild(wrap);
@@ -2177,6 +2217,8 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       dashSection.appendChild(wrap);
     }
   }
+ 
+  /* DOM hazır olunca inject et */
 
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',injectTriggerBtn);
