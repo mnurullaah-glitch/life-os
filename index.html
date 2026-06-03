@@ -739,6 +739,18 @@ textarea::placeholder{color:var(--muted);}
 }
 .eylem-is .eylem-glow{background:radial-gradient(circle at center,rgba(124,106,255,.2) 0%,transparent 70%);}
 
+/* Anlık İş (teal/cyan ton, moddan ayrı dursun) */
+.eylem-anlik{
+  background:linear-gradient(135deg,rgba(34,211,160,.15) 0%,rgba(79,209,255,.1) 100%);
+  border-color:rgba(34,211,160,.3);
+  box-shadow:0 4px 30px rgba(34,211,160,.15);
+}
+.eylem-anlik:hover{
+  border-color:rgba(34,211,160,.6);
+  box-shadow:0 8px 40px rgba(34,211,160,.3),0 0 60px rgba(34,211,160,.15);
+}
+.eylem-anlik .eylem-glow{background:radial-gradient(circle at center,rgba(34,211,160,.2) 0%,transparent 70%);}
+
 /* Sanat Sepet */
 .eylem-sanat{
   background:linear-gradient(135deg,rgba(255,107,138,.15) 0%,rgba(196,109,255,.1) 100%);
@@ -1939,6 +1951,14 @@ textarea::placeholder{color:var(--muted);}
         <div class="eylem-icon">💼</div>
         <div class="eylem-label">İş</div>
         <div class="eylem-sub">Odaklan ve başla</div>
+        <div class="eylem-glow"></div>
+      </button>
+      
+      <!-- Anlık İş (mod açmaz, sadece 5'ten geri sayar) -->
+      <button class="eylem-btn eylem-anlik" onclick="launchAnlikIs()">
+        <div class="eylem-icon">⏱️</div>
+        <div class="eylem-label">Anlık İş</div>
+        <div class="eylem-sub">Hızlı başla, geri sayım</div>
         <div class="eylem-glow"></div>
       </button>
       
@@ -3320,6 +3340,71 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   };
 
   /* İş Modu launcher */
+  /* ANLIK İŞ — mod paneli AÇMAZ, sadece 5'ten geri sayar ve biter */
+  window.launchAnlikIs=function(){
+    initAudio();
+    saveAksStats();
+    // NOT: setActiveMode çağrılmıyor -> sağdaki kalıcı mod paneli açılmaz
+    var ov=document.getElementById('aksiyon-overlay');
+    var titleEl=document.getElementById('aksiyonTitle');
+    var subEl=document.getElementById('aksiyonSub');
+
+    var quickMessages=[
+      {t:'Hızlı Başla!',s:'Hadi, 5 saniye içinde işe!'},
+      {t:'Anlık Odak!',s:'Kısa ve net, başla'},
+      {t:'Şimdi!',s:'Erteleme yok, hemen'},
+      {t:'Hazır Ol!',s:'Geri sayım başlıyor'}
+    ];
+    var msg=quickMessages[Math.floor(Math.random()*quickMessages.length)];
+
+    titleEl.textContent=msg.t;
+    subEl.textContent=msg.s;
+
+    var grad=document.querySelector('.aksiyon-number');
+    if(grad){
+      grad.style.background='linear-gradient(135deg,#22d3a0 0%,#4fd1ff 50%,#fff 100%)';
+      grad.style.webkitBackgroundClip='text';
+    }
+
+    ov.classList.add('visible');
+    playRingTone();
+
+    var count=5;
+    var numEl=document.getElementById('aksiyonNumber');
+    numEl.textContent=count;
+    numEl.style.fontSize='7rem';
+
+    var ringFill=document.getElementById('aksiyonRingFill');
+    ringFill.style.transition='none';
+    ringFill.style.strokeDashoffset='0';
+    void ringFill.offsetWidth;
+    setTimeout(function(){
+      ringFill.style.transition='stroke-dashoffset 5s linear';
+      ringFill.style.strokeDashoffset='591';
+    },50);
+
+    var countTimer=setInterval(function(){
+      count--;
+      if(count<=0){
+        clearInterval(countTimer);
+        numEl.textContent='⏱️';
+        numEl.style.fontSize='4rem';
+        titleEl.textContent='Hadi Başla!';
+        subEl.textContent='İşine koyul, Nurullah ✦';
+        playFinish();
+        ov.style.background='rgba(34,211,160,.15)';
+        setTimeout(function(){ov.style.background='#000';},300);
+        setTimeout(function(){
+          ov.classList.add('fade-out');
+          setTimeout(function(){ov.classList.remove('visible','fade-out');},800);
+        },2000);
+        return;
+      }
+      numEl.textContent=count;
+      playTick(count);
+    },1000);
+  };
+
   window.launchIsModu=function(){
     initAudio();
     saveAksStats();
@@ -4296,5 +4381,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06262baf8e6a3f7',t:'MTc4MDUyODM3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0626fb04e2cd2a3',t:'MTc4MDUyODkwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
