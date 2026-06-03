@@ -1912,7 +1912,8 @@ textarea::placeholder{color:var(--muted);}
 
 </main>
 
-<script>window.stopActionVideo=function(){ if(window.actionVideoEl){ try{window.actionVideoEl.pause(); window.actionVideoEl.remove();}catch(e){} window.actionVideoEl=null; } };
+<script>
+window.stopActionVideo = function() { if(window.actionVideoEl) { try { window.actionVideoEl.pause(); window.actionVideoEl.remove(); } catch(e){} window.window.actionVideoEl = null; } };
 (function(){
 'use strict';
 
@@ -1956,9 +1957,9 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 
 /* ══ FIREBASE ══ */
 firebase.initializeApp({apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",authDomain:"dashboard-ab880.firebaseapp.com",projectId:"dashboard-ab880",storageBucket:"dashboard-ab880.firebasestorage.app",messagingSenderId:"1014186585487",appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"});
-var db=firebase.firestore();
-var userDoc=db.collection('users').doc('nurullah');
-var state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
+window.db=firebase.firestore();
+window.userDoc=window.db.collection('users').doc('nurullah');
+window.state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
 var saveTimers={};
 function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
@@ -1973,7 +1974,7 @@ function saveToCloud(field,value,statusId){
 }
 
 /* ══ AUTH ══ */
-var auth=firebase.auth();
+window.auth=firebase.auth();
 var loginScreen=document.getElementById('login-screen');
 var introScreen=document.getElementById('intro-screen');
 var loginBtn=document.getElementById('loginBtn');
@@ -1984,8 +1985,8 @@ auth.onAuthStateChanged(function(user){
 });
 loginBtn.addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
-  if(!email||!pass)return;loginBtn.textContent='BEKLEYİN...';loginError.style.display='none';
-  auth.signInWithEmailAndPassword(email,pass).then(function(){loginBtn.textContent='GİRİŞ YAP';}).catch(function(error){loginError.style.display='block';loginBtn.textContent='GİRİŞ YAP';console.log(error);});
+  if(!email||!pass)return;loginBtn.textContent='BEKLEYİN...';loginError.style.display='none'; loginError.textContent='';
+  auth.signInWithEmailAndPassword(email,pass).then(function(){loginBtn.textContent='GİRİŞ YAP';}).catch(function(error){loginError.style.display='block';loginError.textContent='Giriş Hatası: ' + error.message;loginBtn.textContent='GİRİŞ YAP';console.error(error);});
 });
 document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')loginBtn.click();});
 
@@ -2061,7 +2062,7 @@ setupMusicBtn('vibeSpInput','vibeSpBtn','vibeSpEmbed','spotify','vibeSpotify');
 setupMusicBtn('vibeYtInput','vibeYtBtn','vibeYtEmbed','youtube','vibeYoutube');
 
 /* ══ LOAD FROM CLOUD ══ */
-function loadFromCloud(){
+window.loadFromCloud = function(){
   userDoc.get().then(function(doc){
     if(!doc.exists){renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();return;}
     var d=doc.data();
@@ -2630,22 +2631,22 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
  /* ─ AUDIO CONTEXT KİLİDİNİ AÇMA (CRITICAL FIX) ─ */
-  var sharedAudioCtx = null;
+  window.sharedAudioCtx = null;
   window.initAudio = function(){
-    if(!sharedAudioCtx) {
-      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(!window.sharedAudioCtx) {
+      window.sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     // Eğer tarayıcı sesi uyku moduna aldıysa, tıklamayla uyandırıyoruz
-    if(sharedAudioCtx.state === 'suspended') {
+    if(window.sharedAudioCtx.state === 'suspended') {
       sharedAudioCtx.resume();
     }
   }
 
   /* ─ ring audio ─ */
-  function playRingTone(){
+  window.playRingTone = function(){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       function beep(freq,start,dur,vol,type){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2664,10 +2665,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ tick beep (her saniye) ─ */
-  function playTick(n){
+  window.playTick = function(n){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       var osc=ctx.createOscillator(),gain=ctx.createGain();
       osc.connect(gain);gain.connect(ctx.destination);
       osc.type='sine';
@@ -2679,10 +2680,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ finish chime ─ */
-  function playFinish(){
+  window.playFinish = function(){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       [[523,.0],[659,.12],[784,.24],[1047,.38]].forEach(function(p){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2697,8 +2698,8 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
 
  /* ─ video carousel için başlangıç ─ */
   var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
-  var actionVideoEl=null;
-  function startActionVideo(){
+  window.actionVideoEl=null;
+  window.startActionVideo = function(){
     actionVideoEl=document.createElement('video');
     actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
 
@@ -2730,7 +2731,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     setTimeout(function(){numEl.classList.remove('tick');},160);
   }
 
-  function startCountdown(){
+  window.startCountdown = function(){
     countCurrent=5;
     numEl.textContent='5';
     titleEl.textContent=titles[0];
@@ -2800,7 +2801,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     setTimeout(function(){startCountdown();},400);
   }
 
-  function dismissAksiyon(){
+  window.dismissAksiyon = function(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
     setTimeout(function(){
@@ -2830,7 +2831,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     setTimeout(function(){startCountdown();},400);
   }
  
-  function dismissAksiyon(){
+  window.dismissAksiyon = function(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
     setTimeout(function(){
@@ -2858,20 +2859,26 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
 
 /* ══ MOOD CHANGER - SLOT MACHINE ══ */
 (function(){
-  
   var moodActions=[
-    {emoji:'📚',text:'15 dakika boyunca bir kitap oku'},
-    {emoji:'🎬',text:'Listendeki dizinin yeni bölümünü izle'},
-    {emoji:'🎧',text:'Hiç bilmediğin yeni bir albüm keşfet'},
-    {emoji:'☕',text:'Bir kahve yap ve geleceğini planla'},
-    {emoji:'🧘',text:'5 dakika boyunca derin nefes egzersizi yap'},
-    {emoji:'🚶',text:'Kısa bir yürüyüşe çıkıp hava al'},
-    {emoji:'📝',text:'Günlüğüne bugün için 3 şükür notu düş'},
-    {emoji:'🏃',text:'15 adet şınav veya squat çek'},
-    {emoji:'🧹',text:'Çalışma masanı ve çevreni düzenle'},
-    {emoji:'🧩',text:'Bir hobinle ilgilenerek kafa dağıt'}
+    {emoji:'🎬',text:'10 saniye içinde bir film seç ve izle'},
+    {emoji:'📚',text:'10 saniye içinde bir kitap belirle ve oku'},
+    {emoji:'📞',text:'10 saniye içinde birisini ara'},
+    {emoji:'🌳',text:'10 saniye içinde dışarı çık ve gezin'},
+    {emoji:'🎨',text:'Bugün bir şeyler çiz veya boya'},
+    {emoji:'🎵',text:'5 şarkı seç ve bir playlist yap'},
+    {emoji:'💪',text:'10 şınav çek ve poz ver'},
+    {emoji:'☕',text:'Bir kahve molası ver ve düşün'},
+    {emoji:'🧘',text:'2 dakika meditasyon yap'},
+    {emoji:'📝',text:'Bir hedef yaz ve bugün başla'},
+    {emoji:'🌟',text:'Birine güzel bir şey söyle'},
+    {emoji:'🍳',text:'Yeni bir yemek tarifi dene'},
+    {emoji:'🧹',text:'Masını veya odanı düzelt'},
+    {emoji:'🎮',text:'30 dakika oyun oyna'},
+    {emoji:'🌙',text:'Yarın için bir plan yap'},
+    {emoji:'🎭',text:'Bugün komik bir şey yap'},
+    {emoji:'💧',text:'Bir bardak su iç ve farkına var'},
+    {emoji:'🚀',text:'En zor görevine başla hemen'}
   ];
-
 
   /* Mood Changer launcher */
   window.launchMoodChanger=function(){
@@ -3758,5 +3765,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   </div>
 </div>
 
-<div id="persistent-work-badge" style="position:fixed;right:20px;top:80px;z-index:9999;display:none;background:rgba(14, 8, 38, 0.9);backdrop-filter:blur(15px);border:1px solid rgba(124,106,255,0.6);padding:15px;border-radius:15px;box-shadow:0 0 30px rgba(124,106,255,0.4);flex-direction:column;align-items:center;gap:10px;"><div style="width:12px;height:12px;background:#7c6aff;border-radius:50%;box-shadow:0 0 15px #7c6aff;animation:blinkBadge 1.5s infinite;"></div><span style="font-size:0.75rem;font-weight:700;letter-spacing:1px;color:#fff;text-transform:uppercase;text-align:center;">İş Modu<br>Aktif</span><button onclick="document.getElementById('persistent-work-badge').style.display='none'" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:0.6rem;cursor:pointer;padding:6px 12px;border-radius:6px;font-weight:700;margin-top:5px;">KAPAT</button></div><style>@keyframes blinkBadge { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } }</style><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0617ee42fa7c28b',t:'MTc4MDUxOTA0NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a061573a3c21cdd4',t:'MTc4MDUxNzQyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
