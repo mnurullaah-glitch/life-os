@@ -726,6 +726,88 @@ textarea::placeholder{color:var(--muted);}
   transition:left .6s ease;
 }
 .aksiyon-trigger-btn:hover::after{left:100%;}
+
+/* ═══════════════════════════════════════════════════
+   HABIT TRACKER (Alışkanlık Takipçisi)
+═══════════════════════════════════════════════════ */
+.habit-layout{display:grid;grid-template-columns:1fr 380px;gap:0;min-height:540px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.habit-left{border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(255,255,255,.015);}
+.habit-add-row{display:flex;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--border);}
+.habit-emoji-input{width:42px;height:38px;text-align:center;font-size:1.2rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;outline:none;cursor:pointer;font-family:inherit;transition:border-color .2s;}
+.habit-emoji-input:focus{border-color:rgba(34,211,160,.4);}
+.habit-name-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:.85rem;font-family:inherit;outline:none;transition:border-color .2s;}
+.habit-name-input:focus{border-color:rgba(34,211,160,.4);}
+.habit-name-input::placeholder{color:var(--muted);}
+.habit-cat-select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:9px 8px;color:var(--text);font-size:.78rem;font-family:inherit;outline:none;cursor:pointer;}
+.habit-cat-select option{background:#0c0c20;color:var(--text);}
+.habit-add-btn{width:38px;height:38px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--ok),#1ab080);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(34,211,160,.4);transition:all .25s ease;flex-shrink:0;}
+.habit-add-btn:hover{transform:scale(1.1);}
+.habit-suggest-row{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.habit-suggest-row::-webkit-scrollbar{display:none;}
+.habit-suggest-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);font-size:.72rem;cursor:pointer;white-space:nowrap;transition:all .2s;font-family:inherit;}
+.habit-suggest-chip:hover{background:rgba(34,211,160,.1);border-color:rgba(34,211,160,.3);color:var(--ok);}
+.habit-items{flex:1;overflow-y:auto;padding:4px;display:flex;flex-direction:column;gap:1px;}
+.habit-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .2s ease;}
+.habit-item:hover{background:rgba(255,255,255,.04);border-color:var(--border);}
+.habit-item.selected{background:rgba(34,211,160,.08);border-color:rgba(34,211,160,.3);}
+.habit-item-check{position:relative;width:17px;height:17px;flex-shrink:0;}
+.habit-item-check input{position:absolute;opacity:0;width:0;height:0;}
+.habit-item-checkbox{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(34,211,160,.45);background:transparent;transition:all .22s cubic-bezier(.23,1,.32,1);display:flex;align-items:center;justify-content:center;}
+.habit-item-check input:checked~.habit-item-checkbox{background:linear-gradient(135deg,var(--ok),#1ab080);border-color:transparent;box-shadow:0 0 8px rgba(34,211,160,.5);}
+.habit-item-checkbox::after{content:'';width:4px;height:7px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg) translateY(-1px);opacity:0;transition:opacity .15s ease;}
+.habit-item-check input:checked~.habit-item-checkbox::after{opacity:1;}
+.habit-item-emoji{font-size:1.1rem;flex-shrink:0;}
+.habit-item-name{flex:1;font-size:.85rem;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.habit-item-streak{display:flex;align-items:center;gap:3px;font-size:.7rem;font-weight:600;color:var(--warn);flex-shrink:0;padding:2px 7px;border-radius:10px;background:rgba(255,180,50,.1);border:1px solid rgba(255,180,50,.2);}
+.habit-item-streak.zero{color:var(--muted);background:rgba(255,255,255,.03);border-color:var(--border);}
+.habit-item-pct{font-size:.68rem;color:var(--muted);flex-shrink:0;min-width:30px;text-align:right;}
+.habit-item-del{background:none;border:none;color:var(--err);cursor:pointer;opacity:0;font-size:.72rem;padding:3px 5px;border-radius:5px;flex-shrink:0;transition:all .2s ease;}
+.habit-item:hover .habit-item-del{opacity:.7;}
+.habit-item-del:hover{opacity:1!important;background:rgba(255,85,102,.15);}
+.habit-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:140px;color:var(--muted);font-size:.82rem;gap:8px;}
+.habit-empty-icon{font-size:1.8rem;opacity:.25;}
+.habit-status-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--border);}
+.habit-right{display:flex;flex-direction:column;background:rgba(255,255,255,.01);}
+.habit-detail-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);gap:10px;}
+.habit-detail-empty-icon{font-size:2.2rem;opacity:.12;}
+.habit-detail-empty p{font-size:.82rem;opacity:.45;}
+.habit-detail{display:flex;flex-direction:column;height:100%;}
+.habit-detail-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.habit-detail-emoji{font-size:2rem;}
+.habit-detail-info{flex:1;}
+.habit-detail-name{font-size:1.1rem;font-weight:500;color:var(--text);}
+.habit-detail-cat{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.habit-detail-body{flex:1;overflow-y:auto;padding:16px 22px;}
+.habit-detail-section{margin-bottom:18px;}
+.habit-detail-section-title{font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.habit-detail-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.habit-heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.habit-heatmap-wd{text-align:center;font-size:.58rem;font-weight:700;color:var(--muted);letter-spacing:.5px;padding:3px 0;}
+.habit-heatmap-cell{aspect-ratio:1;border-radius:5px;background:rgba(255,255,255,.03);transition:all .15s;cursor:default;position:relative;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:rgba(255,255,255,.25);}
+.habit-heatmap-cell.future{background:transparent;color:transparent;}
+.habit-heatmap-cell.other-month{opacity:.2;}
+.habit-heatmap-cell.done{background:rgba(34,211,160,.3);border:1px solid rgba(34,211,160,.25);color:rgba(255,255,255,.5);}
+.habit-heatmap-cell.done:hover{background:rgba(34,211,160,.5);}
+.habit-heatmap-cell.today-cell{border:1px solid rgba(124,106,255,.4);box-shadow:0 0 4px rgba(124,106,255,.2);}
+.habit-heatmap-cell.today-cell.done{border-color:var(--ok);box-shadow:0 0 6px rgba(34,211,160,.3);}
+.habit-month-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.habit-month-nav-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;}
+.habit-month-nav-btn:hover{background:rgba(34,211,160,.1);border-color:rgba(34,211,160,.3);color:var(--ok);}
+.habit-month-label{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.6);flex:1;text-align:center;}
+.habit-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.habit-stat-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.habit-stat-num{font-size:1.6rem;font-weight:200;line-height:1;margin-bottom:3px;}
+.habit-stat-num.green{background:linear-gradient(135deg,#22d3a0,#4fd1ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.habit-stat-num.gold{background:linear-gradient(135deg,#ffb432,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.habit-stat-num.purple{background:linear-gradient(135deg,#7c6aff,#c46dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.habit-stat-num.blue{background:linear-gradient(135deg,#4fd1ff,#7c6aff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.habit-stat-label{font-size:.62rem;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+.habit-detail-footer{padding:10px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.habit-detail-created{font-size:.65rem;color:var(--muted);}
+.habit-detail-delete{background:rgba(255,85,102,.08);border:1px solid rgba(255,85,102,.2);color:var(--err);border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .25s ease;font-family:inherit;}
+.habit-detail-delete:hover{background:rgba(255,85,102,.18);border-color:var(--err);}
+@media(max-width:900px){.habit-layout{grid-template-columns:1fr;}.habit-right{border-top:1px solid var(--border);min-height:280px;}}
+@media(max-width:768px){.habit-add-row{flex-wrap:wrap;}.habit-cat-select{flex:1;min-width:100px;}}
 </style>
 </head>
 <body>
@@ -831,6 +913,7 @@ textarea::placeholder{color:var(--muted);}
     <button class="tab-btn" data-tab="notes"><span>Notlar</span></button>
     <button class="tab-btn" data-tab="vibe"><span>✨ Vibe</span></button>
     <button class="tab-btn" data-tab="game"><span>⚽ Oyun</span></button>
+    <button class="tab-btn" data-tab="habits"><span>✅ Alışkanlıklar</span></button>
   </nav>
   <div class="top-right"><div class="top-time" id="liveClock">--:--</div></div>
 </header>
@@ -1242,6 +1325,92 @@ textarea::placeholder{color:var(--muted);}
   </div>
 </section>
 
+<section id="habits" class="tab-content">
+  <div class="glass-panel">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:linear-gradient(135deg,rgba(34,211,160,.25),rgba(79,209,255,.2));border:1px solid rgba(34,211,160,.3);">✅</div>
+      <span class="panel-title">Alışkanlık Takipçisi</span>
+      <span class="panel-badge" id="habitBadge" style="background:rgba(34,211,160,.15);border:1px solid rgba(34,211,160,.3);color:#22d3a0;">0 Alışkanlık</span>
+    </div>
+    <div class="habit-layout">
+      <div class="habit-left">
+        <div class="habit-add-row">
+          <input type="text" class="habit-emoji-input" id="habitEmojiInput" value="✅" maxlength="2" title="Emoji seç">
+          <input type="text" class="habit-name-input" id="habitNameInput" placeholder="Yeni alışkanlık ekle..." autocomplete="off">
+          <select class="habit-cat-select" id="habitCatSelect">
+            <option value="health">💚 Sağlık</option>
+            <option value="mind">🧠 Zihin</option>
+            <option value="productivity">⚡ Verimlilik</option>
+            <option value="personal">✨ Kişisel</option>
+          </select>
+          <button class="habit-add-btn" id="habitAddBtn" title="Ekle">+</button>
+        </div>
+        <div class="habit-suggest-row" id="habitSuggestRow">
+          <button class="habit-suggest-chip" data-emoji="💧" data-name="Su İç" data-cat="health">💧 Su İç</button>
+          <button class="habit-suggest-chip" data-emoji="📖" data-name="Kitap Oku" data-cat="mind">📖 Kitap Oku</button>
+          <button class="habit-suggest-chip" data-emoji="🧘" data-name="Meditasyon" data-cat="mind">🧘 Meditasyon</button>
+          <button class="habit-suggest-chip" data-emoji="🏃" data-name="Spor" data-cat="health">🏃 Spor</button>
+          <button class="habit-suggest-chip" data-emoji="🌅" data-name="Erken Kalk" data-cat="productivity">🌅 Erken Kalk</button>
+          <button class="habit-suggest-chip" data-emoji="📝" data-name="Günlük Yaz" data-cat="personal">📝 Günlük Yaz</button>
+          <button class="habit-suggest-chip" data-emoji="💊" data-name="Vitamin Al" data-cat="health">💊 Vitamin Al</button>
+          <button class="habit-suggest-chip" data-emoji="🚶" data-name="Yürüyüş" data-cat="health">🚶 Yürüyüş</button>
+        </div>
+        <div class="habit-items" id="habitItemsList"></div>
+        <div class="habit-status-row">
+          <div class="progress-wrap">
+            <div class="progress-track"><div class="progress-fill" id="habitProgressFill" style="width:0%;background:linear-gradient(90deg,var(--ok),#4fd1ff);box-shadow:0 0 8px rgba(34,211,160,.4);"></div></div>
+            <span class="progress-label" id="habitProgressLabel">0 / 0 bugün</span>
+          </div>
+          <div class="cloud-status" id="habitStatus"><div class="cloud-dot"></div><span>Buluta Bağlı</span></div>
+        </div>
+      </div>
+      <div class="habit-right">
+        <div class="habit-detail-empty" id="habitDetailEmpty">
+          <div class="habit-detail-empty-icon">✅</div>
+          <p>Bir alışkanlık seç veya ekle</p>
+        </div>
+        <div class="habit-detail" id="habitDetail" style="display:none;">
+          <div class="habit-detail-header">
+            <span class="habit-detail-emoji" id="habitDetailEmoji">✅</span>
+            <div class="habit-detail-info">
+              <div class="habit-detail-name" id="habitDetailName">—</div>
+              <div class="habit-detail-cat" id="habitDetailCat">—</div>
+            </div>
+          </div>
+          <div class="habit-detail-body">
+            <div class="habit-detail-section">
+              <div class="habit-detail-section-title">📊 Bu Ay</div>
+              <div class="habit-month-nav">
+                <button class="habit-month-nav-btn" id="habitMonthPrev">‹</button>
+                <span class="habit-month-label" id="habitMonthLabel">Haziran 2026</span>
+                <button class="habit-month-nav-btn" id="habitMonthNext">›</button>
+              </div>
+              <div class="habit-heatmap" style="margin-bottom:2px;">
+                <div class="habit-heatmap-wd">Pt</div><div class="habit-heatmap-wd">Sa</div><div class="habit-heatmap-wd">Ça</div>
+                <div class="habit-heatmap-wd">Pe</div><div class="habit-heatmap-wd">Cu</div><div class="habit-heatmap-wd">Ct</div><div class="habit-heatmap-wd">Pz</div>
+              </div>
+              <div class="habit-heatmap" id="habitHeatmapGrid"></div>
+            </div>
+            <div class="habit-detail-section">
+              <div class="habit-detail-section-title">📈 İstatistikler</div>
+              <div class="habit-stats-grid">
+                <div class="habit-stat-card"><div class="habit-stat-num green" id="habitStatStreak">0</div><div class="habit-stat-label">Seri 🔥</div></div>
+                <div class="habit-stat-card"><div class="habit-stat-num gold" id="habitStatBest">0</div><div class="habit-stat-label">En İyi Seri</div></div>
+                <div class="habit-stat-card"><div class="habit-stat-num purple" id="habitStatTotal">0</div><div class="habit-stat-label">Toplam Gün</div></div>
+                <div class="habit-stat-card"><div class="habit-stat-num blue" id="habitStatRate">0%</div><div class="habit-stat-label">Tamamlanma</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="habit-detail-footer">
+            <span class="habit-detail-created" id="habitDetailCreated">—</span>
+            <button class="habit-detail-delete" id="habitDetailDelete">🗑 Sil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <script>
@@ -1258,7 +1427,7 @@ updateClock();setInterval(updateClock,30000);
 var bot=document.getElementById('bot'),botBubble=document.getElementById('bot-bubble'),botSvg=document.getElementById('bot-svg');
 var botTimer=null,botIdx=0,botStarted=false;
 var botLines=['Merhaba! 👋','Nasılsın bugün? 😊','Görevlerin var mı? 📋','Su içmeyi unutma! 💧','Harika gidiyorsun! 💜','Müzik açık mı? 🎵','Odaklan, başarırsın! 🚀','Bir mola ver ☕','Nurullah, süpersin! ✨','Notlarını güncelle 📓','Keyfin yerinde mi? 🎉','Bu görevi bitir! 💪'];
-var tabLines={dashboard:'Hadi görevlere! ✦',todos:'Görevlerin burada! ✦',calendar:'Takvimine bak! 📅',journal:'Günlüğünü yaz 📓',notes:'Fikirlerin nerede? 💡',vibe:'Keyfin nasıl bugün? ✨',game:'Biraz kafa dağıtalım! ⚽'};
+var tabLines={dashboard:'Hadi görevlere! ✦',todos:'Görevlerin burada! ✦',calendar:'Takvimine bak! 📅',journal:'Günlüğünü yaz 📓',notes:'Fikirlerin nerede? 💡',vibe:'Keyfin nasıl bugün? ✨',game:'Biraz kafa dağıtalım! ⚽',habits:'Alışkanlıklarını takip et! ✅'};
 function botSay(txt,ms){clearTimeout(botTimer);botBubble.textContent=txt||botLines[botIdx++%botLines.length];botBubble.classList.add('pop');botTimer=setTimeout(function(){botBubble.classList.remove('pop');},ms||3200);}
 function botLoop(){setTimeout(function(){if(!botBubble.classList.contains('pop'))botSay(null,3000);botLoop();},20000+Math.random()*20000);}
 function startBot(){if(botStarted)return;botStarted=true;bot.classList.add('on');setTimeout(function(){botSay('Sisteme bağlandım! 👋',3400);},700);botLoop();}
@@ -1290,7 +1459,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 firebase.initializeApp({apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",authDomain:"dashboard-ab880.firebaseapp.com",projectId:"dashboard-ab880",storageBucket:"dashboard-ab880.firebasestorage.app",messagingSenderId:"1014186585487",appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"});
 var db=firebase.firestore();
 var userDoc=db.collection('users').doc('nurullah');
-var state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
+var state={todos:[],journals:[],notes:[],calEvents:[],habits:[],activeJournalId:null,activeNoteId:null,activeTodoId:null,activeHabitId:null};
 var saveTimers={};
 function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
@@ -1395,11 +1564,12 @@ setupMusicBtn('vibeYtInput','vibeYtBtn','vibeYtEmbed','youtube','vibeYoutube');
 /* ══ LOAD FROM CLOUD ══ */
 function loadFromCloud(){
   userDoc.get().then(function(doc){
-    if(!doc.exists){renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();return;}
+    if(!doc.exists){renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();renderHabits();renderDashHabits();return;}
     var d=doc.data();
     if(Array.isArray(d.todos)){state.todos=d.todos.map(function(t){if(!t.id)t.id=Date.now().toString()+Math.random().toString(36).slice(2);t.priority=t.priority||'none';t.category=t.category||'';t.note=t.note||'';t.repeat=t.repeat||'none';t.dueDate=t.dueDate||'';t.dueTime=t.dueTime||'';t.starred=t.starred||false;t.createdAt=t.createdAt||Date.now();return t;});}
-    if(Array.isArray(d.calEvents)){state.calEvents=d.calEvents;}
-    renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();
+if(Array.isArray(d.calEvents)){state.calEvents=d.calEvents;}
+    if(Array.isArray(d.habits)){state.habits=d.habits;}
+    renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();renderHabits();renderDashHabits();
     if(Array.isArray(d.journals))state.journals=d.journals;else if(d.journal&&typeof d.journal==='string'&&d.journal.trim())state.journals=[{id:Date.now().toString(),title:'Aktarılan Günlük',content:d.journal}];
     renderJournalList();
     if(Array.isArray(d.notes))state.notes=d.notes;else if(d.notes&&typeof d.notes==='string'&&d.notes.trim())state.notes=[{id:Date.now().toString(),title:'Aktarılan Notlar',content:d.notes}];
@@ -1408,7 +1578,7 @@ function loadFromCloud(){
     if(d.dashSpotify&&d.dashSpotify.url){var em=toSpotifyEmbed(d.dashSpotify.url);if(em)document.getElementById('dashSpEmbed').src=em;if(document.getElementById('dashSpInput'))document.getElementById('dashSpInput').value=d.dashSpotify.url;}
     if(d.dashYoutube&&d.dashYoutube.url){var emY=toYoutubeEmbed(d.dashYoutube.url);if(emY)document.getElementById('dashYtEmbed').src=emY;if(document.getElementById('dashYtInput'))document.getElementById('dashYtInput').value=d.dashYoutube.url;}
     if(d.vibeData){var v=d.vibeData;if(v.note&&document.getElementById('vibeNote'))document.getElementById('vibeNote').value=v.note;if(v.mood){var mb=document.querySelector('.mood-btn[data-mood="'+v.mood+'"]');if(mb){mb.classList.add('selected');var mm=document.getElementById('moodMessage');if(mm)mm.textContent=mb.dataset.msg;}}if(v.spotifyUrl){var es=toSpotifyEmbed(v.spotifyUrl);if(es)document.getElementById('vibeSpEmbed').src=es;if(document.getElementById('vibeSpInput'))document.getElementById('vibeSpInput').value=v.spotifyUrl;}if(v.youtubeUrl){var ey=toYoutubeEmbed(v.youtubeUrl);if(ey)document.getElementById('vibeYtEmbed').src=ey;if(document.getElementById('vibeYtInput'))document.getElementById('vibeYtInput').value=v.youtubeUrl;}}
-  }).catch(function(e){console.error('Yükleme Hatası:',e);renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();var ts=document.getElementById('todoStatus');if(ts){ts.querySelector('span').textContent='Çevrimdışı';ts.style.color='#ffaa00';}});
+  }).catch(function(e){console.error('Yükleme Hatası:',e);renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();renderHabits();renderDashHabits();var ts=document.getElementById('todoStatus');if(ts){ts.querySelector('span').textContent='Çevrimdışı';ts.style.color='#ffaa00';}});
 }
 
 /* ══ CAL EVENTS (independent from todos) ══ */
@@ -1927,6 +2097,176 @@ if(gCanvas){
 /* ══ SHOWCASE ══ */
 var showcaseIdx=0,showcaseImgs=document.querySelectorAll('.showcase-img');
 if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(function(){showcaseImgs[showcaseIdx].classList.remove('active');showcaseIdx=(showcaseIdx+1)%showcaseImgs.length;showcaseImgs[showcaseIdx].classList.add('active');},15000);}
+
+/* ═══════════════════════════════════════════════════
+   HABIT TRACKER (Alışkanlık Takipçisi)
+═══════════════════════════════════════════════════ */
+var habitCatMeta={health:{label:'Sağlık',color:'#22d3a0'},mind:{label:'Zihin',color:'#7c6aff'},productivity:{label:'Verimlilik',color:'#ffb432'},personal:{label:'Kişisel',color:'#c46dff'}};
+var habitDetailDate=new Date();
+
+function getTodayStrH(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+
+function calcStreak(h){
+  var c=h.completions||{},streak=0,d=new Date();
+  var ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  if(c[ds]){streak=1;d.setDate(d.getDate()-1);while(true){var p=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(c[p]){streak++;d.setDate(d.getDate()-1);}else break;}}
+  else{d.setDate(d.getDate()-1);while(true){var p=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(c[p]){streak++;d.setDate(d.getDate()-1);}else break;}}
+  return streak;
+}
+
+function calcBestStreak(h){
+  var c=h.completions||{},dates=Object.keys(c).filter(function(k){return c[k];}).sort();
+  if(!dates.length)return 0;var best=1,cur=1;
+  for(var i=1;i<dates.length;i++){var diff=(new Date(dates[i]+'T00:00:00')-new Date(dates[i-1]+'T00:00:00'))/(864e5);if(diff===1){cur++;if(cur>best)best=cur;}else cur=1;}
+  return best;
+}
+
+function calcTotalDone(h){var c=h.completions||{};return Object.keys(c).filter(function(k){return c[k];}).length;}
+
+function calcRate(h){
+  if(!h.createdAt)return 0;var totalDays=Math.max(1,Math.floor((Date.now()-h.createdAt)/864e5)+1);
+  return Math.round(calcTotalDone(h)/totalDays*100);
+}
+
+function saveHabits(){saveToCloud('habits',state.habits,'habitStatus');}
+
+function addHabit(emoji,name,category){
+  if(!name||!name.trim())return;
+  var h={id:Date.now().toString()+Math.random().toString(36).slice(2),name:name.trim(),emoji:emoji||'✅',category:category||'personal',createdAt:Date.now(),completions:{}};
+  state.habits.unshift(h);renderHabits();renderDashHabits();selectHabit(h.id);saveHabits();
+  botSay('Alışkanlık eklendi! ✅',2500);updateSuggestVis();
+}
+
+function toggleHabitToday(id){
+  var h=state.habits.find(function(x){return x.id===id;});if(!h)return;
+  var today=getTodayStrH();if(!h.completions)h.completions={};
+  h.completions[today]=!h.completions[today];if(!h.completions[today])delete h.completions[today];
+  renderHabits();renderDashHabits();if(state.activeHabitId===id)renderHabitDetail();saveHabits();
+}
+
+function deleteHabitById(id){
+  state.habits=state.habits.filter(function(x){return x.id!==id;});
+  if(state.activeHabitId===id){state.activeHabitId=null;closeHabitDetail();}
+  renderHabits();renderDashHabits();saveHabits();updateSuggestVis();
+}
+
+function selectHabit(id){
+  state.activeHabitId=id;var h=state.habits.find(function(x){return x.id===id;});if(!h)return;
+  document.getElementById('habitDetailEmpty').style.display='none';
+  document.getElementById('habitDetail').style.display='flex';
+  habitDetailDate=new Date();renderHabitDetail();renderHabits();
+}
+
+function closeHabitDetail(){
+  document.getElementById('habitDetailEmpty').style.display='flex';
+  document.getElementById('habitDetail').style.display='none';
+}
+
+function renderHabits(){
+  var list=document.getElementById('habitItemsList');if(!list)return;list.innerHTML='';
+  if(!state.habits.length){list.innerHTML='<div class="habit-empty"><span class="habit-empty-icon">✅</span><span>Henüz alışkanlık yok</span></div>';document.getElementById('habitBadge').textContent='0 Alışkanlık';return;}
+  var today=getTodayStrH(),doneToday=0;
+  state.habits.forEach(function(h){
+    var isDone=h.completions&&h.completions[today];if(isDone)doneToday++;
+    var streak=calcStreak(h),rate=calcRate(h);
+    var item=document.createElement('div');item.className='habit-item'+(h.id===state.activeHabitId?' selected':'');item.dataset.id=h.id;
+    var ck=document.createElement('label');ck.className='habit-item-check';ck.onclick=function(e){e.stopPropagation();};
+    var ci=document.createElement('input');ci.type='checkbox';ci.checked=!!isDone;
+    ci.addEventListener('change',function(e){e.stopPropagation();toggleHabitToday(h.id);});
+    var cb=document.createElement('div');cb.className='habit-item-checkbox';ck.appendChild(ci);ck.appendChild(cb);
+    var em=document.createElement('span');em.className='habit-item-emoji';em.textContent=h.emoji;
+    var nm=document.createElement('span');nm.className='habit-item-name';nm.textContent=h.name;
+    var sk=document.createElement('span');sk.className='habit-item-streak'+(streak>0?'':' zero');sk.innerHTML=(streak>0?'🔥 ':'')+streak;
+    var pc=document.createElement('span');pc.className='habit-item-pct';pc.textContent=rate+'%';
+    var del=document.createElement('button');del.className='habit-item-del';del.textContent='✕';del.title='Sil';
+    del.onclick=function(e){e.stopPropagation();if(!confirm('Bu alışkanlığı silmek istiyor musun?'))return;deleteHabitById(h.id);};
+    item.appendChild(ck);item.appendChild(em);item.appendChild(nm);item.appendChild(sk);item.appendChild(pc);item.appendChild(del);
+    item.addEventListener('click',function(){selectHabit(h.id);});list.appendChild(item);
+  });
+  var total=state.habits.length;
+  document.getElementById('habitBadge').textContent=total+' Alışkanlık';
+  document.getElementById('habitProgressFill').style.width=(total?Math.round(doneToday/total*100):0)+'%';
+  document.getElementById('habitProgressLabel').textContent=doneToday+' / '+total+' bugün';
+}
+
+function renderHabitDetail(){
+  var h=state.habits.find(function(x){return x.id===state.activeHabitId;});if(!h)return;
+  document.getElementById('habitDetailEmoji').textContent=h.emoji;
+  document.getElementById('habitDetailName').textContent=h.name;
+  var catInfo=habitCatMeta[h.category];
+  document.getElementById('habitDetailCat').textContent=catInfo?catInfo.label+' — '+Object.keys(habitCatMeta).find(function(k){return k===h.category;}):h.category;
+  var created=h.createdAt?new Date(h.createdAt).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}):'—';
+  document.getElementById('habitDetailCreated').textContent='Oluşturuldu: '+created;
+  document.getElementById('habitStatStreak').textContent=calcStreak(h);
+  document.getElementById('habitStatBest').textContent=calcBestStreak(h);
+  document.getElementById('habitStatTotal').textContent=calcTotalDone(h);
+  document.getElementById('habitStatRate').textContent=calcRate(h)+'%';
+  renderHabitHeatmap(h);
+}
+
+function renderHabitHeatmap(h){
+  var y=habitDetailDate.getFullYear(),m=habitDetailDate.getMonth();
+  document.getElementById('habitMonthLabel').textContent=TR_MONTHS[m]+' '+y;
+  var grid=document.getElementById('habitHeatmapGrid');grid.innerHTML='';
+  var firstDay=new Date(y,m,1),startDow=(firstDay.getDay()+6)%7,daysInMonth=new Date(y,m+1,0).getDate(),daysInPrev=new Date(y,m,0).getDate();
+  var today=getTodayStrH(),completions=h.completions||{};
+  var cells=[];
+  for(var i=0;i<startDow;i++)cells.push({d:daysInPrev-startDow+1+i,m:m-1,y:m===0?y-1:y,other:true});
+  for(var d=1;d<=daysInMonth;d++)cells.push({d:d,m:m,y:y,other:false});
+  while(cells.length<42)cells.push({d:cells.length-startDow-daysInMonth+1,m:m+1,y:m===11?y+1:y,other:true});
+  cells.forEach(function(cell){
+    var ds=cell.y+'-'+String(cell.m+1).padStart(2,'0')+'-'+String(cell.d).padStart(2,'0');
+    var isDone=!!completions[ds],isToday=ds===today,isFuture=new Date(ds+'T00:00:00')>new Date();
+    var div=document.createElement('div');
+    div.className='habit-heatmap-cell'+(isDone?' done':'')+(isToday?' today-cell':'')+(isFuture?' future':'')+(cell.other?' other-month':'');
+    if(!cell.other)div.textContent=cell.d;
+    grid.appendChild(div);
+  });
+}
+
+document.getElementById('habitMonthPrev').addEventListener('click',function(){habitDetailDate.setMonth(habitDetailDate.getMonth()-1);var h=state.habits.find(function(x){return x.id===state.activeHabitId;});if(h)renderHabitHeatmap(h);});
+document.getElementById('habitMonthNext').addEventListener('click',function(){habitDetailDate.setMonth(habitDetailDate.getMonth()+1);var h=state.habits.find(function(x){return x.id===state.activeHabitId;});if(h)renderHabitHeatmap(h);});
+document.getElementById('habitAddBtn').addEventListener('click',function(){var emoji=document.getElementById('habitEmojiInput').value||'✅';var name=document.getElementById('habitNameInput').value;var cat=document.getElementById('habitCatSelect').value;addHabit(emoji,name,cat);document.getElementById('habitNameInput').value='';});
+document.getElementById('habitNameInput').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('habitAddBtn').click();});
+document.querySelectorAll('.habit-suggest-chip').forEach(function(chip){chip.addEventListener('click',function(){addHabit(this.dataset.emoji,this.dataset.name,this.dataset.cat);});});
+
+function updateSuggestVis(){var row=document.getElementById('habitSuggestRow');if(row)row.style.display=state.habits.length>0?'none':'flex';}
+
+document.getElementById('habitDetailDelete').addEventListener('click',function(){if(!state.activeHabitId)return;if(!confirm('Bu alışkanlığı silmek istiyor musun?'))return;deleteHabitById(state.activeHabitId);});
+
+/* ── Dashboard habit widget (injected via JS — no HTML touch) ── */
+function injectDashHabitWidget(){
+  var ds=document.getElementById('dashboard');if(!ds)return;
+  var dg=ds.querySelector('.dashboard-grid');if(!dg||!dg.children[0])return;
+  var w=document.createElement('div');w.className='glass-panel';w.id='dashHabitWidget';w.style.cssText='padding:16px 20px;';
+  w.innerHTML='<div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;"><div class="panel-icon" style="width:28px;height:28px;font-size:.8rem;background:linear-gradient(135deg,rgba(34,211,160,.25),rgba(79,209,255,.2));border:1px solid rgba(34,211,160,.3);">✅</div><span style="font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.45);flex:1;">Bugünün Alışkanlıkları</span><span id="dashHabitBadge" style="font-size:.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(34,211,160,.15);border:1px solid rgba(34,211,160,.3);color:#22d3a0;">0/0</span></div><div id="dashHabitList" style="display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto;"></div><div style="margin-top:10px;display:flex;align-items:center;gap:8px;"><div style="flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;"><div id="dashHabitProgress" style="height:100%;border-radius:4px;background:linear-gradient(90deg,#22d3a0,#4fd1ff);transition:width .5s cubic-bezier(.23,1,.32,1);width:0%;box-shadow:0 0 8px rgba(34,211,160,.4);"></div></div><button id="dashHabitViewAll" style="background:rgba(34,211,160,.1);border:1px solid rgba(34,211,160,.3);color:#22d3a0;border-radius:8px;padding:5px 12px;font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">Tümünü Gör →</button></div>';
+  dg.children[0].appendChild(w);
+  document.getElementById('dashHabitViewAll').addEventListener('click',function(){document.querySelector('.tab-btn[data-tab="habits"]').click();});
+}
+
+function renderDashHabits(){
+  var list=document.getElementById('dashHabitList');if(!list)return;list.innerHTML='';
+  if(!state.habits.length){list.innerHTML='<div style="font-size:.78rem;color:var(--muted);text-align:center;padding:14px 0;">Henüz alışkanlık eklemedin</div>';var b=document.getElementById('dashHabitBadge');if(b)b.textContent='0/0';var p=document.getElementById('dashHabitProgress');if(p)p.style.width='0%';return;}
+  var today=getTodayStrH(),doneCount=0;
+  state.habits.forEach(function(h){
+    var isDone=h.completions&&h.completions[today];if(isDone)doneCount++;
+    var row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 9px;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;transition:all .2s;cursor:pointer;';
+    row.onmouseenter=function(){this.style.background='rgba(255,255,255,.05)';};row.onmouseleave=function(){this.style.background='rgba(255,255,255,.025)';};
+    var em=document.createElement('span');em.style.cssText='font-size:.95rem;flex-shrink:0;';em.textContent=h.emoji;
+    var txt=document.createElement('span');txt.style.cssText='flex:1;font-size:.8rem;color:'+(isDone?'var(--muted)':'var(--text)')+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'+(isDone?'text-decoration:line-through;':'');txt.textContent=h.name;
+    var ck=document.createElement('button');ck.style.cssText='width:18px;height:18px;border-radius:50%;border:2px solid '+(isDone?'#22d3a0':'rgba(34,211,160,.35)')+';background:'+(isDone?'linear-gradient(135deg,#22d3a0,#1ab080)':'transparent')+';cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#fff;transition:all .2s;'+(isDone?'box-shadow:0 0 6px rgba(34,211,160,.4);':'');ck.innerHTML=isDone?'✓':'';ck.onclick=function(e){e.stopPropagation();toggleHabitToday(h.id);};
+    row.appendChild(em);row.appendChild(txt);row.appendChild(ck);
+    row.onclick=function(){document.querySelector('.tab-btn[data-tab="habits"]').click();setTimeout(function(){selectHabit(h.id);},100);};
+    list.appendChild(row);
+  });
+  var b=document.getElementById('dashHabitBadge');if(b)b.textContent=doneCount+'/'+state.habits.length;
+  var p=document.getElementById('dashHabitProgress');if(p)p.style.width=Math.round(doneCount/state.habits.length*100)+'%';
+}
+
+injectDashHabitWidget();
+renderHabits();
+renderDashHabits();
+updateSuggestVis();
 
 })();
 
