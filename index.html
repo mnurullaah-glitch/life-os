@@ -1323,7 +1323,7 @@ textarea::placeholder{color:var(--muted);}
     <h2 style="font-size:.9rem;color:var(--text);letter-spacing:3px;font-weight:600;">SİSTEME GİRİŞ</h2>
     <input type="email" id="loginEmail" class="login-input" placeholder="E-posta adresi">
     <input type="password" id="loginPass" class="login-input" placeholder="Şifre">
-    <button id="loginBtn" class="launch-btn" style="padding:14px;width:100%;margin-top:10px;font-size:.85rem;">GİRİŞ YAP</button>
+    <button id="loginBtn" class="launch-btn" style="padding:14px;width:100%;margin-top:10px;font-size:.85rem;">GİRİŞ YAP</button><button id="guestBtn" class="launch-btn" style="padding:10px;width:100%;margin-top:8px;font-size:.75rem;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">MİSAFİR GİRİŞİ</button>
     <div id="loginError" style="color:var(--err);font-size:.75rem;display:none;">Hatalı e-posta veya şifre.</div>
   </div>
 </div>
@@ -1958,7 +1958,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 firebase.initializeApp({apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",authDomain:"dashboard-ab880.firebaseapp.com",projectId:"dashboard-ab880",storageBucket:"dashboard-ab880.firebasestorage.app",messagingSenderId:"1014186585487",appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"});
 var db=firebase.firestore();
 var userDoc=db.collection('users').doc('nurullah');
-var state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
+window.state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
 var saveTimers={};
 function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
@@ -1977,6 +1977,7 @@ var auth=firebase.auth();
 var loginScreen=document.getElementById('login-screen');
 var introScreen=document.getElementById('intro-screen');
 var loginBtn=document.getElementById('loginBtn');
+var guestBtn=document.getElementById('guestBtn'); if(guestBtn){ guestBtn.addEventListener('click', function(){ loginScreen.style.opacity='0'; setTimeout(function(){ loginScreen.style.display='none'; introScreen.style.display='flex'; introScreen.classList.remove('hidden'); },800); if(window.loadFromCloud) window.loadFromCloud(); }); }
 var loginError=document.getElementById('loginError');
 auth.onAuthStateChanged(function(user){
   if(user){loginScreen.style.opacity='0';setTimeout(function(){loginScreen.style.display='none';introScreen.style.display='flex';introScreen.classList.remove('hidden');},800);loadFromCloud();}
@@ -2007,7 +2008,7 @@ function showGreeting(duration){
   introScreen.addEventListener('click',dismissIntro);
   document.addEventListener('keydown',function sk(e){if(e.key==='Escape'){dismissIntro();document.removeEventListener('keydown',sk);}});
 }
-function dismissIntro(){
+window.dismissIntro=function(){
   if(introTimer){clearTimeout(introTimer);introTimer=null;}
   introScreen.classList.add('hidden');bgVideo.classList.remove('visible');
   setTimeout(function(){bgVideo.pause();},1500);
@@ -2061,7 +2062,7 @@ setupMusicBtn('vibeSpInput','vibeSpBtn','vibeSpEmbed','spotify','vibeSpotify');
 setupMusicBtn('vibeYtInput','vibeYtBtn','vibeYtEmbed','youtube','vibeYoutube');
 
 /* ══ LOAD FROM CLOUD ══ */
-function loadFromCloud(){
+window.loadFromCloud=function(){
   userDoc.get().then(function(doc){
     if(!doc.exists){renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();return;}
     var d=doc.data();
@@ -2630,22 +2631,22 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
  /* ─ AUDIO CONTEXT KİLİDİNİ AÇMA (CRITICAL FIX) ─ */
-  var sharedAudioCtx = null;
-  function initAudio(){
-    if(!sharedAudioCtx) {
-      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  window.sharedAudioCtx = null;
+  window.initAudio=function(){
+    if(!window.sharedAudioCtx) {
+      window.sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     // Eğer tarayıcı sesi uyku moduna aldıysa, tıklamayla uyandırıyoruz
-    if(sharedAudioCtx.state === 'suspended') {
+    if(window.sharedAudioCtx.state === 'suspended') {
       sharedAudioCtx.resume();
     }
   }
 
   /* ─ ring audio ─ */
-  function playRingTone(){
+  window.playRingTone=function(){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       function beep(freq,start,dur,vol,type){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2664,10 +2665,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ tick beep (her saniye) ─ */
-  function playTick(n){
+  window.playTick=function(n){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       var osc=ctx.createOscillator(),gain=ctx.createGain();
       osc.connect(gain);gain.connect(ctx.destination);
       osc.type='sine';
@@ -2679,10 +2680,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ finish chime ─ */
-  function playFinish(){
+  window.playFinish=function(){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       [[523,.0],[659,.12],[784,.24],[1047,.38]].forEach(function(p){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2696,23 +2697,24 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
  /* ─ video carousel için başlangıç ─ */
+window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoEl.pause(); window.actionVideoEl.remove(); window.actionVideoEl=null; } };
   var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
-  var actionVideoEl=null;
-  function startActionVideo(){
-    actionVideoEl=document.createElement('video');
-    actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
+  window.actionVideoEl=null;
+  window.startActionVideo=function(){
+    window.actionVideoEl=document.createElement('video');
+    window.actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
 
     // TELEFONLAR İÇİN KRİTİK DÜZELTME (Tam ekrana geçmesini engeller)
-    actionVideoEl.muted = true;
-    actionVideoEl.loop = true;
-    actionVideoEl.setAttribute('muted', '');
-    actionVideoEl.setAttribute('playsinline', ''); 
-    actionVideoEl.setAttribute('webkit-playsinline', ''); // iOS Safari için şart
-    actionVideoEl.setAttribute('autoplay', '');
+    window.actionVideoEl.muted = true;
+    window.actionVideoEl.loop = true;
+    window.actionVideoEl.setAttribute('muted', '');
+    window.actionVideoEl.setAttribute('playsinline', ''); 
+    window.actionVideoEl.setAttribute('webkit-playsinline', ''); // iOS Safari için şart
+    window.actionVideoEl.setAttribute('autoplay', '');
 
-    actionVideoEl.src=actionVideos[Math.floor(Math.random()*actionVideos.length)];
+    window.actionVideoEl.src=actionVideos[Math.floor(Math.random()*actionVideos.length)];
     document.getElementById('aksiyon-overlay').appendChild(actionVideoEl);
-    actionVideoEl.play().catch(function(){});
+    window.actionVideoEl.play().catch(function(){});
   }
 
   /* ─ countdown logic ─ */
@@ -2725,12 +2727,12 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   var titles=['Hazır mısın?','Odaklan…','Zamanın değerli','Konsantre ol…','Başlıyoruz!'];
   var subs=['Büyük işler seni bekliyor','Her saniye bir fırsat','Sen bunu yapabilirsin','Zihnini hazırla','Nurullah, başarılar!'];
 
-  function tickAnim(n){
+  window.tickAnim=function(n){
     numEl.classList.add('tick');
     setTimeout(function(){numEl.classList.remove('tick');},160);
   }
 
-  function startCountdown(){
+  window.startCountdown=function(){
     countCurrent=5;
     numEl.textContent='5';
     titleEl.textContent=titles[0];
@@ -2796,11 +2798,11 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     startActionVideo();
     ov.classList.add('visible');
     playRingTone();
-    
+window.stopActionVideo=function(){ if(typeof actionVideoEl !== "undefined" && actionVideoEl){ actionVideoEl.pause(); actionVideoEl.remove(); actionVideoEl=null; } };
     setTimeout(function(){startCountdown();},400);
   }
 
-  function dismissAksiyon(){
+  window.dismissAksiyon=function(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
     setTimeout(function(){
@@ -2830,7 +2832,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     setTimeout(function(){startCountdown();},400);
   }
  
-  function dismissAksiyon(){
+  window.dismissAksiyon=function(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
     setTimeout(function(){
@@ -3764,5 +3766,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   </div>
 </div>
 
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a05eeb46b85893a0',t:'MTc4MDQ5MjAyNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
