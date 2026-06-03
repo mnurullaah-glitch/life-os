@@ -1913,8 +1913,14 @@ textarea::placeholder{color:var(--muted);}
 </main>
 
 <script>
-(function(){
-'use strict';
+window.stopActionVideo = function() {
+  if (window.actionVideoEl) {
+    try { window.actionVideoEl.pause(); window.actionVideoEl.remove(); } catch(e){}
+    window.actionVideoEl = null;
+  }
+};
+
+
 
 /* ══ CLOCK ══ */
 function fmt(d){return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
@@ -1927,9 +1933,9 @@ var bot=document.getElementById('bot'),botBubble=document.getElementById('bot-bu
 var botTimer=null,botIdx=0,botStarted=false;
 var botLines=['Merhaba! 👋','Nasılsın bugün? 😊','Görevlerin var mı? 📋','Su içmeyi unutma! 💧','Harika gidiyorsun! 💜','Müzik açık mı? 🎵','Odaklan, başarırsın! 🚀','Bir mola ver ☕','Nurullah, süpersin! ✨','Notlarını güncelle 📓','Keyfin yerinde mi? 🎉','Bu görevi bitir! 💪'];
 var tabLines={dashboard:'Hadi görevlere! ✦',todos:'Görevlerin burada! ✦',calendar:'Takvimine bak! 📅',journal:'Günlüğünü yaz 📓',notes:'Fikirlerin nerede? 💡',vibe:'Keyfin nasıl bugün? ✨',game:'Biraz kafa dağıtalım! ⚽'};
-function botSay(txt,ms){clearTimeout(botTimer);botBubble.textContent=txt||botLines[botIdx++%botLines.length];botBubble.classList.add('pop');botTimer=setTimeout(function(){botBubble.classList.remove('pop');},ms||3200);}
-function botLoop(){setTimeout(function(){if(!botBubble.classList.contains('pop'))botSay(null,3000);botLoop();},20000+Math.random()*20000);}
-function startBot(){if(botStarted)return;botStarted=true;bot.classList.add('on');setTimeout(function(){botSay('Sisteme bağlandım! 👋',3400);},700);botLoop();}
+function botSay(txt,ms){clearTimeout(botTimer);botBubble.textContent=txt||botLines[botIdx++%botLines.length];botBubble.classList.add('pop');botTimer=setTimeoutbotBubble.classList.remove('pop');},ms||3200);}
+function botLoop(){setTimeoutif(!botBubble.classList.contains('pop'))botSay(null,3000);botLoop();},20000+Math.random()*20000);}
+function startBot(){if(botStarted)return;botStarted=true;bot.classList.add('on');setTimeoutbotSay('Sisteme bağlandım! 👋',3400);},700);botLoop();}
 var dragOn=false,dragSX=0,dragSY=0,dragOL=0,dragOT=0,dragMoved=false;
 function dragBegin(cx,cy){dragOn=true;dragMoved=false;var r=bot.getBoundingClientRect();bot.style.transition='opacity .7s ease';bot.style.left=r.left+'px';bot.style.top=r.top+'px';bot.style.right='auto';bot.style.bottom='auto';dragSX=cx;dragSY=cy;dragOL=r.left;dragOT=r.top;botSvg.style.cursor='grabbing';}
 function dragMove(cx,cy){if(!dragOn)return;var dx=cx-dragSX,dy=cy-dragSY;if(Math.abs(dx)>4||Math.abs(dy)>4)dragMoved=true;bot.style.left=(dragOL+dx)+'px';bot.style.top=(dragOT+dy)+'px';}
@@ -1944,7 +1950,7 @@ botSvg.addEventListener('click',function(){if(!dragMoved)botSay(null,3000);});
 document.querySelectorAll('.tab-btn').forEach(function(b){
   b.addEventListener('click',function(){
     var t=this.getAttribute('data-tab');
-    if(tabLines[t])setTimeout(function(){botSay(tabLines[t],2800);},300);
+    if(tabLines[t])setTimeoutbotSay(tabLines[t],2800);},300);
     if(botStarted){
       var positions=[{bottom:'24px',right:'24px',top:'auto',left:'auto'},{bottom:'24px',right:'auto',top:'auto',left:'24px'},{bottom:'auto',right:'24px',top:'100px',left:'auto'},{bottom:'auto',right:'auto',top:'100px',left:'24px'}];
       var p=positions[Math.floor(Math.random()*positions.length)];
@@ -1964,10 +1970,10 @@ function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
   if(el){el.querySelector('span').textContent='Kaydediliyor...';el.style.color='rgba(255,255,255,.5)';}
   if(saveTimers[field])clearTimeout(saveTimers[field]);
-  saveTimers[field]=setTimeout(function(){
+  saveTimers[field]=setTimeout
     var p={};p[field]=value;
     userDoc.set(p,{merge:true})
-      .then(function(){if(el){el.querySelector('span').textContent='Senkronize ✓';el.style.color='var(--ok)';}})
+      .thenif(el){el.querySelector('span').textContent='Senkronize ✓';el.style.color='var(--ok)';}})
       .catch(function(e){console.error(e);if(el){el.querySelector('span').textContent='Hata!';el.style.color='var(--err)';}});
   },800);
 }
@@ -1979,13 +1985,13 @@ var introScreen=document.getElementById('intro-screen');
 var loginBtn=document.getElementById('loginBtn');
 var loginError=document.getElementById('loginError');
 auth.onAuthStateChanged(function(user){
-  if(user){loginScreen.style.opacity='0';setTimeout(function(){loginScreen.style.display='none';introScreen.style.display='flex';introScreen.classList.remove('hidden');},800);loadFromCloud();}
+  if(user){loginScreen.style.opacity='0';setTimeoutloginScreen.style.display='none';introScreen.style.display='flex';introScreen.classList.remove('hidden');},800);loadFromCloud();}
   else{introScreen.style.display='none';loginScreen.style.display='flex';loginScreen.style.opacity='1';}
 });
 loginBtn.addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
   if(!email||!pass)return;loginBtn.textContent='BEKLEYİN...';loginError.style.display='none';
-  auth.signInWithEmailAndPassword(email,pass).then(function(){loginBtn.textContent='GİRİŞ YAP';}).catch(function(error){loginError.style.display='block'; loginError.textContent = "Hata: " + error.message;loginBtn.textContent='GİRİŞ YAP';console.log(error);});
+  auth.signInWithEmailAndPassword(email,pass).thenloginBtn.textContent='GİRİŞ YAP';}).catch(function(error){loginError.style.display='block'; loginError.textContent="Giriş Hatası: " + (error.message || "Bilinmeyen hata");loginBtn.textContent='GİRİŞ YAP';console.log(error);});
 });
 document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')loginBtn.click();});
 
@@ -1996,7 +2002,7 @@ launchBtn.addEventListener('click',function(){
   launchBtn.classList.add('hide');
   var rv=videoList[Math.floor(Math.random()*videoList.length)];bgVideo.src=rv;bgVideo.muted=false;
   var p=bgVideo.play();
-  if(p)p.then(function(){bgVideo.classList.add('visible');showGreeting(9600);}).catch(function(){showGreeting(9600);});
+  if(p)p.thenbgVideo.classList.add('visible');showGreeting(9600);}).catchshowGreeting(9600);});
   else showGreeting(9600);
 });
 function showGreeting(duration){
@@ -2010,8 +2016,8 @@ function showGreeting(duration){
 function dismissIntro(){
   if(introTimer){clearTimeout(introTimer);introTimer=null;}
   introScreen.classList.add('hidden');bgVideo.classList.remove('visible');
-  setTimeout(function(){bgVideo.pause();},1500);
-  setTimeout(function(){document.getElementById('topBar').classList.add('visible');document.getElementById('mainContent').classList.add('visible');startBot();},300);
+  setTimeoutbgVideo.pause();},1500);
+  setTimeoutdocument.getElementById('topBar').classList.add('visible');document.getElementById('mainContent').classList.add('visible');startBot();},300);
 }
 
 /* ══ TABS ══ */
@@ -2035,7 +2041,7 @@ var gymInput=document.getElementById('gymInput'),gymTarget=document.getElementBy
 function updateGym(){var v=parseFloat(gymInput.value)||0,t=parseFloat(gymTarget.value)||5;gymDisplay.textContent=v;gymBar.style.width=Math.min(100,Math.round(v/t*100))+'%';saveWidgets();}
 gymInput.addEventListener('input',updateGym);gymTarget.addEventListener('input',updateGym);
 var widgetT=null;
-function saveWidgets(){clearTimeout(widgetT);widgetT=setTimeout(function(){userDoc.set({widgets:{filmCount:parseInt(filmInput.value)||5,runKm:parseFloat(runInput.value)||0,runTarget:parseFloat(runTarget.value)||10,gymSessions:parseFloat(gymInput.value)||0,gymTarget:parseFloat(gymTarget.value)||5}},{merge:true}).catch(function(){});},1000);}
+function saveWidgets(){clearTimeout(widgetT);widgetT=setTimeoutuserDoc.set({widgets:{filmCount:parseInt(filmInput.value)||5,runKm:parseFloat(runInput.value)||0,runTarget:parseFloat(runTarget.value)||10,gymSessions:parseFloat(gymInput.value)||0,gymTarget:parseFloat(gymTarget.value)||5}},{merge:true}).catch});},1000);}
 
 /* ══ EMBED HELPERS ══ */
 function toSpotifyEmbed(url){try{var m=url.match(/spotify\.com\/(playlist|album|track|artist)\/([a-zA-Z0-9]+)/);if(m)return'https://open.spotify.com/embed/'+m[1]+'/'+m[2]+'?utm_source=generator&theme=0';}catch(e){}return null;}
@@ -2050,7 +2056,7 @@ function setupMusicBtn(inputId,btnId,embedId,type,saveKey){
   btn.addEventListener('click',function(){
     var url=inp?inp.value.trim():'';
     var em=type==='spotify'?toSpotifyEmbed(url):toYoutubeEmbed(url);
-    if(em&&emb){emb.src=em;var p={};p[saveKey]={url:url};userDoc.set(p,{merge:true}).catch(function(){});botSay(type==='spotify'?'Spotify yüklendi! 🎵':'YouTube yüklendi! ▶',2500);}
+    if(em&&emb){emb.src=em;var p={};p[saveKey]={url:url};userDoc.set(p,{merge:true}).catch});botSay(type==='spotify'?'Spotify yüklendi! 🎵':'YouTube yüklendi! ▶',2500);}
     else botSay('Geçerli bir link gir!',2500);
   });
   if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&btn)btn.click();});
@@ -2083,7 +2089,7 @@ function loadFromCloud(){
 function getCalEventsForDate(dateStr){return state.calEvents.filter(function(e){return e.date===dateStr;});}
 function saveCalEvents(){
   if(saveTimers['calEvents'])clearTimeout(saveTimers['calEvents']);
-  saveTimers['calEvents']=setTimeout(function(){userDoc.set({calEvents:state.calEvents},{merge:true}).catch(function(){});},800);
+  saveTimers['calEvents']=setTimeoutuserDoc.set({calEvents:state.calEvents},{merge:true}).catch});},800);
 }
 function addCalEvent(dateStr,text,time){
   if(!text||!text.trim())return;
@@ -2165,7 +2171,7 @@ document.getElementById('dashCalEventInput').addEventListener('keydown',function
 // init
 renderDashMiniCal();
 // select today by default
-(function(){var ts=getTodayStr();dashCalSelected=ts;renderDashCalDayPanel(ts);})();
+var ts=getTodayStr();dashCalSelected=ts;renderDashCalDayPanel(ts);
 
 /* ══ TODO CORE ══ */
 var currentFilter='all',completedOpen=false;
@@ -2305,7 +2311,7 @@ function renderDashTodos(){
     var ck=document.createElement('button');ck.style.cssText='background:none;border:1px solid rgba(124,106,255,.35);border-radius:50%;width:18px;height:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:rgba(124,106,255,.8);transition:all .2s;';ck.textContent='✓';
     ck.onclick=function(e){e.stopPropagation();toggleTodoById(t.id);};
     row.appendChild(dot);row.appendChild(txt);row.appendChild(ck);
-    row.onclick=function(){document.querySelector('.tab-btn[data-tab="todos"]').click();setTimeout(function(){selectTodo(t.id);},100);};
+    row.onclick=function(){document.querySelector('.tab-btn[data-tab="todos"]').click();setTimeoutselectTodo(t.id);},100);};
     dl.appendChild(row);
   });
   var total=window.state.todos.length,done=window.state.todos.filter(function(t){return t.completed;}).length,pct=total?Math.round(done/total*100):0;
@@ -2364,7 +2370,7 @@ function renderMonthView(){
     todos.slice(0,1).forEach(function(t){
       var ev=document.createElement('div');ev.className='cal-event-dot prio-'+(t.priority||'none');
       ev.textContent=(t.completed?'✓ ':'')+t.text;ev.title=t.text;
-      ev.onclick=function(e){e.stopPropagation();document.querySelector('.tab-btn[data-tab="todos"]').click();setTimeout(function(){selectTodo(t.id);},100);};
+      ev.onclick=function(e){e.stopPropagation();document.querySelector('.tab-btn[data-tab="todos"]').click();setTimeoutselectTodo(t.id);},100);};
       div.appendChild(ev);
     });
     var total=todos.length+ownEvs.length;
@@ -2455,7 +2461,7 @@ function renderCalDayTasks(dateStr){
     var row=document.createElement('div');row.className='cal-task-item';
     var ck=document.createElement('label');ck.className='cal-task-check';
     var ci=document.createElement('input');ci.type='checkbox';ci.checked=t.completed;
-    ci.addEventListener('change',function(){toggleTodoById(t.id);setTimeout(function(){renderCalDayTasks(dateStr);},50);});
+    ci.addEventListener('change',function(){toggleTodoById(t.id);setTimeoutrenderCalDayTasks(dateStr);},50);});
     var cb=document.createElement('div');cb.className='cal-task-check-box';ck.appendChild(ci);ck.appendChild(cb);
     var txt=document.createElement('span');txt.className='cal-task-text'+(t.completed?' done':'');txt.textContent=t.text;
     var del=document.createElement('button');del.className='cal-task-delete';del.textContent='✕';
@@ -2565,7 +2571,7 @@ document.querySelectorAll('.mood-btn').forEach(function(b){
     document.querySelectorAll('.mood-btn').forEach(function(x){x.classList.remove('selected');});
     this.classList.add('selected');if(moodMsgBox)moodMsgBox.textContent=this.dataset.msg;
     botSay(this.dataset.emoji+' '+this.dataset.mood+'!',2500);
-    userDoc.set({vibeData:{mood:this.dataset.mood,moodDate:getTodayStr()}},{merge:true}).catch(function(){});
+    userDoc.set({vibeData:{mood:this.dataset.mood,moodDate:getTodayStr()}},{merge:true}).catch});
   });
 });
 var quotes=[{t:'"Büyük işler yapmak için büyük emek gerekir."',a:'— Atatürk'},{t:'"Başarı, her gün tekrarlanan küçük çabaların toplamıdır."',a:'— Robert Collier'},{t:'"Gelecek, güzel rüyalarının gerçek olduğuna inananlarındır."',a:'— Eleanor Roosevelt'},{t:'"Zorluklar, yeteneklerini fark etmen için var."',a:'— Epiktetos'},{t:'"Hayal edebiliyorsan, yapabilirsin."',a:'— Walt Disney'},{t:'"Her gün biraz daha iyi ol."',a:'— Japonca atasözü'},{t:'"Tek gerçek yatırım kendine yapılandır."',a:'— Marcus Aurelius'},{t:'"Disiplin, istediğin her şeyin anahtarıdır."',a:'— Anonymous'}];
@@ -2577,7 +2583,7 @@ var vibeNoteEl=document.getElementById('vibeNote'),vibeNoteT=null;
 vibeNoteEl.addEventListener('input',function(){
   var el=document.getElementById('vibeStatus');if(el){el.querySelector('span').textContent='Kaydediliyor...';el.style.color='rgba(255,255,255,.5)';}
   clearTimeout(vibeNoteT);
-  vibeNoteT=setTimeout(function(){userDoc.set({vibeData:{note:vibeNoteEl.value}},{merge:true}).then(function(){if(el){el.querySelector('span').textContent='Senkronize ✓';el.style.color='var(--ok)';}}).catch(function(){});},900);
+  vibeNoteT=setTimeoutuserDoc.set({vibeData:{note:vibeNoteEl.value}},{merge:true}).thenif(el){el.querySelector('span').textContent='Senkronize ✓';el.style.color='var(--ok)';}}).catch});},900);
 });
 
 /* ══ GAME ══ */
@@ -2594,12 +2600,12 @@ if(gCanvas){
 
 /* ══ SHOWCASE ══ */
 var showcaseIdx=0,showcaseImgs=document.querySelectorAll('.showcase-img');
-if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(function(){showcaseImgs[showcaseIdx].classList.remove('active');showcaseIdx=(showcaseIdx+1)%showcaseImgs.length;showcaseImgs[showcaseIdx].classList.add('active');},15000);}
+if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setIntervalshowcaseImgs[showcaseIdx].classList.remove('active');showcaseIdx=(showcaseIdx+1)%showcaseImgs.length;showcaseImgs[showcaseIdx].classList.add('active');},15000);}
 
-})();
+
 
 /* ══ AKSİYON SAYAÇ ══ */
-(function(){
+
   /* ─ particles ─ */
   var pc=document.getElementById('aksiyon-particles'),pCtx=pc.getContext('2d');
   var particles=[];
@@ -2631,7 +2637,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
 
  /* ─ AUDIO CONTEXT KİLİDİNİ AÇMA (CRITICAL FIX) ─ */
   var sharedAudioCtx = null;
-  window.initAudio=function(){
+  function initAudio(){
     if(!sharedAudioCtx) {
       sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -2642,7 +2648,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ ring audio ─ */
-  window.playRingTone=function(){
+  function playRingTone(){
     try{
       if(!sharedAudioCtx) return;
       var ctx = sharedAudioCtx;
@@ -2664,7 +2670,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ tick beep (her saniye) ─ */
-  window.playTick=function(n){
+  function playTick(n){
     try{
       if(!sharedAudioCtx) return;
       var ctx = sharedAudioCtx;
@@ -2679,7 +2685,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ finish chime ─ */
-  window.playFinish=function(){
+  function playFinish(){
     try{
       if(!sharedAudioCtx) return;
       var ctx = sharedAudioCtx;
@@ -2697,9 +2703,8 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
 
  /* ─ video carousel için başlangıç ─ */
   var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
-window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoEl.pause(); window.actionVideoEl.remove(); window.actionVideoEl=null; } };
   var actionVideoEl=null;
-  window.startActionVideo=function(){
+  function startActionVideo(){
     actionVideoEl=document.createElement('video');
     actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
 
@@ -2713,7 +2718,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
 
     actionVideoEl.src=actionVideos[Math.floor(Math.random()*actionVideos.length)];
     document.getElementById('aksiyon-overlay').appendChild(actionVideoEl);
-    actionVideoEl.play().catch(function(){});
+    actionVideoEl.play().catch});
   }
 
   /* ─ countdown logic ─ */
@@ -2728,7 +2733,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
 
   function tickAnim(n){
     numEl.classList.add('tick');
-    setTimeout(function(){numEl.classList.remove('tick');},160);
+    setTimeoutnumEl.classList.remove('tick');},160);
   }
 
   function startCountdown(){
@@ -2747,7 +2752,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     
     // 2. ADIM: Tarayıcıya bu "dolu" hali ekrana çizmesi için 50ms süre veriyoruz, 
     // ardından erime animasyonunu tetikliyoruz (İkinci açılıştaki sorunun KESİN çözümü)
-    setTimeout(function(){
+    setTimeout
       ringFill.style.transition = 'stroke-dashoffset 5s linear';
       ringFill.style.strokeDashoffset = '591'; 
     }, 50);
@@ -2755,7 +2760,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     playTick(5);
     tickAnim(5);
 
-    countTimer=setInterval(function(){
+    countTimer=setInterval
       countCurrent--;
       if(countCurrent<=0){
         clearInterval(countTimer);
@@ -2767,9 +2772,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
 
         var ov=document.getElementById('aksiyon-overlay');
         ov.style.background='rgba(124,106,255,.15)';
-        setTimeout(function(){ov.style.background='#000';},250);
+        setTimeoutov.style.background='#000';},250);
 
-        setTimeout(function(){dismissAksiyon();},1500);
+        setTimeoutdismissAksiyon();},1500);
         return;
       }
       numEl.textContent=countCurrent;
@@ -2798,13 +2803,13 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     ov.classList.add('visible');
     playRingTone();
     
-    setTimeout(function(){startCountdown();},400);
+    setTimeoutstartCountdown();},400);
   }
 
   function dismissAksiyon(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
-    setTimeout(function(){
+    setTimeout
       ov.classList.remove('visible','fade-out');
       ov.style.background='#000';
       cancelAnimationFrame(animP);particles=[];
@@ -2828,13 +2833,13 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     startActionVideo();
     ov.classList.add('visible');
     playRingTone();
-    setTimeout(function(){startCountdown();},400);
+    setTimeoutstartCountdown();},400);
   }
  
   function dismissAksiyon(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
-    setTimeout(function(){
+    setTimeout
       ov.classList.remove('visible','fade-out');
       ov.style.background='#000';
       cancelAnimationFrame(animP);particles=[];
@@ -2858,7 +2863,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
  
 
 /* ══ MOOD CHANGER - SLOT MACHINE ══ */
-(function(){
+
   var moodActions=[
     {emoji:'🎬',text:'10 saniye içinde bir film seç ve izle'},
     {emoji:'📚',text:'10 saniye içinde bir kitap belirle ve oku'},
@@ -2921,12 +2926,12 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     ringFill.style.transition='none';
     ringFill.style.strokeDashoffset='0';
     void ringFill.offsetWidth;
-    setTimeout(function(){
+    setTimeout
       ringFill.style.transition='stroke-dashoffset 5s linear';
       ringFill.style.strokeDashoffset='591';
     },50);
     
-    var countTimer=setInterval(function(){
+    var countTimer=setInterval
       count--;
       if(count<=0){
         clearInterval(countTimer);
@@ -2936,10 +2941,10 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
         subEl.textContent='Hadi, yarat! ✦';
         playFinish();
         ov.style.background='rgba(255,107,138,.15)';
-        setTimeout(function(){ov.style.background='#000';},300);
-        setTimeout(function(){
+        setTimeoutov.style.background='#000';},300);
+        setTimeout
           ov.classList.add('fade-out');
-          setTimeout(function(){ov.classList.remove('visible','fade-out');},800);
+          setTimeoutov.classList.remove('visible','fade-out');},800);
         },2000);
         return;
       }
@@ -2984,12 +2989,12 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     ringFill.style.transition='none';
     ringFill.style.strokeDashoffset='0';
     void ringFill.offsetWidth;
-    setTimeout(function(){
+    setTimeout
       ringFill.style.transition='stroke-dashoffset 5s linear';
       ringFill.style.strokeDashoffset='591';
     },50);
     
-    var countTimer=setInterval(function(){
+    var countTimer=setInterval
       count--;
       if(count<=0){
         clearInterval(countTimer);
@@ -2999,10 +3004,10 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
         subEl.textContent='Kendine dikkat et! 💪';
         playFinish();
         ov.style.background='rgba(255,85,102,.15)';
-        setTimeout(function(){ov.style.background='#000';},300);
-        setTimeout(function(){
+        setTimeoutov.style.background='#000';},300);
+        setTimeout
           ov.classList.add('fade-out');
-          setTimeout(function(){ov.classList.remove('visible','fade-out');},800);
+          setTimeoutov.classList.remove('visible','fade-out');},800);
         },2000);
         return;
       }
@@ -3047,12 +3052,12 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     ringFill.style.transition='none';
     ringFill.style.strokeDashoffset='0';
     void ringFill.offsetWidth;
-    setTimeout(function(){
+    setTimeout
       ringFill.style.transition='stroke-dashoffset 5s linear';
       ringFill.style.strokeDashoffset='591';
     },50);
     
-    var countTimer=setInterval(function(){
+    var countTimer=setInterval
       count--;
       if(count<=0){
         clearInterval(countTimer);
@@ -3062,10 +3067,10 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
         subEl.textContent='Başarılar, Nurullah ✦';
         playFinish();
         ov.style.background='rgba(124,106,255,.15)';
-        setTimeout(function(){ov.style.background='#000';},300);
-        setTimeout(function(){
+        setTimeoutov.style.background='#000';},300);
+        setTimeout
           ov.classList.add('fade-out');
-          setTimeout(function(){ov.classList.remove('visible','fade-out');},800);
+          setTimeoutov.classList.remove('visible','fade-out');},800);
         },2000);
         return;
       }
@@ -3124,25 +3129,25 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     var vid=document.getElementById('gunaydinVideo');
     var morningVids=['gunaydin1.mp4','gunaydin2.mp4','gunaydin3.mp4'];
     vid.src=morningVids[Math.floor(Math.random()*morningVids.length)];
-    vid.play().catch(function(){});
+    vid.play().catch});
     
     // Show overlay
     ov.classList.add('visible');
     
     // Animate texts
-    setTimeout(function(){
+    setTimeout
       mainText.classList.add('visible');
     },300);
-    setTimeout(function(){
+    setTimeout
       subText.classList.add('visible');
     },800);
-    setTimeout(function(){
+    setTimeout
       calBox.classList.add('visible');
     },1200);
-    setTimeout(function(){
+    setTimeout
       doneBadge.classList.add('visible');
     },1600);
-    setTimeout(function(){
+    setTimeout
       actionBtn.classList.add('visible');
     },2000);
     
@@ -3184,9 +3189,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     var elems=ov.querySelectorAll('.visible');
     elems.forEach(function(e){e.classList.remove('visible');});
     
-    setTimeout(function(){
+    setTimeout
       ov.classList.add('fade-out');
-      setTimeout(function(){
+      setTimeout
         ov.classList.remove('visible','fade-out');
         document.getElementById('gunaydinVideo').pause();
       },800);
@@ -3252,17 +3257,17 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     var vid=document.getElementById('gecelerVideo');
     var nightVids=['gece1.mp4','gece2.mp4','gece3.mp4'];
     vid.src=nightVids[Math.floor(Math.random()*nightVids.length)];
-    vid.play().catch(function(){});
+    vid.play().catch});
     
     // Show overlay
     ov.classList.add('visible');
     
     // Animate
-    setTimeout(function(){mainText.classList.add('visible');},300);
-    setTimeout(function(){subText.classList.add('visible');},800);
-    setTimeout(function(){calBox.classList.add('visible');},1200);
-    setTimeout(function(){doneBadge.classList.add('visible');},1600);
-    setTimeout(function(){actionBtn.classList.add('visible');},2000);
+    setTimeoutmainText.classList.add('visible');},300);
+    setTimeoutsubText.classList.add('visible');},800);
+    setTimeoutcalBox.classList.add('visible');},1200);
+    setTimeoutdoneBadge.classList.add('visible');},1600);
+    setTimeoutactionBtn.classList.add('visible');},2000);
     
     // Particles
     var pc=document.getElementById('gecelerParticles');
@@ -3305,9 +3310,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     var elems=ov.querySelectorAll('.visible');
     elems.forEach(function(e){e.classList.remove('visible');});
     
-    setTimeout(function(){
+    setTimeout
       ov.classList.add('fade-out');
-      setTimeout(function(){
+      setTimeout
         ov.classList.remove('visible','fade-out');
         document.getElementById('gecelerVideo').pause();
       },800);
@@ -3410,7 +3415,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
       if(!allDone){
         requestAnimationFrame(animate);
       }else{
-        setTimeout(function(){
+        setTimeout
           isSpinning=false;
           spinBtn.disabled=false;
           showResult(selectedAction);
@@ -3430,7 +3435,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     resultTimer.textContent=count;
 
     if(timerInterval)clearInterval(timerInterval);
-    timerInterval=setInterval(function(){
+    timerInterval=setInterval
       count--;
       resultTimer.textContent=count;
       playTick(count);
@@ -3440,7 +3445,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
         resultTimer.textContent='✓';
         resultTimer.style.background='linear-gradient(135deg,#22d3a0 0%,#4fd1ff 100%)';
         -webkit-background-clip='text';
-        setTimeout(function(){
+        setTimeout
           resultDiv.classList.remove('visible');
           resultTimer.style.background='';
           initSlotMachine();
@@ -3462,7 +3467,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
   });
 
   initSlotMachine();
-})();
+
 
 /* expose globally so the trigger button can call it */
 window.launchAksiyon=launchAksiyon;
@@ -3636,7 +3641,7 @@ window.launchAksiyon=launchAksiyon;
     numEl.style.fontSize='7rem';
     
     var themeIdx=0;
-    countTimer=setInterval(function(){
+    countTimer=setInterval
       countCurrent--;
       if(countCurrent<=0){
         clearInterval(countTimer);
@@ -3646,8 +3651,8 @@ window.launchAksiyon=launchAksiyon;
         subEl.textContent='Nurullah ✦';
         playFinish();
         ov.style.background=hexToRgba(t.color1,.15);
-        setTimeout(function(){ov.style.background='#000';},250);
-        setTimeout(function(){dismissAksiyon();},1500);
+        setTimeoutov.style.background='#000';},250);
+        setTimeoutdismissAksiyon();},1500);
         return;
       }
       numEl.textContent=countCurrent;
@@ -3664,7 +3669,7 @@ window.launchAksiyon=launchAksiyon;
     },1000);
     
     // Start ring from full
-    setTimeout(function(){
+    setTimeout
       ringFillEl.style.transition='stroke-dashoffset 5s linear';
       ringFillEl.style.strokeDashoffset='591';
     },50);
@@ -3723,7 +3728,7 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   }else{
     injectTriggerBtn();
   }
-})();
+
 </script>
 <!-- GÜNAYDIN OVERLAY -->
 <div id="gunaydin-overlay">
