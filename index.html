@@ -3949,15 +3949,17 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   }
 
   function save(){
+    // 1) Yerel (anında, çevrimdışı için)
     try{ localStorage.setItem('activeMode',JSON.stringify({mode:currentMode,startTs:startTs})); }catch(e){}
+    // 2) Buluta yaz (cihazlar arası senkron)
+    try{ if(window.userDoc&&window.userDoc.set)window.userDoc.set({activeMode:{mode:currentMode,startTs:startTs}},{merge:true}).catch(function(){}); }catch(e){}
   }
 
-  // Global: launcher'lar bunu çağırır
-  window.setActiveMode=function(mode){
+  // Sadece arayüzü çiz — kaydetmez (uzaktan gelen güncellemelerde kullanılır)
+  function applyMode(mode,ts){
     if(!MODES[mode])return;
-    var changed=(mode!==currentMode);
     currentMode=mode;
-    if(changed||!startTs)startTs=Date.now();
+    startTs=ts||Date.now();
     var def=MODES[mode];
     iconEl.textContent=def.icon;
     titleEl.textContent=def.title;
@@ -3971,15 +3973,29 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     miniBadge.classList.remove('visible');
     if(tickInt)clearInterval(tickInt);
     tick(); tickInt=setInterval(tick,1000);
-    save();
-  };
+  }
 
-  window.closeActiveMode=function(){
+  // Arayüzü tamamen temizle (kaydetmez)
+  function clearModeUI(){
     panel.classList.remove('visible');
     miniBadge.classList.remove('visible');
     currentMode=null;startTs=null;
     if(tickInt){clearInterval(tickInt);tickInt=null;}
+  }
+
+  // Global: launcher'lar bunu çağırır
+  window.setActiveMode=function(mode){
+    if(!MODES[mode])return;
+    var changed=(mode!==currentMode);
+    applyMode(mode,(changed||!startTs)?Date.now():startTs);
+    save();
+  };
+
+  window.closeActiveMode=function(){
+    clearModeUI();
     try{ localStorage.removeItem('activeMode'); }catch(e){}
+    // Bulutta da temizle ki diğer cihazlarda da kapansın
+    try{ if(window.userDoc&&window.userDoc.set)window.userDoc.set({activeMode:null},{merge:true}).catch(function(){}); }catch(e){}
   };
 
   // Paneli küçült (rozet kalır, mod devam eder)
@@ -4008,22 +4024,41 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     });
   });
 
-  // Sayfa açılışında kayıtlı modu geri yükle (kalıcı)
+  // 1) Sayfa açılışında ÖNCE yerel kayıttan hızlı geri yükle (anında görünsün)
   try{
     var saved=JSON.parse(localStorage.getItem('activeMode'));
     if(saved&&saved.mode&&MODES[saved.mode]){
-      currentMode=saved.mode;
-      startTs=saved.startTs||Date.now();
-      var def=MODES[currentMode];
-      iconEl.textContent=def.icon;titleEl.textContent=def.title;
-      statusEl.textContent=def.status;descEl.textContent=def.desc;
-      miniIcon.textContent=def.icon;miniText.textContent=def.title;
-      applyStyleVars(currentMode);renderSwitch();
-      panel.classList.add('visible');
-      tick();tickInt=setInterval(tick,1000);
+      applyMode(saved.mode,saved.startTs);
     }
   }catch(e){}
+
+  // 2) Buluttan GERÇEK ZAMANLI dinle — telefonda başlatınca PC'de (ve tersi) anında görünür
+  function startModeSync(){
+    try{
+      if(!window.userDoc||!window.userDoc.onSnapshot)return;
+      window.userDoc.onSnapshot(function(doc){
+        var data=doc&&doc.exists?doc.data():null;
+        var am=data?data.activeMode:undefined;
+        if(am&&am.mode&&MODES[am.mode]){
+          // Başka cihazdan gelen mod farklıysa arayüzü güncelle (kaydetme, döngü olmasın)
+          if(am.mode!==currentMode||am.startTs!==startTs){
+            applyMode(am.mode,am.startTs);
+            try{ localStorage.setItem('activeMode',JSON.stringify({mode:am.mode,startTs:am.startTs})); }catch(e){}
+          }
+        }else if(am===null){
+          // Başka cihazda kapatılmışsa burada da kapat
+          if(currentMode){
+            clearModeUI();
+            try{ localStorage.removeItem('activeMode'); }catch(e){}
+          }
+        }
+      },function(err){/* sessiz geç */});
+    }catch(e){}
+  }
+  // userDoc Firebase ile hazırsa hemen başlat, değilse kısa bekleyip dene
+  if(window.userDoc&&window.userDoc.onSnapshot){ startModeSync(); }
+  else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0620e01696ca5cc',t:'MTc4MDUyNDkwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0621bf47e0b816f',t:'MTc4MDUyNTQ3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
