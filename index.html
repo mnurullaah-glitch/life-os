@@ -66,7 +66,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .top-logo{font-size:.8rem;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
 .top-logo-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:0 0 12px var(--g1);animation:dotPulse 2s ease-in-out infinite;flex-shrink:0;}
 @keyframes dotPulse{0%,100%{box-shadow:0 0 12px var(--g1)}50%{box-shadow:0 0 24px var(--g1),0 0 48px rgba(124,106,255,.15)}}
-nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;scrollbar-width:none;flex:1;margin:0 16px;}
+nav{display:flex;flex-wrap:nowrap;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;scrollbar-width:none;flex:1;margin:0 16px;cursor:grab;}
+nav:active{cursor:grabbing;}
 nav::-webkit-scrollbar{display:none;}
 .tab-btn{position:relative;overflow:hidden;padding:8px 16px;border-radius:32px;border:none;font-size:.78rem;font-weight:500;color:var(--muted);cursor:pointer;background:transparent;transition:all .35s cubic-bezier(.23,1,.32,1);letter-spacing:.3px;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .tab-btn::before{content:'';position:absolute;inset:0;border-radius:32px;background:linear-gradient(135deg,var(--a1),var(--a2));opacity:0;transition:opacity .35s ease;}
@@ -2163,6 +2164,60 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
   });
 });
 
+/* ══ NAV PARMAK/FARE İLE KAYDIRMA (CSS'ten bağımsız garanti) ══ */
+(function(){
+  var nav=document.getElementById('mainNav');
+  if(!nav)return;
+  var down=false,startX=0,startScroll=0,moved=false,activePointer=null;
+
+  // Pointer Events (modern tarayıcı + mobil) — tek tip, en güvenilir
+  if(window.PointerEvent){
+    nav.addEventListener('pointerdown',function(e){
+      down=true;moved=false;activePointer=e.pointerId;
+      startX=e.clientX;startScroll=nav.scrollLeft;
+    });
+    nav.addEventListener('pointermove',function(e){
+      if(!down||e.pointerId!==activePointer)return;
+      var dx=e.clientX-startX;
+      if(Math.abs(dx)>4){moved=true; try{nav.setPointerCapture(e.pointerId);}catch(_){}}
+      nav.scrollLeft=startScroll-dx;
+    });
+    function end(e){
+      if(!down)return;down=false;activePointer=null;
+      try{nav.releasePointerCapture&&nav.releasePointerCapture(e.pointerId);}catch(_){}
+    }
+    nav.addEventListener('pointerup',end);
+    nav.addEventListener('pointercancel',end);
+    nav.addEventListener('pointerleave',end);
+    // Sürüklerken sekmeye yanlışlıkla basılmasını engelle
+    nav.addEventListener('click',function(e){
+      if(moved){e.preventDefault();e.stopPropagation();moved=false;}
+    },true);
+  }else{
+    // Eski tarayıcı / iOS Safari için touch fallback
+    nav.addEventListener('touchstart',function(e){
+      down=true;moved=false;startX=e.touches[0].clientX;startScroll=nav.scrollLeft;
+    },{passive:true});
+    nav.addEventListener('touchmove',function(e){
+      if(!down)return;
+      var dx=e.touches[0].clientX-startX;
+      if(Math.abs(dx)>4)moved=true;
+      nav.scrollLeft=startScroll-dx;
+    },{passive:true});
+    nav.addEventListener('touchend',function(){down=false;});
+    nav.addEventListener('click',function(e){
+      if(moved){e.preventDefault();e.stopPropagation();moved=false;}
+    },true);
+  }
+
+  // Fare tekerleği / trackpad ile yatay kaydırma (masaüstü kolaylığı)
+  nav.addEventListener('wheel',function(e){
+    if(Math.abs(e.deltaX)<Math.abs(e.deltaY)){
+      nav.scrollLeft+=e.deltaY;e.preventDefault();
+    }
+  },{passive:false});
+})();
+
 /* ══ WIDGETS ══ */
 var filmInput=document.getElementById('filmCountInput'),filmDisplay=document.getElementById('filmCountDisplay');
 filmInput.addEventListener('input',function(){filmDisplay.textContent=this.value||'0';saveWidgets();});
@@ -4241,5 +4296,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06259c8ba4c96cc',t:'MTc4MDUyODAxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06262baf8e6a3f7',t:'MTc4MDUyODM3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
