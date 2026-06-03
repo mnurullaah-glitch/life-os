@@ -2859,26 +2859,20 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
 
 /* ══ MOOD CHANGER - SLOT MACHINE ══ */
 (function(){
+  
   var moodActions=[
-    {emoji:'🎬',text:'10 saniye içinde bir film seç ve izle'},
-    {emoji:'📚',text:'10 saniye içinde bir kitap belirle ve oku'},
-    {emoji:'📞',text:'10 saniye içinde birisini ara'},
-    {emoji:'🌳',text:'10 saniye içinde dışarı çık ve gezin'},
-    {emoji:'🎨',text:'Bugün bir şeyler çiz veya boya'},
-    {emoji:'🎵',text:'5 şarkı seç ve bir playlist yap'},
-    {emoji:'💪',text:'10 şınav çek ve poz ver'},
-    {emoji:'☕',text:'Bir kahve molası ver ve düşün'},
-    {emoji:'🧘',text:'2 dakika meditasyon yap'},
-    {emoji:'📝',text:'Bir hedef yaz ve bugün başla'},
-    {emoji:'🌟',text:'Birine güzel bir şey söyle'},
-    {emoji:'🍳',text:'Yeni bir yemek tarifi dene'},
-    {emoji:'🧹',text:'Masını veya odanı düzelt'},
-    {emoji:'🎮',text:'30 dakika oyun oyna'},
-    {emoji:'🌙',text:'Yarın için bir plan yap'},
-    {emoji:'🎭',text:'Bugün komik bir şey yap'},
-    {emoji:'💧',text:'Bir bardak su iç ve farkına var'},
-    {emoji:'🚀',text:'En zor görevine başla hemen'}
+    {emoji:'🐔',text:'10 saniye boyunca tavuk gibi gıdakla (Ciddiyim)'},
+    {emoji:'🕺',text:'En sevdiğin şarkıda 30 saniye en kötü dansını yap'},
+    {emoji:'🎤',text:'Aynanın karşısına geçip bir opera sanatçısı gibi bağır'},
+    {emoji:'🦒',text:'Zürafa gibi boynunu uzatıp odanın en yüksek yerine dokun'},
+    {emoji:'😎',text:'Güneş gözlüğü tak ve 1 dakika boyunca dâhi bir hacker gibi davran'},
+    {emoji:'🧱',text:'Duvarla 10 saniye boyunca çok ciddi bir konu tartış'},
+    {emoji:'🦕',text:'Dinozor gibi yürüyerek mutfağa git ve bir bardak su iç'},
+    {emoji:'🍕',text:'Hayali bir pizza yap ve onu yerken çok mutlu görün'},
+    {emoji:'🧠',text:'Aynaya bakıp "Ben bir dâhiyim ve bu siteyi ben yaptırdım" de'},
+    {emoji:'🚀',text:'Oturduğun yerden geri sayım yapıp uzaya fırlıyormuş gibi zıpla'}
   ];
+
 
   /* Mood Changer launcher */
   window.launchMoodChanger=function(){
@@ -3012,67 +3006,33 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   };
 
   /* İş Modu launcher */
-  window.launchIsModu=function(){
-    initAudio();
-    var ov=document.getElementById('aksiyon-overlay');
-    var titleEl=document.getElementById('aksiyonTitle');
-    var subEl=document.getElementById('aksiyonSub');
-    
-    var workMessages=[
-      {t:'Odaklan!',s:'Work hard, stay focused'},
-      {t:'Yoğunlaş!',s:'Verimli bir gün başlıyor'},
-      {t:'Hedefe Git!',s:'Mükemmel iş çıkar'},
-      {t:'Başla!',s:'Başarı senden geçiyor'}
-    ];
-    var msg=workMessages[Math.floor(Math.random()*workMessages.length)];
-    
-    titleEl.textContent=msg.t;
-    subEl.textContent=msg.s;
-    
-    var grad=document.querySelector('.aksiyon-number');
-    if(grad){
-      grad.style.background='linear-gradient(135deg,#7c6aff 0%,#c46dff 50%,#fff 100%)';
-      grad.style.webkitBackgroundClip='text';
+  
+window.launchIsModu = function() {
+  window.initAudio();
+  var ov = document.getElementById('aksiyon-overlay');
+  var num = document.getElementById('aksiyonNumber');
+  var title = document.getElementById('aksiyonTitle');
+  ov.classList.add('visible');
+  title.textContent = "İş Moduna Geçiliyor...";
+  let count = 5;
+  num.textContent = count;
+  let timer = setInterval(() => {
+    count--;
+    num.textContent = count;
+    window.playTick(count);
+    if (count <= 0) {
+      clearInterval(timer);
+      num.textContent = "💼";
+      window.playFinish();
+      setTimeout(() => {
+        ov.classList.remove('visible');
+        document.getElementById('persistent-work-badge').style.display = 'flex';
+        if(typeof botSay === 'function') botSay('İş Modu Başladı, Bol Şans!', 3000);
+      }, 1000);
     }
-    
-    ov.classList.add('visible');
-    playRingTone();
-    
-    var count=5;
-    var numEl=document.getElementById('aksiyonNumber');
-    numEl.textContent=count;
-    numEl.style.fontSize='7rem';
-    
-    var ringFill=document.getElementById('aksiyonRingFill');
-    ringFill.style.transition='none';
-    ringFill.style.strokeDashoffset='0';
-    void ringFill.offsetWidth;
-    setTimeout(function(){
-      ringFill.style.transition='stroke-dashoffset 5s linear';
-      ringFill.style.strokeDashoffset='591';
-    },50);
-    
-    var countTimer=setInterval(function(){
-      count--;
-      if(count<=0){
-        clearInterval(countTimer);
-        numEl.textContent='💼';
-        numEl.style.fontSize='4rem';
-        titleEl.textContent='Verimli Olsun!';
-        subEl.textContent='Başarılar, Nurullah ✦';
-        playFinish();
-        ov.style.background='rgba(124,106,255,.15)';
-        setTimeout(function(){ov.style.background='#000';},300);
-        setTimeout(function(){
-          ov.classList.add('fade-out');
-          setTimeout(function(){ov.classList.remove('visible','fade-out');},800);
-        },2000);
-        return;
-      }
-      numEl.textContent=count;
-      playTick(count);
-    },1000);
-  };
+  }, 1000);
+};
+
 
   /* GÜNAYDIN LAUNCHER */
   window.launchGunaydin=function(){
@@ -3358,14 +3318,46 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     buildReel('reel3',chunk3);
   }
 
+  
   function spinSlotMachine(){
     if(isSpinning)return;
     isSpinning=true;
     spinBtn.disabled=true;
     resultDiv.classList.remove('visible');
-
+    
     var reels=['reel1','reel2','reel3'];
-    var strips=reels.map(function(id){return document.getElementById(id).querySelector('.reel-strip');});
+    var strips=reels.map(id => document.getElementById(id).querySelector('.reel-strip'));
+    
+    // Pick ONE result for all three reels to "win"
+    var selectedAction = moodActions[Math.floor(Math.random()*moodActions.length)];
+    
+    reels.forEach((id, i) => {
+       var reel = document.getElementById(id);
+       reel.classList.remove('winning');
+       reel.classList.add('spinning');
+       var strip = strips[i];
+       // Instant reset to top for smooth visual
+       strip.style.transition = 'none';
+       strip.style.transform = 'translateY(0)';
+       
+       // Funny logic: all reels stop at same item
+       var itemIndex = moodActions.indexOf(selectedAction);
+       // We add many cycles for animation effect
+       setTimeout(() => {
+          strip.style.transition = 'transform ' + (2 + i*0.5) + 's cubic-bezier(0.45, 0.05, 0.55, 0.95)';
+          strip.style.transform = 'translateY(-' + ((itemIndex + 10) * 60) + 'px)';
+       }, 50);
+    });
+
+    setTimeout(() => {
+      isSpinning=false;
+      spinBtn.disabled=false;
+      reels.forEach(id => document.getElementById(id).classList.remove('spinning'));
+      document.getElementById('reel3').classList.add('winning');
+      showResult(selectedAction);
+    }, 4000);
+  }
+);
     var itemHeight=60;
     var totalItems=strips[0].children.length;
 
@@ -3449,12 +3441,16 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     },1000);
   }
 
+  
   acceptBtn.addEventListener('click',function(){
     clearInterval(timerInterval);
     resultDiv.classList.remove('visible');
+    spinBtn.disabled = false;
+    document.querySelectorAll('.slot-reel').forEach(r => { r.classList.remove('winning', 'spinning'); });
     initSlotMachine();
-    if(typeof botSay==='function')botSay('Hadi! Bu eylemi yap! 💪',3000);
+    if(typeof botSay==='function')botSay('Sıradaki gelsin! 🎲',2000);
   });
+
 
   spinBtn.addEventListener('click',function(){
     initAudio();
@@ -3765,5 +3761,14 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   </div>
 </div>
 
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a061573a3c21cdd4',t:'MTc4MDUxNzQyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<div id="persistent-work-badge" style="position:fixed;right:20px;top:80px;z-index:9999;display:none;background:rgba(124,106,255,0.15);backdrop-filter:blur(15px);border:1px solid rgba(124,106,255,0.4);padding:15px;border-radius:15px;box-shadow:0 0 30px rgba(124,106,255,0.2);flex-direction:column;align-items:center;gap:10px;animation:slideInRight 0.5s cubic-bezier(0.23, 1, 0.32, 1);">
+    <div style="width:10px;height:10px;background:#7c6aff;border-radius:50%;box-shadow:0 0 10px #7c6aff;animation:blink 1.5s infinite;"></div>
+    <span style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;color:#fff;text-transform:uppercase;">İş Modu Aktif</span>
+    <button onclick="document.getElementById('persistent-work-badge').style.display='none'" style="background:rgba(255,255,255,0.05);border:none;color:rgba(255,255,255,0.4);font-size:0.6rem;cursor:pointer;padding:4px 8px;border-radius:5px;">KAPAT</button>
+</div>
+<style>
+@keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+</style>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06162e7aede3285',t:'MTc4MDUxNzg5OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
