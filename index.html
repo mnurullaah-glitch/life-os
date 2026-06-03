@@ -2193,6 +2193,10 @@ renderDashMiniCal();
 /* ══ TODO CORE ══ */
 var currentFilter='all',completedOpen=false;
 function getTodayStr(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+/* ── Yardımcıları global yap ki diğer IIFE kapsamlarındaki Eylem butonları (Günaydın / İyi Geceler) erişebilsin ── */
+window.getTodayStr=getTodayStr;
+window.escapeHTML=escapeHTML;
+window.botSay=botSay;
 function getWeekStr(){var n=new Date();n.setDate(n.getDate()+7);return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
 function getDueStatus(dd){if(!dd)return null;var t=getTodayStr();if(dd<t)return'overdue';if(dd===t)return'today';var s=new Date();s.setDate(s.getDate()+3);if(new Date(dd+'T00:00:00')<=s)return'soon';return'later';}
 function formatDueLabel(dd){if(!dd)return'';var t=getTodayStr();if(dd===t)return'Bugün';var y=new Date();y.setDate(y.getDate()-1);var ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');if(dd===ys)return'Dün';return new Date(dd+'T00:00:00').toLocaleDateString('tr-TR',{day:'numeric',month:'short'});}
@@ -3753,5 +3757,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     </button>
   </div>
 </div>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a061f8b33831f31d',t:'MTc4MDUyNDAzNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
