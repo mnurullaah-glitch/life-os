@@ -1284,6 +1284,90 @@ textarea::placeholder{color:var(--muted);}
   transition:left .6s ease;
 }
 .aksiyon-trigger-btn:hover::after{left:100%;}
+
+/* ══ SAĞ TARAF KALICI MOD PANELİ (İş / Sanat / Spor) ══ */
+#modePanel{
+  position:fixed;top:50%;right:0;transform:translateY(-50%) translateX(110%);
+  z-index:9500;
+  width:210px;
+  padding:18px 16px 16px;
+  border-radius:18px 0 0 18px;
+  background:linear-gradient(145deg,rgba(16,14,32,.92),rgba(10,10,26,.92));
+  border:1px solid var(--border);border-right:none;
+  box-shadow:-8px 0 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:transform .55s cubic-bezier(.23,1,.32,1),box-shadow .4s ease;
+  opacity:0;pointer-events:none;
+}
+#modePanel.visible{transform:translateY(-50%) translateX(0);opacity:1;pointer-events:auto;}
+#modePanel::before{
+  content:'';position:absolute;inset:0;border-radius:18px 0 0 18px;
+  background:var(--mode-accent,linear-gradient(135deg,rgba(124,106,255,.16),rgba(196,109,255,.08)));
+  opacity:.5;z-index:-1;
+}
+.mode-panel-close{
+  position:absolute;top:8px;right:10px;
+  width:24px;height:24px;border-radius:50%;
+  border:1px solid var(--border);background:rgba(255,255,255,.05);
+  color:var(--muted);font-size:.8rem;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s ease;
+}
+.mode-panel-close:hover{background:rgba(255,85,102,.2);color:#fff;border-color:var(--err);transform:rotate(90deg);}
+.mode-panel-eyebrow{
+  font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;
+}
+.mode-panel-icon{
+  font-size:2.4rem;line-height:1;margin-bottom:8px;
+  filter:drop-shadow(0 0 14px var(--mode-glow,rgba(124,106,255,.6)));
+  animation:modeIconFloat 3s ease-in-out infinite;
+}
+@keyframes modeIconFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.mode-panel-title{
+  font-size:1.15rem;font-weight:700;letter-spacing:1px;color:#fff;margin-bottom:4px;
+}
+.mode-panel-status{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.68rem;color:var(--ok);font-weight:600;
+  padding:3px 10px;border-radius:20px;
+  background:rgba(34,211,160,.12);border:1px solid rgba(34,211,160,.3);
+  margin-bottom:14px;
+}
+.mode-panel-status .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:modeDotPulse 1.5s ease-in-out infinite;}
+@keyframes modeDotPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.mode-panel-desc{
+  font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:14px;
+}
+.mode-panel-timer{
+  font-size:.66rem;color:var(--muted);letter-spacing:1px;
+  padding-top:12px;border-top:1px solid var(--border);
+}
+.mode-panel-timer b{color:#fff;font-weight:600;}
+.mode-panel-switch{display:flex;gap:6px;margin-top:14px;}
+.mode-switch-btn{
+  flex:1;padding:8px 0;border-radius:10px;cursor:pointer;
+  border:1px solid var(--border);background:rgba(255,255,255,.04);
+  font-size:1.1rem;line-height:1;transition:all .25s ease;
+}
+.mode-switch-btn:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+.mode-switch-btn.active{border-color:var(--mode-border,var(--a1));background:var(--mode-accent2,rgba(124,106,255,.2));box-shadow:0 0 12px var(--mode-glow,rgba(124,106,255,.4));}
+/* Küçük mod rozeti (üst barda göstermek için, panel kapalıyken bile) */
+#modeMiniBadge{
+  position:fixed;top:14px;right:14px;z-index:9499;
+  display:none;align-items:center;gap:7px;
+  padding:7px 13px;border-radius:30px;cursor:pointer;
+  background:linear-gradient(135deg,rgba(16,14,32,.9),rgba(10,10,26,.9));
+  border:1px solid var(--mode-border,var(--a1));
+  box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 14px var(--mode-glow,rgba(124,106,255,.3));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font-size:.72rem;font-weight:600;color:#fff;letter-spacing:.5px;
+  transition:all .3s ease;
+}
+#modeMiniBadge.visible{display:inline-flex;}
+#modeMiniBadge:hover{transform:translateY(-2px);}
+#modeMiniBadge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:modeDotPulse 1.5s ease-in-out infinite;}
+@media(max-width:560px){#modePanel{width:170px;}}
 </style>
 </head>
 <body>
@@ -2877,6 +2961,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   window.launchSanatSepet=function(){
     initAudio();
     saveAksStats();
+    if(typeof setActiveMode==='function')setActiveMode('sanat');
     var ov=document.getElementById('aksiyon-overlay');
     var titleEl=document.getElementById('aksiyonTitle');
     var subEl=document.getElementById('aksiyonSub');
@@ -2941,6 +3026,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   window.launchSpor=function(){
     initAudio();
     saveAksStats();
+    if(typeof setActiveMode==='function')setActiveMode('spor');
     var ov=document.getElementById('aksiyon-overlay');
     var titleEl=document.getElementById('aksiyonTitle');
     var subEl=document.getElementById('aksiyonSub');
@@ -3005,6 +3091,7 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   window.launchIsModu=function(){
     initAudio();
     saveAksStats();
+    if(typeof setActiveMode==='function')setActiveMode('is');
     var ov=document.getElementById('aksiyon-overlay');
     var titleEl=document.getElementById('aksiyonTitle');
     var subEl=document.getElementById('aksiyonSub');
@@ -3086,15 +3173,26 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     
     mainText.textContent=greeting+', Nurullah';
     
-    // Günün görevlerini çek
+    // Günün görevlerini + takvim etkinliklerini çek (BUGÜN yapılacaklar)
     var todayStr=getTodayStr();
     var todayTasks=window.state.todos.filter(function(t){return t.dueDate===todayStr;});
+    var todayEvents=(window.state.calEvents||[]).filter(function(e){return e.date===todayStr;})
+      .sort(function(a,b){return (a.time||'')>(b.time||'')?1:(a.time||'')<(b.time||'')?-1:0;});
     
     taskList.innerHTML='';
-    if(todayTasks.length===0){
-      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bugün için görev yok 🎉</div>';
+    if(todayTasks.length===0 && todayEvents.length===0){
+      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bugün için plan yok 🎉 — yeni bir şeyler ekle!</div>';
     }else{
-      todayTasks.slice(0,5).forEach(function(t){
+      // Önce takvim etkinlikleri (randevu/etkinlik)
+      todayEvents.slice(0,4).forEach(function(ev){
+        var div=document.createElement('div');
+        div.className='mood-cal-task';
+        var timeTxt=ev.time?'<span style="color:var(--a3);font-weight:600;margin-right:6px;">'+escapeHTML(ev.time)+'</span>':'';
+        div.innerHTML='<span class="check-icon">📌</span><span>'+timeTxt+escapeHTML(ev.text)+'</span>';
+        taskList.appendChild(div);
+      });
+      // Sonra yapılacak görevler
+      todayTasks.slice(0,6).forEach(function(t){
         var div=document.createElement('div');
         div.className='mood-cal-task'+(t.completed?' done-task':'');
         div.innerHTML='<span class="check-icon">'+(t.completed?'✓':'○')+'</span><span>'+escapeHTML(t.text)+'</span>';
@@ -3202,26 +3300,47 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     
     mainText.textContent='İyi geceler, Nurullah';
     
-    // Bugün tamamlanan görevler
-    var todayStr=getTodayStr();
-    var todayTasks=window.state.todos.filter(function(t){return t.dueDate===todayStr;});
+    // GECE YARISI MANTIĞI:
+    // Saat 00:00–02:59 arası tıklarsan, gün hâlâ "dün" sayılır (henüz yatmadın).
+    // 03:00 ve sonrası tıklarsan bugünün özetini gösterir.
+    var refDate=new Date();
+    if(refDate.getHours()<3){
+      refDate.setDate(refDate.getDate()-1);
+    }
+    var dayStr=refDate.getFullYear()+'-'+String(refDate.getMonth()+1).padStart(2,'0')+'-'+String(refDate.getDate()).padStart(2,'0');
+    
+    // O güne ait görevler ve takvim etkinlikleri
+    var todayTasks=window.state.todos.filter(function(t){return t.dueDate===dayStr;});
+    var dayEvents=(window.state.calEvents||[]).filter(function(e){return e.date===dayStr;})
+      .sort(function(a,b){return (a.time||'')>(b.time||'')?1:(a.time||'')<(b.time||'')?-1:0;});
     var completedToday=todayTasks.filter(function(t){return t.completed}).length;
     var totalToday=todayTasks.length;
     
     taskList.innerHTML='';
-    if(todayTasks.length===0){
-      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bugün görev yazmadın, ama yarın yeni bir gün! 🌙</div>';
+    if(todayTasks.length===0 && dayEvents.length===0){
+      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bu gün için plan yazmamıştın, ama yarın yeni bir gün! 🌙</div>';
     }else{
-      var div=document.createElement('div');
-      div.className='mood-cal-task';
-      div.innerHTML='<span class="check-icon">📊</span><span>'+completedToday+' / '+totalToday+' görev tamamlandı</span>';
-      taskList.appendChild(div);
-      
+      // Özet satırı (görev tamamlama oranı)
+      if(totalToday>0){
+        var div=document.createElement('div');
+        div.className='mood-cal-task';
+        div.innerHTML='<span class="check-icon">📊</span><span>'+completedToday+' / '+totalToday+' görev tamamlandı</span>';
+        taskList.appendChild(div);
+      }
+      // Görevler (yaptığın / yapmadığın)
       todayTasks.slice(0,4).forEach(function(t){
         var taskDiv=document.createElement('div');
         taskDiv.className='mood-cal-task'+(t.completed?' done-task':'');
         taskDiv.innerHTML='<span class="check-icon">'+(t.completed?'✓':'○')+'</span><span>'+escapeHTML(t.text)+'</span>';
         taskList.appendChild(taskDiv);
+      });
+      // Takvim etkinlikleri
+      dayEvents.slice(0,3).forEach(function(ev){
+        var evDiv=document.createElement('div');
+        evDiv.className='mood-cal-task';
+        var timeTxt=ev.time?'<span style="color:var(--a3);font-weight:600;margin-right:6px;">'+escapeHTML(ev.time)+'</span>':'';
+        evDiv.innerHTML='<span class="check-icon">📌</span><span>'+timeTxt+escapeHTML(ev.text)+'</span>';
+        taskList.appendChild(evDiv);
       });
     }
     
@@ -3375,9 +3494,9 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     function animate(){
       var allDone=true;
       reels.forEach(function(reelId,i){
+        var reel=document.getElementById(reelId);
         if(counts[i]<maxCounts[i]){
           allDone=false;
-          var reel=document.getElementById(reelId);
           reel.classList.add('spinning');
           positions[i]+=speeds[i];
           counts[i]++;
@@ -3393,7 +3512,6 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
           strips[i].style.transform='translateY(-'+positions[i]+'px)';
           if(reelId==='reel3')reel.classList.add('spinning');
         }else{
-          var reel=document.getElementById(reelId);
           reel.classList.remove('spinning');
           if(i===2)reel.classList.add('winning');
           strips[i].style.transform='translateY(-'+finalPositions[i]+'px)';
@@ -3757,5 +3875,155 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     </button>
   </div>
 </div>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a061f8b33831f31d',t:'MTc4MDUyNDAzNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<!-- ══ SAĞ KALICI MOD PANELİ ══ -->
+<div id="modePanel">
+  <button class="mode-panel-close" id="modePanelClose" title="Modu kapat">✕</button>
+  <div class="mode-panel-eyebrow">AKTİF MOD</div>
+  <div class="mode-panel-icon" id="modePanelIcon">💼</div>
+  <div class="mode-panel-title" id="modePanelTitle">İş Modu</div>
+  <div class="mode-panel-status"><span class="dot"></span><span id="modePanelStatusText">Şu anda iş modundasın</span></div>
+  <div class="mode-panel-desc" id="modePanelDesc">Odaklan ve başla. Dağılma, hedefe kilitlen.</div>
+  <div class="mode-panel-switch">
+    <button class="mode-switch-btn" data-mode="is" title="İş Modu">💼</button>
+    <button class="mode-switch-btn" data-mode="sanat" title="Sanat Modu">🎨</button>
+    <button class="mode-switch-btn" data-mode="spor" title="Spor Modu">⚽</button>
+  </div>
+  <div class="mode-panel-timer">Süre: <b id="modePanelTimer">00:00</b></div>
+</div>
+<!-- Panel kapalıyken görünen küçük rozet -->
+<div id="modeMiniBadge"><span class="dot"></span><span id="modeMiniIcon">💼</span><span id="modeMiniText">İş Modu</span></div>
+
+<script>
+/* ══ KALICI MOD PANELİ MANTIĞI (İş / Sanat / Spor) ══ */
+(function(){
+  var MODES={
+    is:   {icon:'💼',title:'İş Modu',   status:'Şu anda iş modundasın',   desc:'Odaklan ve başla. Dağılma, hedefe kilitlen.',
+           accent:'linear-gradient(135deg,rgba(124,106,255,.18),rgba(196,109,255,.1))', accent2:'rgba(124,106,255,.22)', border:'#7c6aff', glow:'rgba(124,106,255,.55)'},
+    sanat:{icon:'🎨',title:'Sanat Modu',status:'Şu anda sanat modundasın',desc:'Yarat, dene, ruhunu besle. Sınır yok.',
+           accent:'linear-gradient(135deg,rgba(255,107,138,.18),rgba(196,109,255,.1))', accent2:'rgba(255,107,138,.22)', border:'#ff6b8a', glow:'rgba(255,107,138,.55)'},
+    spor: {icon:'⚽',title:'Spor Modu', status:'Şu anda spor modundasın', desc:'Hareket et, terle, güçlen. Kendine dikkat et.',
+           accent:'linear-gradient(135deg,rgba(255,85,102,.18),rgba(255,140,66,.1))', accent2:'rgba(255,85,102,.22)', border:'#ff5566', glow:'rgba(255,85,102,.55)'}
+  };
+
+  var panel=document.getElementById('modePanel');
+  var miniBadge=document.getElementById('modeMiniBadge');
+  var iconEl=document.getElementById('modePanelIcon');
+  var titleEl=document.getElementById('modePanelTitle');
+  var statusEl=document.getElementById('modePanelStatusText');
+  var descEl=document.getElementById('modePanelDesc');
+  var timerEl=document.getElementById('modePanelTimer');
+  var miniIcon=document.getElementById('modeMiniIcon');
+  var miniText=document.getElementById('modeMiniText');
+
+  var currentMode=null;
+  var startTs=null;
+  var tickInt=null;
+
+  function applyStyleVars(m){
+    var def=MODES[m];
+    [panel,miniBadge].forEach(function(el){
+      el.style.setProperty('--mode-accent',def.accent);
+      el.style.setProperty('--mode-accent2',def.accent2);
+      el.style.setProperty('--mode-border',def.border);
+      el.style.setProperty('--mode-glow',def.glow);
+    });
+  }
+
+  function renderSwitch(){
+    document.querySelectorAll('.mode-switch-btn').forEach(function(b){
+      b.classList.toggle('active',b.getAttribute('data-mode')===currentMode);
+    });
+  }
+
+  function fmtElapsed(ms){
+    var s=Math.floor(ms/1000);
+    var h=Math.floor(s/3600); s-=h*3600;
+    var m=Math.floor(s/60); s-=m*60;
+    function p(n){return String(n).padStart(2,'0');}
+    return h>0?(p(h)+':'+p(m)+':'+p(s)):(p(m)+':'+p(s));
+  }
+
+  function tick(){
+    if(startTs)timerEl.textContent=fmtElapsed(Date.now()-startTs);
+  }
+
+  function save(){
+    try{ localStorage.setItem('activeMode',JSON.stringify({mode:currentMode,startTs:startTs})); }catch(e){}
+  }
+
+  // Global: launcher'lar bunu çağırır
+  window.setActiveMode=function(mode){
+    if(!MODES[mode])return;
+    var changed=(mode!==currentMode);
+    currentMode=mode;
+    if(changed||!startTs)startTs=Date.now();
+    var def=MODES[mode];
+    iconEl.textContent=def.icon;
+    titleEl.textContent=def.title;
+    statusEl.textContent=def.status;
+    descEl.textContent=def.desc;
+    miniIcon.textContent=def.icon;
+    miniText.textContent=def.title;
+    applyStyleVars(mode);
+    renderSwitch();
+    panel.classList.add('visible');
+    miniBadge.classList.remove('visible');
+    if(tickInt)clearInterval(tickInt);
+    tick(); tickInt=setInterval(tick,1000);
+    save();
+  };
+
+  window.closeActiveMode=function(){
+    panel.classList.remove('visible');
+    miniBadge.classList.remove('visible');
+    currentMode=null;startTs=null;
+    if(tickInt){clearInterval(tickInt);tickInt=null;}
+    try{ localStorage.removeItem('activeMode'); }catch(e){}
+  };
+
+  // Paneli küçült (rozet kalır, mod devam eder)
+  function minimize(){
+    panel.classList.remove('visible');
+    if(currentMode)miniBadge.classList.add('visible');
+  }
+  function expand(){
+    if(!currentMode)return;
+    miniBadge.classList.remove('visible');
+    panel.classList.add('visible');
+  }
+
+  // X butonu = modu tamamen kapat (kullanıcı kapatabilsin)
+  document.getElementById('modePanelClose').addEventListener('click',function(e){
+    e.stopPropagation();
+    window.closeActiveMode();
+    if(typeof botSay==='function')botSay('Mod kapatıldı 👋',2200);
+  });
+  // Rozete tıkla = paneli geri aç
+  miniBadge.addEventListener('click',expand);
+  // Panel içindeki mod değiştirme butonları
+  document.querySelectorAll('.mode-switch-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      window.setActiveMode(b.getAttribute('data-mode'));
+    });
+  });
+
+  // Sayfa açılışında kayıtlı modu geri yükle (kalıcı)
+  try{
+    var saved=JSON.parse(localStorage.getItem('activeMode'));
+    if(saved&&saved.mode&&MODES[saved.mode]){
+      currentMode=saved.mode;
+      startTs=saved.startTs||Date.now();
+      var def=MODES[currentMode];
+      iconEl.textContent=def.icon;titleEl.textContent=def.title;
+      statusEl.textContent=def.status;descEl.textContent=def.desc;
+      miniIcon.textContent=def.icon;miniText.textContent=def.title;
+      applyStyleVars(currentMode);renderSwitch();
+      panel.classList.add('visible');
+      tick();tickInt=setInterval(tick,1000);
+    }
+  }catch(e){}
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0620e01696ca5cc',t:'MTc4MDUyNDkwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
