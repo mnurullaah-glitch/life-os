@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>NURULLAH // CLOUD OS</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -1104,7 +1104,7 @@ textarea::placeholder{color:var(--muted);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity 1.2s ease;
-  overflow:hidden;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #geceler-overlay.visible{opacity:1;pointer-events:auto;}
 #geceler-overlay.fade-out{opacity:0;pointer-events:none;}
@@ -1116,7 +1116,7 @@ textarea::placeholder{color:var(--muted);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity 1.2s ease;
-  overflow:hidden;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #gunaydin-overlay.visible{opacity:1;pointer-events:auto;}
 #gunaydin-overlay.fade-out{opacity:0;pointer-events:none;}
@@ -1367,7 +1367,27 @@ textarea::placeholder{color:var(--muted);}
 #modeMiniBadge.visible{display:inline-flex;}
 #modeMiniBadge:hover{transform:translateY(-2px);}
 #modeMiniBadge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:modeDotPulse 1.5s ease-in-out infinite;}
-@media(max-width:560px){#modePanel{width:170px;}}
+
+/* ── MOD PANELİ MOBİL UYUM ── */
+@media(max-width:768px){
+  /* Panel ekranın çoğunu kaplamasın; alttan değil yandan, ama daha dar */
+  #modePanel{width:62vw;max-width:240px;padding:14px 12px;}
+  .mode-panel-icon{font-size:2rem;}
+  .mode-panel-title{font-size:1rem;}
+  .mode-panel-desc{font-size:.68rem;}
+  /* Mini rozet üst bar (56px) ile çakışmasın → bara değil alta koy */
+  #modeMiniBadge{top:auto;bottom:74px;right:12px;}
+}
+@media(max-width:560px){#modePanel{width:70vw;}}
+
+/* ── GÜNAYDIN / İYİ GECELER OVERLAY MOBİL UYUM ── */
+@media(max-width:768px){
+  .mood-content{padding:48px 18px;max-width:100%;}
+  .mood-text-anim{font-size:1.9rem;letter-spacing:2px;margin-bottom:14px;}
+  .mood-sub-text{font-size:.95rem;}
+  .mood-calendar-box{padding:16px 18px;margin-top:20px;}
+  .mood-action-btn{margin-top:18px;padding:12px 26px;}
+}
 </style>
 </head>
 <body>
@@ -2806,75 +2826,141 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     }catch(e){}
   }
 
-  /* ─ GÜNAYDIN melodisi: parlak, yükselen, neşeli "güne başla" jingle'ı ─ */
+  /* ─ GÜNAYDIN melodisi: modern, sıcak, sinematik "şafak" tınısı ─ */
   window.playGunaydinSound = function(){
     try{
       if(!window.sharedAudioCtx) return;
       var ctx = window.sharedAudioCtx;
-      var t0 = ctx.currentTime;
-      function note(freq,start,dur,vol,type){
-        var osc=ctx.createOscillator(),gain=ctx.createGain();
-        osc.connect(gain);gain.connect(ctx.destination);
-        osc.type=type||'triangle';osc.frequency.value=freq;
-        gain.gain.setValueAtTime(.0001,t0+start);
-        gain.gain.linearRampToValueAtTime(vol,t0+start+.04);
-        gain.gain.exponentialRampToValueAtTime(.0001,t0+start+dur);
-        osc.start(t0+start);osc.stop(t0+start+dur+.05);
+      var t0 = ctx.currentTime + .02;
+
+      // Master zincir: bus -> lowpass (yumuşaklık) -> master gain -> çıkış
+      var master = ctx.createGain();
+      master.gain.setValueAtTime(.0001, t0);
+      master.gain.linearRampToValueAtTime(.9, t0 + .15);
+      master.gain.setValueAtTime(.9, t0 + 2.6);
+      master.gain.exponentialRampToValueAtTime(.0001, t0 + 3.6);
+
+      var filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(700, t0);
+      filter.frequency.linearRampToValueAtTime(5200, t0 + .9); // filtre açılışı = "ışık doğuyor"
+      filter.Q.value = .6;
+      filter.connect(master); master.connect(ctx.destination);
+
+      // Stereo genişlik için yumuşak pan desteği (varsa)
+      function makeBus(pan){
+        var g = ctx.createGain();
+        if(ctx.createStereoPanner){ var p=ctx.createStereoPanner(); p.pan.value=pan; g.connect(p); p.connect(filter); }
+        else { g.connect(filter); }
+        return g;
       }
-      // Yumuşak "şafak parıltısı" — yükselen arpej (C-E-G-C-E)
-      var melody=[
-        [523.25,.00,.45,.16],  // C5
-        [659.25,.16,.45,.16],  // E5
-        [783.99,.32,.50,.17],  // G5
-        [1046.50,.50,.70,.18], // C6
-        [1318.51,.74,.95,.15]  // E6 (uzun, parlak final)
+
+      // Yumuşak zarflı, koro (detune) destekli nota
+      function voice(freq, start, dur, vol, type, pan, detune){
+        var bus = makeBus(pan||0);
+        var env = ctx.createGain();
+        env.gain.setValueAtTime(.0001, t0+start);
+        env.gain.linearRampToValueAtTime(vol, t0+start+.06);        // yumuşak atak (tık yok)
+        env.gain.exponentialRampToValueAtTime(.0001, t0+start+dur); // doğal sönüş
+        env.connect(bus);
+        [0, detune||0, -(detune||0)].forEach(function(d,i){
+          if(i>0 && !detune) return;
+          var o=ctx.createOscillator();
+          o.type=type||'triangle'; o.frequency.value=freq;
+          o.detune.value=d;
+          o.connect(env);
+          o.start(t0+start); o.stop(t0+start+dur+.1);
+        });
+      }
+
+      // Cmaj9 ışıltısı — zil/mallet tınısında yumuşak yükselen arpej
+      // C5 - E5 - G5 - B5 - D6 (maj9), her nota stereo'da hafif kayar
+      var arp=[
+        [523.25,.00,1.7,.18,'triangle',-.35,6],
+        [659.25,.13,1.6,.17,'triangle',-.15,6],
+        [783.99,.26,1.6,.17,'triangle', .1, 7],
+        [987.77,.40,1.5,.15,'sine',     .25,7],
+        [1174.66,.55,1.7,.16,'sine',    .4, 8]
       ];
-      melody.forEach(function(n){
-        note(n[0],n[1],n[2],n[3],'triangle');
-        note(n[0]*2,n[1],n[2]*.6,n[3]*.25,'sine'); // üst oktav parlaklık
+      arp.forEach(function(n){ voice(n[0],n[1],n[2],n[3],n[4],n[5],n[6]); });
+
+      // Üstte zarif "shimmer" — çok kısık, yüksek parıltılar (kristal his)
+      [1567.98, 2093.00, 2637.02].forEach(function(f,i){
+        voice(f, .7 + i*.12, .9, .045, 'sine', (i-1)*.4, 0);
       });
-      // Hafif "ışıltı" yüksek tınılar (kuş cıvıltısı hissi)
-      [1568,1760,2093].forEach(function(f,i){
-        note(f,.95+i*.09,.18,.05,'sine');
-      });
-      // Sıcak bas zemin
-      note(130.81,0,1.8,.06,'sine'); // C3 pad
+
+      // Sıcak pad zemini — C3 + G3 yumuşakça şişer (sinematik altyapı)
+      voice(130.81, 0, 3.2, .12, 'sine', 0, 4);   // C3
+      voice(196.00, .05, 3.0, .08, 'sine', 0, 4); // G3
     }catch(e){}
   }
 
-  /* ─ İYİ GECELER melodisi: yumuşak, alçalan, sakin "ninni" tınısı ─ */
+  /* ─ İYİ GECELER melodisi: modern, rüya gibi, yumuşak "uyku" tınısı ─ */
   window.playGecelerSound = function(){
     try{
       if(!window.sharedAudioCtx) return;
       var ctx = window.sharedAudioCtx;
-      var t0 = ctx.currentTime;
-      function note(freq,start,dur,vol,type){
-        var osc=ctx.createOscillator(),gain=ctx.createGain();
-        osc.connect(gain);gain.connect(ctx.destination);
-        osc.type=type||'sine';osc.frequency.value=freq;
-        gain.gain.setValueAtTime(.0001,t0+start);
-        gain.gain.linearRampToValueAtTime(vol,t0+start+.08);
-        gain.gain.exponentialRampToValueAtTime(.0001,t0+start+dur);
-        osc.start(t0+start);osc.stop(t0+start+dur+.05);
+      var t0 = ctx.currentTime + .02;
+
+      var master = ctx.createGain();
+      master.gain.setValueAtTime(.0001, t0);
+      master.gain.linearRampToValueAtTime(.85, t0 + .25);
+      master.gain.setValueAtTime(.85, t0 + 3.2);
+      master.gain.exponentialRampToValueAtTime(.0001, t0 + 4.4);
+
+      // Kapalı, sıcak filtre — yüksekleri yumuşatır, "loş ışık" hissi
+      var filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2600, t0);
+      filter.frequency.linearRampToValueAtTime(900, t0 + 4.0); // yavaşça karararak söner
+      filter.Q.value = .5;
+      filter.connect(master); master.connect(ctx.destination);
+
+      function makeBus(pan){
+        var g = ctx.createGain();
+        if(ctx.createStereoPanner){ var p=ctx.createStereoPanner(); p.pan.value=pan; g.connect(p); p.connect(filter); }
+        else { g.connect(filter); }
+        return g;
       }
-      // Sakin, alçalan melodi (G-E-C-G) — uyku öncesi huzur
+      function voice(freq, start, dur, vol, type, pan, detune){
+        var bus = makeBus(pan||0);
+        var env = ctx.createGain();
+        env.gain.setValueAtTime(.0001, t0+start);
+        env.gain.linearRampToValueAtTime(vol, t0+start+.12);  // çok yumuşak atak (ninni)
+        env.gain.exponentialRampToValueAtTime(.0001, t0+start+dur);
+        env.connect(bus);
+        [0, detune||0, -(detune||0)].forEach(function(d,i){
+          if(i>0 && !detune) return;
+          var o=ctx.createOscillator();
+          o.type=type||'sine'; o.frequency.value=freq;
+          o.detune.value=d;
+          o.connect(env);
+          o.start(t0+start); o.stop(t0+start+dur+.1);
+        });
+      }
+
+      // Alçalan, dingin melodi — Fmaj7 hissi (huzurlu uyku)
+      // D5 - A4 - F4 - C4, uzun ve yumuşak, hafif stereo salınım
       var melody=[
-        [783.99,.00,.80,.14],  // G5
-        [659.25,.40,.85,.14],  // E5
-        [523.25,.85,.95,.15],  // C5
-        [392.00,1.35,1.40,.15] // G4 (uzun, dingin kapanış)
+        [587.33,.00,2.0,.15,'sine',-.3, 5],  // D5
+        [440.00,.55,2.1,.15,'sine', .25,5],  // A4
+        [349.23,1.15,2.3,.15,'sine',-.2, 6], // F4
+        [261.63,1.8,2.6,.16,'sine', .15,6]   // C4 (dingin kapanış)
       ];
       melody.forEach(function(n){
-        note(n[0],n[1],n[2],n[3],'sine');
-        note(n[0]*1.5,n[1]+.02,n[2]*.5,n[3]*.18,'triangle'); // hafif beşli harmoni
+        voice(n[0],n[1],n[2],n[3],'sine',n[4],n[5]);
+        voice(n[0]*2,n[1]+.03,n[2]*.55,n[3]*.12,'sine',n[4]*-1,0); // hafif üst oktav ışıltı
       });
-      // Derin, sıcak gece pad'i (yavaş sönen)
-      note(98,0,2.6,.07,'sine');    // G2
-      note(146.83,.1,2.4,.05,'sine'); // D3
-      // En sonda tek bir "yıldız" parıltısı
-      note(1174.66,1.7,.5,.04,'sine'); // D6 fısıltı
+
+      // Derin, sıcak gece pad'i — F2 + C3 yavaşça nefes alır
+      voice(87.31, 0, 4.0, .12, 'sine', 0, 3);   // F2
+      voice(130.81,.1, 3.8, .09, 'triangle', 0, 4); // C3
+
+      // En sonda tek bir uzak "yıldız" fısıltısı
+      voice(1046.50, 2.6, 1.4, .04, 'sine', .3, 0); // C6
     }catch(e){}
   }
+
 
 
  /* ─ video carousel için başlangıç ─ */
@@ -4135,5 +4221,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0623df4aa346117',t:'MTc4MDUyNjg3MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06245f238516117',t:'MTc4MDUyNzE5OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
