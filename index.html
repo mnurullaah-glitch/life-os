@@ -66,7 +66,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .top-logo{font-size:.8rem;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
 .top-logo-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:0 0 12px var(--g1);animation:dotPulse 2s ease-in-out infinite;flex-shrink:0;}
 @keyframes dotPulse{0%,100%{box-shadow:0 0 12px var(--g1)}50%{box-shadow:0 0 24px var(--g1),0 0 48px rgba(124,106,255,.15)}}
-nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1;margin:0 16px;}
+nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;scrollbar-width:none;flex:1;margin:0 16px;}
 nav::-webkit-scrollbar{display:none;}
 .tab-btn{position:relative;overflow:hidden;padding:8px 16px;border-radius:32px;border:none;font-size:.78rem;font-weight:500;color:var(--muted);cursor:pointer;background:transparent;transition:all .35s cubic-bezier(.23,1,.32,1);letter-spacing:.3px;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .tab-btn::before{content:'';position:absolute;inset:0;border-radius:32px;background:linear-gradient(135deg,var(--a1),var(--a2));opacity:0;transition:opacity .35s ease;}
@@ -534,12 +534,12 @@ textarea::placeholder{color:var(--muted);}
 }
 @media(max-width:768px){
   /* TOP BAR — single row with scrollable nav */
-  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:8px;overflow:hidden;}
+  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:8px;overflow:visible;}
   .top-logo{font-size:.72rem;letter-spacing:1px;gap:6px;}
   .top-logo span{display:none;}
   .top-right{display:none;}
-  nav{flex:1;margin:0;padding:4px;border-radius:28px;min-width:0;}
-  .tab-btn{padding:6px 11px;font-size:.7rem;}
+  nav{flex:1 1 0;margin:0;padding:4px;border-radius:28px;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);}
+  .tab-btn{padding:6px 11px;font-size:.7rem;flex:0 0 auto;}
   main{margin:12px auto 60px;padding:0 10px;}
   .glass-panel{padding:16px 14px;}
   .todo-layout{grid-template-columns:1fr;}
@@ -2158,6 +2158,8 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
     document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
     this.classList.add('active');var t=document.getElementById(name);if(t)t.classList.add('active');
     if(name==='calendar'){renderCalendar();renderMiniCal();}
+    // Mobilde: tıklanan sekmeyi nav içinde görünür alana kaydır
+    try{ if(this.scrollIntoView)this.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}); }catch(e){}
   });
 });
 
@@ -4239,5 +4241,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a062526338dc132c',t:'MTc4MDUyNzcwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06259c8ba4c96cc',t:'MTc4MDUyODAxMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
