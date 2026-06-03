@@ -2904,15 +2904,16 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
 
       var master = ctx.createGain();
       master.gain.setValueAtTime(.0001, t0);
-      master.gain.linearRampToValueAtTime(.85, t0 + .25);
-      master.gain.setValueAtTime(.85, t0 + 3.2);
+      master.gain.linearRampToValueAtTime(1.0, t0 + .25);
+      master.gain.setValueAtTime(1.0, t0 + 3.2);
       master.gain.exponentialRampToValueAtTime(.0001, t0 + 4.4);
 
-      // Kapalı, sıcak filtre — yüksekleri yumuşatır, "loş ışık" hissi
+      // Sıcak ama "loş" filtre — yüksekleri yumuşatır, fakat telefon hoparlörü
+      // için yeterli orta-tiz bırakır (çok aşağı kapanmaz)
       var filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(2600, t0);
-      filter.frequency.linearRampToValueAtTime(900, t0 + 4.0); // yavaşça karararak söner
+      filter.frequency.setValueAtTime(3400, t0);
+      filter.frequency.linearRampToValueAtTime(1700, t0 + 4.0); // yavaşça yumuşar ama duyulur kalır
       filter.Q.value = .5;
       filter.connect(master); master.connect(ctx.destination);
 
@@ -2940,24 +2941,24 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
       }
 
       // Alçalan, dingin melodi — Fmaj7 hissi (huzurlu uyku)
-      // D5 - A4 - F4 - C4, uzun ve yumuşak, hafif stereo salınım
+      // Bir oktav YUKARI taşındı (telefon hoparlöründe duyulsun): D5-A4-F4-C5
       var melody=[
-        [587.33,.00,2.0,.15,'sine',-.3, 5],  // D5
-        [440.00,.55,2.1,.15,'sine', .25,5],  // A4
-        [349.23,1.15,2.3,.15,'sine',-.2, 6], // F4
-        [261.63,1.8,2.6,.16,'sine', .15,6]   // C4 (dingin kapanış)
+        [587.33,.00,2.0,.20,'triangle',-.3, 5],  // D5
+        [440.00,.55,2.1,.20,'triangle', .25,5],  // A4
+        [349.23,1.15,2.3,.20,'triangle',-.2, 6], // F4
+        [523.25,1.8,2.6,.22,'triangle', .15,6]   // C5 (dingin, parlak kapanış)
       ];
       melody.forEach(function(n){
-        voice(n[0],n[1],n[2],n[3],'sine',n[4],n[5]);
-        voice(n[0]*2,n[1]+.03,n[2]*.55,n[3]*.12,'sine',n[4]*-1,0); // hafif üst oktav ışıltı
+        voice(n[0],n[1],n[2],n[3],n[4],n[5],n[6]);
+        voice(n[0]*2,n[1]+.03,n[2]*.55,n[3]*.22,'sine',n[4]*-1,0); // üst oktav ışıltı (telefon için belirginlik)
       });
 
-      // Derin, sıcak gece pad'i — F2 + C3 yavaşça nefes alır
-      voice(87.31, 0, 4.0, .12, 'sine', 0, 3);   // F2
-      voice(130.81,.1, 3.8, .09, 'triangle', 0, 4); // C3
+      // Sıcak gece pad'i — telefon için biraz daha yukarıda (C4 + G3)
+      voice(261.63, 0, 4.0, .14, 'triangle', 0, 4);  // C4
+      voice(196.00, .1, 3.8, .10, 'triangle', 0, 4); // G3
 
-      // En sonda tek bir uzak "yıldız" fısıltısı
-      voice(1046.50, 2.6, 1.4, .04, 'sine', .3, 0); // C6
+      // En sonda yumuşak "yıldız" fısıltısı (parlak tiz, her cihazda duyulur)
+      voice(1046.50, 2.6, 1.5, .07, 'sine', .3, 0); // C6
     }catch(e){}
   }
 
@@ -4221,5 +4222,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06245f238516117',t:'MTc4MDUyNzE5OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0624bbbdbebddf3',t:'MTc4MDUyNzQzNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
