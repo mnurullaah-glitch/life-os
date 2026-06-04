@@ -777,6 +777,11 @@ textarea::placeholder{color:var(--muted);}
 }
 .eylem-geceler .eylem-glow{background:radial-gradient(circle at center,rgba(79,209,255,.2) 0%,transparent 70%);}
 
+/* Anlık */
+.eylem-anlik{background:linear-gradient(135deg,rgba(79,209,255,.15) 0%,rgba(124,106,255,.1) 100%);border-color:rgba(79,209,255,.3);box-shadow:0 4px 30px rgba(79,209,255,.15);}
+.eylem-anlik:hover{border-color:rgba(79,209,255,.6);box-shadow:0 8px 40px rgba(79,209,255,.3),0 0 60px rgba(79,209,255,.15);}
+.eylem-anlik .eylem-glow{background:radial-gradient(circle at center,rgba(79,209,255,.2) 0%,transparent 70%);}
+
 .eylem-btn:hover .eylem-glow{opacity:1;}
 
 /* Slot Container */
@@ -1349,6 +1354,17 @@ body{transition:background .8s ease,color .8s ease;}
 /* Sync */
 .beast-sync-inline{display:flex;align-items:center;gap:6px;font-size:.62rem;color:rgba(255,200,200,.4);letter-spacing:.5px;margin-left:auto;}
 .beast-sync-dot{width:5px;height:5px;border-radius:50%;background:#22d3a0;flex-shrink:0;animation:blink 2.5s ease-in-out infinite;}
+/* ══════════════ GOD MODE MINI PANEL ══════════════ */
+.beast-mini-panel{position:fixed;z-index:9003;top:80px;right:18px;width:260px;background:rgba(20,3,3,.92);backdrop-filter:blur(24px);border:1px solid rgba(255,26,26,.35);border-radius:16px;padding:14px 16px;box-shadow:0 8px 48px rgba(0,0,0,.6),0 0 60px rgba(255,26,26,.15);transform:translateX(140%);opacity:0;transition:transform .55s cubic-bezier(.23,1,.32,1),opacity .4s ease;pointer-events:none;}
+body.beast-mode .beast-mini-panel{transform:translateX(0);opacity:1;pointer-events:auto;}
+.beast-mini-header{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--beast-primary);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.beast-mini-goal{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,26,26,.06);border:1px solid rgba(255,26,26,.2);border-radius:8px;color:#ffeaea;font-size:.78rem;margin-bottom:6px;}
+.beast-mini-goal .goal-num{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,rgba(255,26,26,.4),rgba(255,77,77,.3));display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0;}
+.beast-mini-empty{font-size:.72rem;color:rgba(255,200,200,.4);text-align:center;padding:8px 0;}
+@media(max-width:768px){
+  .beast-mini-panel{top:auto;bottom:20px;right:12px;left:12px;width:auto;transform:translateY(140%);transition:transform .55s cubic-bezier(.23,1,.32,1),opacity .4s ease;}
+  body.beast-mode .beast-mini-panel{transform:translateY(0);}
+}
 /* ══════════════ ALL IN ONE / BEAST MODE END ══════════════ */
 </style>
 </head>
@@ -1923,6 +1939,14 @@ body{transition:background .8s ease,color .8s ease;}
         <div class="eylem-icon">🌙</div>
         <div class="eylem-label">İyi geceler, Nurullah</div>
         <div class="eylem-sub">Günü değerlendir</div>
+        <div class="eylem-glow"></div>
+      </button>
+      
+      <!-- Anlık -->
+      <button class="eylem-btn eylem-anlik" onclick="launchAksiyon()">
+        <div class="eylem-icon">⏱️</div>
+        <div class="eylem-label">Anlık</div>
+        <div class="eylem-sub">5 saniye odaklan</div>
         <div class="eylem-glow"></div>
       </button>
       
@@ -3975,6 +3999,28 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     if(beastGoalsWrap)beastGoalsWrap.style.display=(beastActive && beastSecondsLeft===0)?'none':'flex';
     if(beastLockedGoals)beastLockedGoals.style.display=(beastActive && beastSecondsLeft===0)?'block':'none';
     if(beastLockedGoals && beastSecondsLeft===0)renderLockedGoals();
+    renderMiniPanel();
+  }
+  
+  function renderMiniPanel(){
+    var panel=document.getElementById('beastMiniPanel');
+    var list=document.getElementById('beastMiniGoals');
+    if(!panel||!list)return;
+    if(!beastActive){panel.style.display='none';return;}
+    panel.style.display='';
+    list.innerHTML='';
+    var hasAny=false;
+    beastGoals.forEach(function(g,idx){
+      if(!g)return;
+      hasAny=true;
+      var div=document.createElement('div');
+      div.className='beast-mini-goal';
+      div.innerHTML='<span class="goal-num">'+(idx+1)+'</span><span>'+g+'</span>';
+      list.appendChild(div);
+    });
+    if(!hasAny){
+      list.innerHTML='<div class="beast-mini-empty">Hedef belirlenmedi</div>';
+    }
   }
   
   function activateBeastMode(){
@@ -4041,6 +4087,7 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     inp.addEventListener('input',function(){
       beastGoals[idx]=this.value;
       saveBeastState();
+      renderMiniPanel();
     });
   });
   
@@ -4100,6 +4147,13 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
 })();
 /* ══════════════ BEAST MODE JS END ══════════════ */
 </script>
+
+<!-- ══════════════ GOD MODE MINI PANEL ══════════════ -->
+<div id="beastMiniPanel" class="beast-mini-panel">
+  <div class="beast-mini-header">🔥 GOD MODE</div>
+  <div id="beastMiniGoals" class="beast-mini-goals"></div>
+</div>
+<!-- ══════════════ GOD MODE MINI PANEL END ══════════════ -->
 
 </body>
 </html>
