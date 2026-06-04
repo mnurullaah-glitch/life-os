@@ -2043,12 +2043,32 @@ auth.onAuthStateChanged(function(user){
   if(user){loginScreen.style.opacity='0';setTimeout(function(){loginScreen.style.display='none';introScreen.style.display='flex';introScreen.classList.remove('hidden');},800);loadFromCloud();}
   else{introScreen.style.display='none';loginScreen.style.display='flex';loginScreen.style.opacity='1';}
 });
+if(loginBtn){
 loginBtn.addEventListener('click',function(){
   var email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
-  if(!email||!pass)return;loginBtn.textContent='BEKLEYİN...';loginError.style.display='none';
-  auth.signInWithEmailAndPassword(email,pass).then(function(){loginBtn.textContent='GİRİŞ YAP';}).catch(function(error){loginError.style.display='block'; loginError.textContent = "Hata: " + error.message;loginBtn.textContent='GİRİŞ YAP';console.log(error);});
+  if(!email||!pass){
+    loginError.style.display='block';
+    loginError.textContent='E-posta ve şifre boş bırakılamaz.';
+    return;
+  }
+  loginBtn.textContent='BEKLEYİN...';
+  loginBtn.disabled=true;
+  loginError.style.display='none';
+  auth.signInWithEmailAndPassword(email,pass)
+    .then(function(){ loginBtn.textContent='GİRİŞ YAP'; loginBtn.disabled=false; })
+    .catch(function(error){
+      loginError.style.display='block';
+      loginError.textContent='Hata: '+error.message;
+      loginBtn.textContent='GİRİŞ YAP';
+      loginBtn.disabled=false;
+      console.error('Giriş hatası:',error);
+    });
 });
-document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')loginBtn.click();});
+}
+var loginPassEl=document.getElementById('loginPass');
+if(loginPassEl){
+loginPassEl.addEventListener('keydown',function(e){if(e.key==='Enter'&&loginBtn)loginBtn.click();});
+}
 
 /* ══ INTRO ══ */
 var launchPhase=document.getElementById('launchPhase'),greetingPhase=document.getElementById('greetingPhase'),launchBtn=document.getElementById('launchBtn'),bgVideo=document.getElementById('bgVideo');
@@ -3500,10 +3520,13 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
         clearInterval(timerInterval);
         resultTimer.textContent='✓';
         resultTimer.style.background='linear-gradient(135deg,#22d3a0 0%,#4fd1ff 100%)';
-        -webkit-background-clip='text';
+        resultTimer.style.webkitBackgroundClip='text';
+        resultTimer.style.webkitTextFillColor='transparent';
         setTimeout(function(){
           resultDiv.classList.remove('visible');
           resultTimer.style.background='';
+          resultTimer.style.webkitBackgroundClip='';
+          resultTimer.style.webkitTextFillColor='';
           initSlotMachine();
         },2000);
       }
