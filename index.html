@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>NURULLAH // CLOUD OS</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -66,7 +66,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .top-logo{font-size:.8rem;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
 .top-logo-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));box-shadow:0 0 12px var(--g1);animation:dotPulse 2s ease-in-out infinite;flex-shrink:0;}
 @keyframes dotPulse{0%,100%{box-shadow:0 0 12px var(--g1)}50%{box-shadow:0 0 24px var(--g1),0 0 48px rgba(124,106,255,.15)}}
-nav{display:flex;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1;margin:0 16px;}
+nav{display:flex;flex-wrap:nowrap;gap:4px;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:40px;padding:5px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;scrollbar-width:none;flex:1;margin:0 16px;cursor:grab;}
+nav:active{cursor:grabbing;}
 nav::-webkit-scrollbar{display:none;}
 .tab-btn{position:relative;overflow:hidden;padding:8px 16px;border-radius:32px;border:none;font-size:.78rem;font-weight:500;color:var(--muted);cursor:pointer;background:transparent;transition:all .35s cubic-bezier(.23,1,.32,1);letter-spacing:.3px;font-family:inherit;white-space:nowrap;flex-shrink:0;}
 .tab-btn::before{content:'';position:absolute;inset:0;border-radius:32px;background:linear-gradient(135deg,var(--a1),var(--a2));opacity:0;transition:opacity .35s ease;}
@@ -526,17 +527,20 @@ textarea::placeholder{color:var(--muted);}
 @media(max-width:900px){
   .dashboard-grid{grid-template-columns:1fr;}
   .cal-layout{grid-template-columns:1fr;}
-  .cal-side{display:none;}
+  /* Mobilde sağ paneli gizleme — takvimin ALTINA al ki güne basınca açılsın */
+  .cal-side{display:flex;}
+  /* Mobilde mini-takvim gereksiz (ana takvim zaten var) → gizle */
+  .cal-side .mini-cal{display:none;}
   .showcase-card{height:350px;}
 }
 @media(max-width:768px){
   /* TOP BAR — single row with scrollable nav */
-  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:8px;overflow:hidden;}
+  .top-bar{flex-direction:row;flex-wrap:nowrap;height:56px;padding:0 10px;gap:8px;overflow:visible;}
   .top-logo{font-size:.72rem;letter-spacing:1px;gap:6px;}
   .top-logo span{display:none;}
   .top-right{display:none;}
-  nav{flex:1;margin:0;padding:4px;border-radius:28px;min-width:0;}
-  .tab-btn{padding:6px 11px;font-size:.7rem;}
+  nav{flex:1 1 0;margin:0;padding:4px;border-radius:28px;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%);}
+  .tab-btn{padding:6px 11px;font-size:.7rem;flex:0 0 auto;}
   main{margin:12px auto 60px;padding:0 10px;}
   .glass-panel{padding:16px 14px;}
   .todo-layout{grid-template-columns:1fr;}
@@ -548,7 +552,13 @@ textarea::placeholder{color:var(--muted);}
   .vibe-grid{grid-template-columns:1fr;}
   #bot{bottom:14px;right:12px;}
   #bot-svg{width:52px;height:52px;}
-  .cal-days .cal-day{min-height:55px;}
+  .cal-days .cal-day{min-height:55px;touch-action:manipulation;}
+  .cal-day,.dash-mini-day,.mini-day-cell{touch-action:manipulation;-webkit-tap-highlight-color:rgba(124,106,255,.25);}
+  /* Seçili gün hücresi mobilde net belli olsun */
+  .cal-day.selected{box-shadow:0 0 0 2px rgba(124,106,255,.6);}
+  /* Mobilde seçili-gün paneli takvimin altında güzel dursun */
+  .cal-side{margin-top:14px;}
+  .cal-selected-day{border:1px solid rgba(124,106,255,.25);border-radius:14px;padding:14px;background:rgba(124,106,255,.04);}
   .dashboard-grid{grid-template-columns:1fr;}
 
   /* INTRO TEXT MOBILE FIXES */
@@ -728,6 +738,18 @@ textarea::placeholder{color:var(--muted);}
   box-shadow:0 8px 40px rgba(124,106,255,.3),0 0 60px rgba(124,106,255,.15);
 }
 .eylem-is .eylem-glow{background:radial-gradient(circle at center,rgba(124,106,255,.2) 0%,transparent 70%);}
+
+/* Anlık İş (teal/cyan ton, moddan ayrı dursun) */
+.eylem-anlik{
+  background:linear-gradient(135deg,rgba(34,211,160,.15) 0%,rgba(79,209,255,.1) 100%);
+  border-color:rgba(34,211,160,.3);
+  box-shadow:0 4px 30px rgba(34,211,160,.15);
+}
+.eylem-anlik:hover{
+  border-color:rgba(34,211,160,.6);
+  box-shadow:0 8px 40px rgba(34,211,160,.3),0 0 60px rgba(34,211,160,.15);
+}
+.eylem-anlik .eylem-glow{background:radial-gradient(circle at center,rgba(34,211,160,.2) 0%,transparent 70%);}
 
 /* Sanat Sepet */
 .eylem-sanat{
@@ -1104,7 +1126,7 @@ textarea::placeholder{color:var(--muted);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity 1.2s ease;
-  overflow:hidden;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #geceler-overlay.visible{opacity:1;pointer-events:auto;}
 #geceler-overlay.fade-out{opacity:0;pointer-events:none;}
@@ -1116,7 +1138,7 @@ textarea::placeholder{color:var(--muted);}
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
   transition:opacity 1.2s ease;
-  overflow:hidden;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #gunaydin-overlay.visible{opacity:1;pointer-events:auto;}
 #gunaydin-overlay.fade-out{opacity:0;pointer-events:none;}
@@ -1284,67 +1306,110 @@ textarea::placeholder{color:var(--muted);}
   transition:left .6s ease;
 }
 .aksiyon-trigger-btn:hover::after{left:100%;}
-/* ══════════════ ALL IN ONE / BEAST MODE ══════════════ */
-:root{--beast-primary:#ff1a1a;--beast-secondary:#ff4d4d;--beast-accent:#ff8080;--beast-glow:rgba(255,26,26,.35);}
-body.beast-mode{--bg:#0f0202;--border:rgba(255,26,26,.18);--text:#ffeaea;--muted:rgba(255,200,200,.45);--a1:#ff1a1a;--a2:#ff4d4d;--a3:#ff8080;--ok:#ff5566;--err:#ff1a1a;--warn:#ffb432;--g1:rgba(255,26,26,.35);}
-body.beast-mode .aurora{background:linear-gradient(135deg,#0f0202 0%,#2a0505 25%,#0f0202 50%,#1a0606 75%,#0f0202 100%);}
-body.beast-mode .top-bar{background:rgba(15,2,2,.78);border-bottom:1px solid rgba(255,26,26,.25);}
-body.beast-mode .glass-panel,body.beast-mode .dash-cal-widget,body.beast-mode .widget-card,body.beast-mode .fitness-widget,body.beast-mode .vibe-widget,body.beast-mode .showcase-card,body.beast-mode .login-panel,body.beast-mode .cal-selected-day,body.beast-mode .mini-cal,body.beast-mode .quote-box{background:rgba(255,20,20,.025);border-color:rgba(255,26,26,.22);box-shadow:0 4px 32px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.03);}
-body.beast-mode .glass-panel::before,body.beast-mode .dash-cal-widget::before,body.beast-mode .widget-card::before{background:linear-gradient(90deg,transparent,rgba(255,26,26,.5),rgba(255,77,77,.45),rgba(255,128,128,.3),transparent);}
-body.beast-mode .panel-icon{background:linear-gradient(135deg,rgba(255,26,26,.25),rgba(255,77,77,.2));border-color:rgba(255,26,26,.35);}
-body.beast-mode .panel-badge{background:rgba(255,26,26,.15);border-color:rgba(255,26,26,.3);color:var(--beast-primary);}
-body.beast-mode .todo-filter-btn.active{color:var(--beast-primary);border-bottom-color:var(--beast-primary);background:rgba(255,26,26,.06);}
-body.beast-mode .progress-fill{background:linear-gradient(90deg,var(--beast-primary),var(--beast-secondary));box-shadow:0 0 8px var(--beast-glow);}
-body.beast-mode .tab-btn.active{color:#fff;box-shadow:0 0 20px rgba(255,26,26,.3);}
-body.beast-mode .tab-btn.active::before{opacity:1;background:linear-gradient(135deg,var(--beast-primary),var(--beast-secondary));}
-body.beast-mode .aksiyon-trigger-btn{border-color:rgba(255,26,26,.5);background:linear-gradient(135deg,rgba(255,26,26,.12),rgba(255,77,77,.1),rgba(255,128,128,.08));box-shadow:0 0 30px rgba(255,26,26,.2);}
-body.beast-mode .aksiyon-btn-icon{background:linear-gradient(135deg,var(--beast-primary),var(--beast-secondary));box-shadow:0 0 10px rgba(255,26,26,.6);}
-body.beast-mode .eylem-btn.eylem-is{background:linear-gradient(135deg,rgba(255,26,26,.15) 0%,rgba(255,77,77,.1) 100%);border-color:rgba(255,26,26,.3);box-shadow:0 4px 30px rgba(255,26,26,.15);}
-body.beast-mode .eylem-btn.eylem-is:hover{border-color:rgba(255,26,26,.6);box-shadow:0 8px 40px rgba(255,26,26,.3),0 0 60px rgba(255,26,26,.15);}
-body.beast-mode .eylem-glow{background:radial-gradient(circle at center,rgba(255,26,26,.2) 0%,transparent 70%)!important;}
-body.beast-mode #bot-svg{filter:drop-shadow(0 0 16px rgba(255,26,26,.6));}
-body.beast-mode #bot-bubble{border-color:rgba(255,26,26,.55);box-shadow:0 0 28px rgba(255,26,26,.3),0 4px 20px rgba(0,0,0,.6);}
-body{transition:background .8s ease,color .8s ease;}
-.glass-panel,.dash-cal-widget,.widget-card,.fitness-widget,.vibe-widget,.top-bar,.todo-item-row,.mood-btn,.eylem-btn{transition:background .6s ease,border-color .6s ease,box-shadow .6s ease;}
-.aksiyon-trigger-btn,.tab-btn,.panel-icon,.panel-badge{transition:all .6s ease;}
-.beast-toggle{position:fixed;z-index:9001;bottom:22px;right:22px;width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,26,26,.45);background:linear-gradient(135deg,rgba(255,26,26,.18),rgba(255,77,77,.12));backdrop-filter:blur(14px);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 24px rgba(255,26,26,.25),inset 0 1px 0 rgba(255,255,255,.06);transition:all .45s cubic-bezier(.23,1,.32,1);}
-.beast-toggle:hover{transform:scale(1.1) rotate(-8deg);border-color:rgba(255,26,26,.8);box-shadow:0 0 40px rgba(255,26,26,.4);}
-.beast-toggle.on{background:linear-gradient(135deg,rgba(255,26,26,.35),rgba(255,77,77,.25));animation:beastPulse 2s ease-in-out infinite;}
-@keyframes beastPulse{0%,100%{box-shadow:0 0 24px rgba(255,26,26,.25)}50%{box-shadow:0 0 48px rgba(255,26,26,.5),0 0 80px rgba(255,26,26,.2)}}
-.beast-panel{position:fixed;z-index:9002;top:80px;right:18px;width:320px;max-width:calc(100vw - 36px);background:rgba(20,3,3,.92);backdrop-filter:blur(24px);border:1px solid rgba(255,26,26,.35);border-radius:20px;padding:20px;box-shadow:0 8px 48px rgba(0,0,0,.6),0 0 60px rgba(255,26,26,.15);transform:translateX(130%);opacity:0;transition:transform .55s cubic-bezier(.23,1,.32,1),opacity .4s ease;pointer-events:none;}
-.beast-panel.open{transform:translateX(0);opacity:1;pointer-events:auto;}
-.beast-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,26,26,.7),rgba(255,77,77,.5),transparent);}
-.beast-panel-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,26,26,.18);}
-.beast-panel-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:linear-gradient(135deg,rgba(255,26,26,.25),rgba(255,77,77,.2));border:1px solid rgba(255,26,26,.35);}
-.beast-panel-title{font-size:.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,200,200,.65);flex:1;}
-.beast-close-btn{background:none;border:none;color:rgba(255,200,200,.5);font-size:1.1rem;cursor:pointer;padding:2px 6px;border-radius:6px;transition:all .2s;}
-.beast-close-btn:hover{color:#fff;background:rgba(255,26,26,.2);}
-.beast-status{font-size:.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--beast-primary);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
-.beast-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--beast-primary);box-shadow:0 0 8px var(--beast-primary);animation:beastDotBlink 1.4s ease-in-out infinite;}
-@keyframes beastDotBlink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.beast-input-wrap{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.beast-input{width:100%;padding:10px 12px;background:rgba(255,26,26,.06);border:1px solid rgba(255,26,26,.25);border-radius:10px;color:#ffeaea;font-size:.85rem;font-family:inherit;outline:none;transition:all .25s ease;}
-.beast-input:focus{border-color:rgba(255,26,26,.7);background:rgba(255,26,26,.1);box-shadow:0 0 12px rgba(255,26,26,.15);}
-.beast-input::placeholder{color:rgba(255,200,200,.35);}
-.beast-timer-wrap{text-align:center;padding:14px;background:rgba(255,26,26,.06);border:1px solid rgba(255,26,26,.2);border-radius:14px;margin-bottom:14px;position:relative;overflow:hidden;}
-.beast-timer-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,26,26,.12) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none;}
-.beast-timer-wrap.ticking::before{opacity:1;}
-.beast-timer-label{font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,200,200,.45);margin-bottom:6px;}
-.beast-timer-num{font-size:2.6rem;font-weight:200;line-height:1;background:linear-gradient(135deg,#fff 0%,#ff4d4d 50%,#ff1a1a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-variant-numeric:tabular-nums;transition:transform .15s ease;}
-.beast-timer-num.tick{transform:scale(1.08);}
-.beast-timer-sub{font-size:.72rem;color:rgba(255,200,200,.5);margin-top:4px;}
-.beast-actions{display:flex;gap:8px;}
-.beast-btn{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,26,26,.3);background:rgba(255,26,26,.1);color:#ffeaea;font-family:inherit;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .25s ease;letter-spacing:.5px;}
-.beast-btn:hover{background:rgba(255,26,26,.2);border-color:rgba(255,26,26,.6);transform:translateY(-1px);}
-.beast-btn.primary{background:linear-gradient(135deg,rgba(255,26,26,.35),rgba(255,77,77,.25));border-color:rgba(255,26,26,.5);}
-.beast-btn.primary:hover{background:linear-gradient(135deg,rgba(255,26,26,.5),rgba(255,77,77,.4));}
-.beast-sync{display:flex;align-items:center;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,26,26,.15);font-size:.62rem;color:rgba(255,200,200,.4);letter-spacing:.5px;}
-.beast-sync-dot{width:5px;height:5px;border-radius:50%;background:#22d3a0;flex-shrink:0;animation:blink 2.5s ease-in-out infinite;}
-@media(max-width:768px){
-  .beast-panel{top:auto;bottom:90px;right:12px;left:12px;width:auto;border-radius:18px;}
-  .beast-toggle{bottom:16px;right:16px;width:48px;height:48px;font-size:1.3rem;}
+
+/* ══ SAĞ TARAF KALICI MOD PANELİ (İş / Sanat / Spor) ══ */
+#modePanel{
+  position:fixed;top:50%;right:0;transform:translateY(-50%) translateX(110%);
+  z-index:9500;
+  width:210px;
+  padding:18px 16px 16px;
+  border-radius:18px 0 0 18px;
+  background:linear-gradient(145deg,rgba(16,14,32,.92),rgba(10,10,26,.92));
+  border:1px solid var(--border);border-right:none;
+  box-shadow:-8px 0 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:transform .55s cubic-bezier(.23,1,.32,1),box-shadow .4s ease;
+  opacity:0;pointer-events:none;
 }
-/* ══════════════ ALL IN ONE / BEAST MODE END ══════════════ */
+#modePanel.visible{transform:translateY(-50%) translateX(0);opacity:1;pointer-events:auto;}
+#modePanel::before{
+  content:'';position:absolute;inset:0;border-radius:18px 0 0 18px;
+  background:var(--mode-accent,linear-gradient(135deg,rgba(124,106,255,.16),rgba(196,109,255,.08)));
+  opacity:.5;z-index:-1;
+}
+.mode-panel-close{
+  position:absolute;top:8px;right:10px;
+  width:24px;height:24px;border-radius:50%;
+  border:1px solid var(--border);background:rgba(255,255,255,.05);
+  color:var(--muted);font-size:.8rem;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s ease;
+}
+.mode-panel-close:hover{background:rgba(255,85,102,.2);color:#fff;border-color:var(--err);transform:rotate(90deg);}
+.mode-panel-eyebrow{
+  font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;
+}
+.mode-panel-icon{
+  font-size:2.4rem;line-height:1;margin-bottom:8px;
+  filter:drop-shadow(0 0 14px var(--mode-glow,rgba(124,106,255,.6)));
+  animation:modeIconFloat 3s ease-in-out infinite;
+}
+@keyframes modeIconFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.mode-panel-title{
+  font-size:1.15rem;font-weight:700;letter-spacing:1px;color:#fff;margin-bottom:4px;
+}
+.mode-panel-status{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.68rem;color:var(--ok);font-weight:600;
+  padding:3px 10px;border-radius:20px;
+  background:rgba(34,211,160,.12);border:1px solid rgba(34,211,160,.3);
+  margin-bottom:14px;
+}
+.mode-panel-status .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:modeDotPulse 1.5s ease-in-out infinite;}
+@keyframes modeDotPulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.mode-panel-desc{
+  font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:14px;
+}
+.mode-panel-timer{
+  font-size:.66rem;color:var(--muted);letter-spacing:1px;
+  padding-top:12px;border-top:1px solid var(--border);
+}
+.mode-panel-timer b{color:#fff;font-weight:600;}
+.mode-panel-switch{display:flex;gap:6px;margin-top:14px;}
+.mode-switch-btn{
+  flex:1;padding:8px 0;border-radius:10px;cursor:pointer;
+  border:1px solid var(--border);background:rgba(255,255,255,.04);
+  font-size:1.1rem;line-height:1;transition:all .25s ease;
+}
+.mode-switch-btn:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+.mode-switch-btn.active{border-color:var(--mode-border,var(--a1));background:var(--mode-accent2,rgba(124,106,255,.2));box-shadow:0 0 12px var(--mode-glow,rgba(124,106,255,.4));}
+/* Küçük mod rozeti (üst barda göstermek için, panel kapalıyken bile) */
+#modeMiniBadge{
+  position:fixed;top:14px;right:14px;z-index:9499;
+  display:none;align-items:center;gap:7px;
+  padding:7px 13px;border-radius:30px;cursor:pointer;
+  background:linear-gradient(135deg,rgba(16,14,32,.9),rgba(10,10,26,.9));
+  border:1px solid var(--mode-border,var(--a1));
+  box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 14px var(--mode-glow,rgba(124,106,255,.3));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font-size:.72rem;font-weight:600;color:#fff;letter-spacing:.5px;
+  transition:all .3s ease;
+}
+#modeMiniBadge.visible{display:inline-flex;}
+#modeMiniBadge:hover{transform:translateY(-2px);}
+#modeMiniBadge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:modeDotPulse 1.5s ease-in-out infinite;}
+
+/* ── MOD PANELİ MOBİL UYUM ── */
+@media(max-width:768px){
+  /* Panel ekranın çoğunu kaplamasın; alttan değil yandan, ama daha dar */
+  #modePanel{width:62vw;max-width:240px;padding:14px 12px;}
+  .mode-panel-icon{font-size:2rem;}
+  .mode-panel-title{font-size:1rem;}
+  .mode-panel-desc{font-size:.68rem;}
+  /* Mini rozet üst bar (56px) ile çakışmasın → bara değil alta koy */
+  #modeMiniBadge{top:auto;bottom:74px;right:12px;}
+}
+@media(max-width:560px){#modePanel{width:70vw;}}
+
+/* ── GÜNAYDIN / İYİ GECELER OVERLAY MOBİL UYUM ── */
+@media(max-width:768px){
+  .mood-content{padding:48px 18px;max-width:100%;}
+  .mood-text-anim{font-size:1.9rem;letter-spacing:2px;margin-bottom:14px;}
+  .mood-sub-text{font-size:.95rem;}
+  .mood-calendar-box{padding:16px 18px;margin-top:20px;}
+  .mood-action-btn{margin-top:18px;padding:12px 26px;}
+}
 </style>
 </head>
 <body>
@@ -1889,6 +1954,14 @@ body{transition:background .8s ease,color .8s ease;}
         <div class="eylem-glow"></div>
       </button>
       
+      <!-- Anlık İş (mod açmaz, sadece 5'ten geri sayar) -->
+      <button class="eylem-btn eylem-anlik" onclick="launchAnlikIs()">
+        <div class="eylem-icon">⏱️</div>
+        <div class="eylem-label">Anlık İş</div>
+        <div class="eylem-sub">Hızlı başla, geri sayım</div>
+        <div class="eylem-glow"></div>
+      </button>
+      
       <!-- Sanat Sepet -->
       <button class="eylem-btn eylem-sanat" onclick="launchSanatSepet()">
         <div class="eylem-icon">🎨</div>
@@ -1974,8 +2047,15 @@ body{transition:background .8s ease,color .8s ease;}
 </main>
 
 <script>
+window.stopActionVideo = function() { if(window.actionVideoEl) { try { window.actionVideoEl.pause(); window.actionVideoEl.remove(); } catch(e){} window.actionVideoEl = null; } };
 (function(){
 'use strict';
+
+function escapeHTML(value){
+  return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch] || ch;
+  });
+}
 
 /* ══ CLOCK ══ */
 function fmt(d){return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
@@ -2016,10 +2096,19 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 });
 
 /* ══ FIREBASE ══ */
-firebase.initializeApp({apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",authDomain:"dashboard-ab880.firebaseapp.com",projectId:"dashboard-ab880",storageBucket:"dashboard-ab880.firebasestorage.app",messagingSenderId:"1014186585487",appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"});
-window.db=firebase.firestore();
-window.userDoc=window.db.collection('users').doc('nurullah');
 window.state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
+var firebaseReady=typeof firebase!=='undefined'&&firebase.initializeApp&&firebase.firestore&&firebase.auth;
+if(firebaseReady){
+  firebase.initializeApp({apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",authDomain:"dashboard-ab880.firebaseapp.com",projectId:"dashboard-ab880",storageBucket:"dashboard-ab880.firebasestorage.app",messagingSenderId:"1014186585487",appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"});
+  window.db=firebase.firestore();
+  window.userDoc=window.db.collection('users').doc('nurullah');
+}else{
+  window.db=null;
+  window.userDoc={
+    set:function(){return Promise.resolve();},
+    get:function(){return Promise.resolve({exists:false,data:function(){return {};}});}
+  };
+}
 var saveTimers={};
 function saveToCloud(field,value,statusId){
   var el=document.getElementById(statusId);
@@ -2034,41 +2123,28 @@ function saveToCloud(field,value,statusId){
 }
 
 /* ══ AUTH ══ */
-window.auth=firebase.auth();
 var loginScreen=document.getElementById('login-screen');
 var introScreen=document.getElementById('intro-screen');
 var loginBtn=document.getElementById('loginBtn');
 var loginError=document.getElementById('loginError');
-auth.onAuthStateChanged(function(user){
-  if(user){loginScreen.style.opacity='0';setTimeout(function(){loginScreen.style.display='none';introScreen.style.display='flex';introScreen.classList.remove('hidden');},800);loadFromCloud();}
-  else{introScreen.style.display='none';loginScreen.style.display='flex';loginScreen.style.opacity='1';}
-});
-if(loginBtn){
-loginBtn.addEventListener('click',function(){
-  var email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
-  if(!email||!pass){
-    loginError.style.display='block';
-    loginError.textContent='E-posta ve şifre boş bırakılamaz.';
-    return;
-  }
-  loginBtn.textContent='BEKLEYİN...';
-  loginBtn.disabled=true;
-  loginError.style.display='none';
-  auth.signInWithEmailAndPassword(email,pass)
-    .then(function(){ loginBtn.textContent='GİRİŞ YAP'; loginBtn.disabled=false; })
-    .catch(function(error){
-      loginError.style.display='block';
-      loginError.textContent='Hata: '+error.message;
-      loginBtn.textContent='GİRİŞ YAP';
-      loginBtn.disabled=false;
-      console.error('Giriş hatası:',error);
-    });
-});
+if(firebaseReady){
+  window.auth=firebase.auth();
+  auth.onAuthStateChanged(function(user){
+    if(user){loginScreen.style.opacity='0';setTimeout(function(){loginScreen.style.display='none';introScreen.style.display='flex';introScreen.classList.remove('hidden');},800);loadFromCloud();}
+    else{introScreen.style.display='none';loginScreen.style.display='flex';loginScreen.style.opacity='1';}
+  });
+  loginBtn.addEventListener('click',function(){
+    var email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
+    if(!email||!pass)return;loginBtn.textContent='BEKLEYİN...';loginError.style.display='none'; loginError.textContent='';
+    auth.signInWithEmailAndPassword(email,pass).then(function(){loginBtn.textContent='GİRİŞ YAP';}).catch(function(error){loginError.style.display='block';loginError.textContent='Giriş Hatası: ' + error.message;loginBtn.textContent='GİRİŞ YAP';console.error(error);});
+  });
+}else{
+  loginScreen.style.display='none';
+  introScreen.style.display='flex';
+  introScreen.classList.remove('hidden');
+  setTimeout(loadFromCloud,0);
 }
-var loginPassEl=document.getElementById('loginPass');
-if(loginPassEl){
-loginPassEl.addEventListener('keydown',function(e){if(e.key==='Enter'&&loginBtn)loginBtn.click();});
-}
+document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')loginBtn.click();});
 
 /* ══ INTRO ══ */
 var launchPhase=document.getElementById('launchPhase'),greetingPhase=document.getElementById('greetingPhase'),launchBtn=document.getElementById('launchBtn'),bgVideo=document.getElementById('bgVideo');
@@ -2103,8 +2179,64 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
     document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active');});
     this.classList.add('active');var t=document.getElementById(name);if(t)t.classList.add('active');
     if(name==='calendar'){renderCalendar();renderMiniCal();}
+    // Mobilde: tıklanan sekmeyi nav içinde görünür alana kaydır
+    try{ if(this.scrollIntoView)this.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}); }catch(e){}
   });
 });
+
+/* ══ NAV PARMAK/FARE İLE KAYDIRMA (CSS'ten bağımsız garanti) ══ */
+(function(){
+  var nav=document.getElementById('mainNav');
+  if(!nav)return;
+  var down=false,startX=0,startScroll=0,moved=false,activePointer=null;
+
+  // Pointer Events (modern tarayıcı + mobil) — tek tip, en güvenilir
+  if(window.PointerEvent){
+    nav.addEventListener('pointerdown',function(e){
+      down=true;moved=false;activePointer=e.pointerId;
+      startX=e.clientX;startScroll=nav.scrollLeft;
+    });
+    nav.addEventListener('pointermove',function(e){
+      if(!down||e.pointerId!==activePointer)return;
+      var dx=e.clientX-startX;
+      if(Math.abs(dx)>4){moved=true; try{nav.setPointerCapture(e.pointerId);}catch(_){}}
+      nav.scrollLeft=startScroll-dx;
+    });
+    function end(e){
+      if(!down)return;down=false;activePointer=null;
+      try{nav.releasePointerCapture&&nav.releasePointerCapture(e.pointerId);}catch(_){}
+    }
+    nav.addEventListener('pointerup',end);
+    nav.addEventListener('pointercancel',end);
+    nav.addEventListener('pointerleave',end);
+    // Sürüklerken sekmeye yanlışlıkla basılmasını engelle
+    nav.addEventListener('click',function(e){
+      if(moved){e.preventDefault();e.stopPropagation();moved=false;}
+    },true);
+  }else{
+    // Eski tarayıcı / iOS Safari için touch fallback
+    nav.addEventListener('touchstart',function(e){
+      down=true;moved=false;startX=e.touches[0].clientX;startScroll=nav.scrollLeft;
+    },{passive:true});
+    nav.addEventListener('touchmove',function(e){
+      if(!down)return;
+      var dx=e.touches[0].clientX-startX;
+      if(Math.abs(dx)>4)moved=true;
+      nav.scrollLeft=startScroll-dx;
+    },{passive:true});
+    nav.addEventListener('touchend',function(){down=false;});
+    nav.addEventListener('click',function(e){
+      if(moved){e.preventDefault();e.stopPropagation();moved=false;}
+    },true);
+  }
+
+  // Fare tekerleği / trackpad ile yatay kaydırma (masaüstü kolaylığı)
+  nav.addEventListener('wheel',function(e){
+    if(Math.abs(e.deltaX)<Math.abs(e.deltaY)){
+      nav.scrollLeft+=e.deltaY;e.preventDefault();
+    }
+  },{passive:false});
+})();
 
 /* ══ WIDGETS ══ */
 var filmInput=document.getElementById('filmCountInput'),filmDisplay=document.getElementById('filmCountDisplay');
@@ -2142,7 +2274,7 @@ setupMusicBtn('vibeSpInput','vibeSpBtn','vibeSpEmbed','spotify','vibeSpotify');
 setupMusicBtn('vibeYtInput','vibeYtBtn','vibeYtEmbed','youtube','vibeYoutube');
 
 /* ══ LOAD FROM CLOUD ══ */
-function loadFromCloud(){
+window.loadFromCloud = function(){
   userDoc.get().then(function(doc){
     if(!doc.exists){renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();return;}
     var d=doc.data();
@@ -2251,6 +2383,10 @@ renderDashMiniCal();
 /* ══ TODO CORE ══ */
 var currentFilter='all',completedOpen=false;
 function getTodayStr(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+/* ── Yardımcıları global yap ki diğer IIFE kapsamlarındaki Eylem butonları (Günaydın / İyi Geceler) erişebilsin ── */
+window.getTodayStr=getTodayStr;
+window.escapeHTML=escapeHTML;
+window.botSay=botSay;
 function getWeekStr(){var n=new Date();n.setDate(n.getDate()+7);return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
 function getDueStatus(dd){if(!dd)return null;var t=getTodayStr();if(dd<t)return'overdue';if(dd===t)return'today';var s=new Date();s.setDate(s.getDate()+3);if(new Date(dd+'T00:00:00')<=s)return'soon';return'later';}
 function formatDueLabel(dd){if(!dd)return'';var t=getTodayStr();if(dd===t)return'Bugün';var y=new Date();y.setDate(y.getDate()-1);var ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');if(dd===ys)return'Dün';return new Date(dd+'T00:00:00').toLocaleDateString('tr-TR',{day:'numeric',month:'short'});}
@@ -2491,7 +2627,15 @@ function renderWeekView(){
   wg.appendChild(adRow);
 }
 
-function selectCalDay(dateStr){calSelectedDate=dateStr;renderCalendar();renderCalDayPanel(dateStr);}
+function selectCalDay(dateStr){calSelectedDate=dateStr;renderCalendar();renderCalDayPanel(dateStr);
+  // Mobilde: güne basınca alttaki seçili-gün paneline yumuşakça kaydır
+  if(window.innerWidth<=900){
+    setTimeout(function(){
+      var el=document.querySelector('.cal-selected-day');
+      if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'center'});
+    },120);
+  }
+}
 function renderCalDayPanel(dateStr){
   var d=new Date(dateStr+'T00:00:00');
   document.getElementById('calSelectedDate').textContent=d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -2711,22 +2855,22 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
  /* ─ AUDIO CONTEXT KİLİDİNİ AÇMA (CRITICAL FIX) ─ */
-  var sharedAudioCtx = null;
-  window.initAudio=function(){
-    if(!sharedAudioCtx) {
-      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  window.sharedAudioCtx = null;
+  window.initAudio = function(){
+    if(!window.sharedAudioCtx) {
+      window.sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     // Eğer tarayıcı sesi uyku moduna aldıysa, tıklamayla uyandırıyoruz
-    if(sharedAudioCtx.state === 'suspended') {
+    if(window.sharedAudioCtx.state === 'suspended') {
       sharedAudioCtx.resume();
     }
   }
 
   /* ─ ring audio ─ */
-  window.playRingTone=function(){
+  window.playRingTone = function(){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       function beep(freq,start,dur,vol,type){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2745,10 +2889,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ tick beep (her saniye) ─ */
-  window.playTick=function(n){
+  window.playTick = function(n){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       var osc=ctx.createOscillator(),gain=ctx.createGain();
       osc.connect(gain);gain.connect(ctx.destination);
       osc.type='sine';
@@ -2760,10 +2904,10 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
   }
 
   /* ─ finish chime ─ */
-  window.playFinish=function(){
+  window.playFinish = function(){
     try{
-      if(!sharedAudioCtx) return;
-      var ctx = sharedAudioCtx;
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
       [[523,.0],[659,.12],[784,.24],[1047,.38]].forEach(function(p){
         var osc=ctx.createOscillator(),gain=ctx.createGain();
         osc.connect(gain);gain.connect(ctx.destination);
@@ -2776,11 +2920,148 @@ if(showcaseImgs.length>0){showcaseImgs[0].classList.add('active');setInterval(fu
     }catch(e){}
   }
 
+  /* ─ GÜNAYDIN melodisi: modern, sıcak, sinematik "şafak" tınısı ─ */
+  window.playGunaydinSound = function(){
+    try{
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
+      var t0 = ctx.currentTime + .02;
+
+      // Master zincir: bus -> lowpass (yumuşaklık) -> master gain -> çıkış
+      var master = ctx.createGain();
+      master.gain.setValueAtTime(.0001, t0);
+      master.gain.linearRampToValueAtTime(.9, t0 + .15);
+      master.gain.setValueAtTime(.9, t0 + 2.6);
+      master.gain.exponentialRampToValueAtTime(.0001, t0 + 3.6);
+
+      var filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(700, t0);
+      filter.frequency.linearRampToValueAtTime(5200, t0 + .9); // filtre açılışı = "ışık doğuyor"
+      filter.Q.value = .6;
+      filter.connect(master); master.connect(ctx.destination);
+
+      // Stereo genişlik için yumuşak pan desteği (varsa)
+      function makeBus(pan){
+        var g = ctx.createGain();
+        if(ctx.createStereoPanner){ var p=ctx.createStereoPanner(); p.pan.value=pan; g.connect(p); p.connect(filter); }
+        else { g.connect(filter); }
+        return g;
+      }
+
+      // Yumuşak zarflı, koro (detune) destekli nota
+      function voice(freq, start, dur, vol, type, pan, detune){
+        var bus = makeBus(pan||0);
+        var env = ctx.createGain();
+        env.gain.setValueAtTime(.0001, t0+start);
+        env.gain.linearRampToValueAtTime(vol, t0+start+.06);        // yumuşak atak (tık yok)
+        env.gain.exponentialRampToValueAtTime(.0001, t0+start+dur); // doğal sönüş
+        env.connect(bus);
+        [0, detune||0, -(detune||0)].forEach(function(d,i){
+          if(i>0 && !detune) return;
+          var o=ctx.createOscillator();
+          o.type=type||'triangle'; o.frequency.value=freq;
+          o.detune.value=d;
+          o.connect(env);
+          o.start(t0+start); o.stop(t0+start+dur+.1);
+        });
+      }
+
+      // Cmaj9 ışıltısı — zil/mallet tınısında yumuşak yükselen arpej
+      // C5 - E5 - G5 - B5 - D6 (maj9), her nota stereo'da hafif kayar
+      var arp=[
+        [523.25,.00,1.7,.18,'triangle',-.35,6],
+        [659.25,.13,1.6,.17,'triangle',-.15,6],
+        [783.99,.26,1.6,.17,'triangle', .1, 7],
+        [987.77,.40,1.5,.15,'sine',     .25,7],
+        [1174.66,.55,1.7,.16,'sine',    .4, 8]
+      ];
+      arp.forEach(function(n){ voice(n[0],n[1],n[2],n[3],n[4],n[5],n[6]); });
+
+      // Üstte zarif "shimmer" — çok kısık, yüksek parıltılar (kristal his)
+      [1567.98, 2093.00, 2637.02].forEach(function(f,i){
+        voice(f, .7 + i*.12, .9, .045, 'sine', (i-1)*.4, 0);
+      });
+
+      // Sıcak pad zemini — C3 + G3 yumuşakça şişer (sinematik altyapı)
+      voice(130.81, 0, 3.2, .12, 'sine', 0, 4);   // C3
+      voice(196.00, .05, 3.0, .08, 'sine', 0, 4); // G3
+    }catch(e){}
+  }
+
+  /* ─ İYİ GECELER melodisi: modern, rüya gibi, yumuşak "uyku" tınısı ─ */
+  window.playGecelerSound = function(){
+    try{
+      if(!window.sharedAudioCtx) return;
+      var ctx = window.sharedAudioCtx;
+      var t0 = ctx.currentTime + .02;
+
+      var master = ctx.createGain();
+      master.gain.setValueAtTime(.0001, t0);
+      master.gain.linearRampToValueAtTime(1.0, t0 + .25);
+      master.gain.setValueAtTime(1.0, t0 + 3.2);
+      master.gain.exponentialRampToValueAtTime(.0001, t0 + 4.4);
+
+      // Sıcak ama "loş" filtre — yüksekleri yumuşatır, fakat telefon hoparlörü
+      // için yeterli orta-tiz bırakır (çok aşağı kapanmaz)
+      var filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(3400, t0);
+      filter.frequency.linearRampToValueAtTime(1700, t0 + 4.0); // yavaşça yumuşar ama duyulur kalır
+      filter.Q.value = .5;
+      filter.connect(master); master.connect(ctx.destination);
+
+      function makeBus(pan){
+        var g = ctx.createGain();
+        if(ctx.createStereoPanner){ var p=ctx.createStereoPanner(); p.pan.value=pan; g.connect(p); p.connect(filter); }
+        else { g.connect(filter); }
+        return g;
+      }
+      function voice(freq, start, dur, vol, type, pan, detune){
+        var bus = makeBus(pan||0);
+        var env = ctx.createGain();
+        env.gain.setValueAtTime(.0001, t0+start);
+        env.gain.linearRampToValueAtTime(vol, t0+start+.12);  // çok yumuşak atak (ninni)
+        env.gain.exponentialRampToValueAtTime(.0001, t0+start+dur);
+        env.connect(bus);
+        [0, detune||0, -(detune||0)].forEach(function(d,i){
+          if(i>0 && !detune) return;
+          var o=ctx.createOscillator();
+          o.type=type||'sine'; o.frequency.value=freq;
+          o.detune.value=d;
+          o.connect(env);
+          o.start(t0+start); o.stop(t0+start+dur+.1);
+        });
+      }
+
+      // Alçalan, dingin melodi — Fmaj7 hissi (huzurlu uyku)
+      // Bir oktav YUKARI taşındı (telefon hoparlöründe duyulsun): D5-A4-F4-C5
+      var melody=[
+        [587.33,.00,2.0,.20,'triangle',-.3, 5],  // D5
+        [440.00,.55,2.1,.20,'triangle', .25,5],  // A4
+        [349.23,1.15,2.3,.20,'triangle',-.2, 6], // F4
+        [523.25,1.8,2.6,.22,'triangle', .15,6]   // C5 (dingin, parlak kapanış)
+      ];
+      melody.forEach(function(n){
+        voice(n[0],n[1],n[2],n[3],n[4],n[5],n[6]);
+        voice(n[0]*2,n[1]+.03,n[2]*.55,n[3]*.22,'sine',n[4]*-1,0); // üst oktav ışıltı (telefon için belirginlik)
+      });
+
+      // Sıcak gece pad'i — telefon için biraz daha yukarıda (C4 + G3)
+      voice(261.63, 0, 4.0, .14, 'triangle', 0, 4);  // C4
+      voice(196.00, .1, 3.8, .10, 'triangle', 0, 4); // G3
+
+      // En sonda yumuşak "yıldız" fısıltısı (parlak tiz, her cihazda duyulur)
+      voice(1046.50, 2.6, 1.5, .07, 'sine', .3, 0); // C6
+    }catch(e){}
+  }
+
+
+
  /* ─ video carousel için başlangıç ─ */
   var actionVideos=['arkaplan.mp4','arkaplan2.mp4','arkaplan3.mp4','arkaplan4.mp4','arkaplan5.mp4'];
-window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoEl.pause(); window.actionVideoEl.remove(); window.actionVideoEl=null; } };
-  var actionVideoEl=null;
-  window.startActionVideo=function(){
+  window.actionVideoEl=null;
+  window.startActionVideo = function(){
     actionVideoEl=document.createElement('video');
     actionVideoEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:.18;pointer-events:none;filter:saturate(.6) brightness(.5);';
 
@@ -2812,7 +3093,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     setTimeout(function(){numEl.classList.remove('tick');},160);
   }
 
-  function startCountdown(){
+  window.startCountdown = function(){
     countCurrent=5;
     numEl.textContent='5';
     titleEl.textContent=titles[0];
@@ -2864,45 +3145,6 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
   }
 
   function launchAksiyon(){
-    initAudio();
-    var ov=document.getElementById('aksiyon-overlay');
-
-    // Tıklandığı an dairenin sıfır (tam dolu) olduğuna emin oluyoruz
-    // Menü açılır açılmaz daireyi her ihtimale karşı sıfırlıyoruz
-    if(ringFill){
-      ringFill.style.transition = 'none';
-      ringFill.style.strokeDashoffset = '0';
-    }
-
-    spawnP();drawP();
-    startActionVideo();
-    ov.classList.add('visible');
-    playRingTone();
-    
-    setTimeout(function(){startCountdown();},400);
-  }
-
-  function dismissAksiyon(){
-    var ov=document.getElementById('aksiyon-overlay');
-    ov.classList.add('fade-out');
-    setTimeout(function(){
-      ov.classList.remove('visible','fade-out');
-      ov.style.background='#000';
-      cancelAnimationFrame(animP);particles=[];
-      stopActionVideo();
-      clearInterval(countTimer);
-      numEl.textContent='5';numEl.style.fontSize='7rem';
-
-      // Menü kapandığında daireyi sonraki kullanım için tam dolu hale getir
-      // Menü tamamen kapandığında daireyi arka planda doldur (hazır beklesin)
-      if(ringFill){
-        ringFill.style.transition = 'none';
-        ringFill.style.strokeDashoffset = '0';
-      }
-    },800);
-  }
- 
-  function launchAksiyon(){
     initAudio(); // TIKLANDIĞI AN SES KİLİDİNİ AÇIYORUZ
     var ov=document.getElementById('aksiyon-overlay');
     spawnP();drawP();
@@ -2912,7 +3154,7 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     setTimeout(function(){startCountdown();},400);
   }
  
-  function dismissAksiyon(){
+  window.dismissAksiyon = function(){
     var ov=document.getElementById('aksiyon-overlay');
     ov.classList.add('fade-out');
     setTimeout(function(){
@@ -2963,12 +3205,15 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
 
   /* Mood Changer launcher */
   window.launchMoodChanger=function(){
+    saveAksStats();
     document.getElementById('slotContainer').scrollIntoView({behavior:'smooth'});
   };
 
   /* Sanat Sepet launcher */
   window.launchSanatSepet=function(){
     initAudio();
+    saveAksStats();
+    if(typeof setActiveMode==='function')setActiveMode('sanat');
     var ov=document.getElementById('aksiyon-overlay');
     var titleEl=document.getElementById('aksiyonTitle');
     var subEl=document.getElementById('aksiyonSub');
@@ -3032,6 +3277,8 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
   /* Spor launcher */
   window.launchSpor=function(){
     initAudio();
+    saveAksStats();
+    if(typeof setActiveMode==='function')setActiveMode('spor');
     var ov=document.getElementById('aksiyon-overlay');
     var titleEl=document.getElementById('aksiyonTitle');
     var subEl=document.getElementById('aksiyonSub');
@@ -3093,8 +3340,75 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
   };
 
   /* İş Modu launcher */
+  /* ANLIK İŞ — mod paneli AÇMAZ, sadece 5'ten geri sayar ve biter */
+  window.launchAnlikIs=function(){
+    initAudio();
+    saveAksStats();
+    // NOT: setActiveMode çağrılmıyor -> sağdaki kalıcı mod paneli açılmaz
+    var ov=document.getElementById('aksiyon-overlay');
+    var titleEl=document.getElementById('aksiyonTitle');
+    var subEl=document.getElementById('aksiyonSub');
+
+    var quickMessages=[
+      {t:'Hızlı Başla!',s:'Hadi, 5 saniye içinde işe!'},
+      {t:'Anlık Odak!',s:'Kısa ve net, başla'},
+      {t:'Şimdi!',s:'Erteleme yok, hemen'},
+      {t:'Hazır Ol!',s:'Geri sayım başlıyor'}
+    ];
+    var msg=quickMessages[Math.floor(Math.random()*quickMessages.length)];
+
+    titleEl.textContent=msg.t;
+    subEl.textContent=msg.s;
+
+    var grad=document.querySelector('.aksiyon-number');
+    if(grad){
+      grad.style.background='linear-gradient(135deg,#22d3a0 0%,#4fd1ff 50%,#fff 100%)';
+      grad.style.webkitBackgroundClip='text';
+    }
+
+    ov.classList.add('visible');
+    playRingTone();
+
+    var count=5;
+    var numEl=document.getElementById('aksiyonNumber');
+    numEl.textContent=count;
+    numEl.style.fontSize='7rem';
+
+    var ringFill=document.getElementById('aksiyonRingFill');
+    ringFill.style.transition='none';
+    ringFill.style.strokeDashoffset='0';
+    void ringFill.offsetWidth;
+    setTimeout(function(){
+      ringFill.style.transition='stroke-dashoffset 5s linear';
+      ringFill.style.strokeDashoffset='591';
+    },50);
+
+    var countTimer=setInterval(function(){
+      count--;
+      if(count<=0){
+        clearInterval(countTimer);
+        numEl.textContent='⏱️';
+        numEl.style.fontSize='4rem';
+        titleEl.textContent='Hadi Başla!';
+        subEl.textContent='İşine koyul, Nurullah ✦';
+        playFinish();
+        ov.style.background='rgba(34,211,160,.15)';
+        setTimeout(function(){ov.style.background='#000';},300);
+        setTimeout(function(){
+          ov.classList.add('fade-out');
+          setTimeout(function(){ov.classList.remove('visible','fade-out');},800);
+        },2000);
+        return;
+      }
+      numEl.textContent=count;
+      playTick(count);
+    },1000);
+  };
+
   window.launchIsModu=function(){
     initAudio();
+    saveAksStats();
+    if(typeof setActiveMode==='function')setActiveMode('is');
     var ov=document.getElementById('aksiyon-overlay');
     var titleEl=document.getElementById('aksiyonTitle');
     var subEl=document.getElementById('aksiyonSub');
@@ -3158,6 +3472,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
   /* GÜNAYDIN LAUNCHER */
   window.launchGunaydin=function(){
     initAudio();
+    saveAksStats();
+    // Günaydın'a özel parlak melodi (overlay açılırken çalsın)
+    setTimeout(function(){ if(typeof window.playGunaydinSound==='function')window.playGunaydinSound(); },350);
     
     var ov=document.getElementById('gunaydin-overlay');
     var mainText=document.getElementById('gunaydinMainText');
@@ -3175,18 +3492,29 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     
     mainText.textContent=greeting+', Nurullah';
     
-    // Günün görevlerini çek
+    // Günün görevlerini + takvim etkinliklerini çek (BUGÜN yapılacaklar)
     var todayStr=getTodayStr();
     var todayTasks=window.state.todos.filter(function(t){return t.dueDate===todayStr;});
+    var todayEvents=(window.state.calEvents||[]).filter(function(e){return e.date===todayStr;})
+      .sort(function(a,b){return (a.time||'')>(b.time||'')?1:(a.time||'')<(b.time||'')?-1:0;});
     
     taskList.innerHTML='';
-    if(todayTasks.length===0){
-      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bugün için görev yok 🎉</div>';
+    if(todayTasks.length===0 && todayEvents.length===0){
+      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bugün için plan yok 🎉 — yeni bir şeyler ekle!</div>';
     }else{
-      todayTasks.slice(0,5).forEach(function(t){
+      // Önce takvim etkinlikleri (randevu/etkinlik)
+      todayEvents.slice(0,4).forEach(function(ev){
+        var div=document.createElement('div');
+        div.className='mood-cal-task';
+        var timeTxt=ev.time?'<span style="color:var(--a3);font-weight:600;margin-right:6px;">'+escapeHTML(ev.time)+'</span>':'';
+        div.innerHTML='<span class="check-icon">📌</span><span>'+timeTxt+escapeHTML(ev.text)+'</span>';
+        taskList.appendChild(div);
+      });
+      // Sonra yapılacak görevler
+      todayTasks.slice(0,6).forEach(function(t){
         var div=document.createElement('div');
         div.className='mood-cal-task'+(t.completed?' done-task':'');
-        div.innerHTML='<span class="check-icon">'+(t.completed?'✓':'○')+'</span><span>'+t.text+'</span>';
+        div.innerHTML='<span class="check-icon">'+(t.completed?'✓':'○')+'</span><span>'+escapeHTML(t.text)+'</span>';
         taskList.appendChild(div);
       });
     }
@@ -3279,6 +3607,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
   /* İYİ GECELER LAUNCHER */
   window.launchIyiGeceler=function(){
     initAudio();
+    saveAksStats();
+    // İyi Geceler'e özel yumuşak/sakin melodi (overlay açılırken çalsın)
+    setTimeout(function(){ if(typeof window.playGecelerSound==='function')window.playGecelerSound(); },350);
     
     var ov=document.getElementById('geceler-overlay');
     var mainText=document.getElementById('gecelerMainText');
@@ -3290,26 +3621,47 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     
     mainText.textContent='İyi geceler, Nurullah';
     
-    // Bugün tamamlanan görevler
-    var todayStr=getTodayStr();
-    var todayTasks=window.state.todos.filter(function(t){return t.dueDate===todayStr;});
+    // GECE YARISI MANTIĞI:
+    // Saat 00:00–02:59 arası tıklarsan, gün hâlâ "dün" sayılır (henüz yatmadın).
+    // 03:00 ve sonrası tıklarsan bugünün özetini gösterir.
+    var refDate=new Date();
+    if(refDate.getHours()<3){
+      refDate.setDate(refDate.getDate()-1);
+    }
+    var dayStr=refDate.getFullYear()+'-'+String(refDate.getMonth()+1).padStart(2,'0')+'-'+String(refDate.getDate()).padStart(2,'0');
+    
+    // O güne ait görevler ve takvim etkinlikleri
+    var todayTasks=window.state.todos.filter(function(t){return t.dueDate===dayStr;});
+    var dayEvents=(window.state.calEvents||[]).filter(function(e){return e.date===dayStr;})
+      .sort(function(a,b){return (a.time||'')>(b.time||'')?1:(a.time||'')<(b.time||'')?-1:0;});
     var completedToday=todayTasks.filter(function(t){return t.completed}).length;
     var totalToday=todayTasks.length;
     
     taskList.innerHTML='';
-    if(todayTasks.length===0){
-      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bugün görev yazmadın, ama yarın yeni bir gün! 🌙</div>';
+    if(todayTasks.length===0 && dayEvents.length===0){
+      taskList.innerHTML='<div style="font-size:.85rem;color:var(--muted);padding:10px 0;">Bu gün için plan yazmamıştın, ama yarın yeni bir gün! 🌙</div>';
     }else{
-      var div=document.createElement('div');
-      div.className='mood-cal-task';
-      div.innerHTML='<span class="check-icon">📊</span><span>'+completedToday+' / '+totalToday+' görev tamamlandı</span>';
-      taskList.appendChild(div);
-      
+      // Özet satırı (görev tamamlama oranı)
+      if(totalToday>0){
+        var div=document.createElement('div');
+        div.className='mood-cal-task';
+        div.innerHTML='<span class="check-icon">📊</span><span>'+completedToday+' / '+totalToday+' görev tamamlandı</span>';
+        taskList.appendChild(div);
+      }
+      // Görevler (yaptığın / yapmadığın)
       todayTasks.slice(0,4).forEach(function(t){
         var taskDiv=document.createElement('div');
         taskDiv.className='mood-cal-task'+(t.completed?' done-task':'');
-        taskDiv.innerHTML='<span class="check-icon">'+(t.completed?'✓':'○')+'</span><span>'+t.text+'</span>';
+        taskDiv.innerHTML='<span class="check-icon">'+(t.completed?'✓':'○')+'</span><span>'+escapeHTML(t.text)+'</span>';
         taskList.appendChild(taskDiv);
+      });
+      // Takvim etkinlikleri
+      dayEvents.slice(0,3).forEach(function(ev){
+        var evDiv=document.createElement('div');
+        evDiv.className='mood-cal-task';
+        var timeTxt=ev.time?'<span style="color:var(--a3);font-weight:600;margin-right:6px;">'+escapeHTML(ev.time)+'</span>':'';
+        evDiv.innerHTML='<span class="check-icon">📌</span><span>'+timeTxt+escapeHTML(ev.text)+'</span>';
+        taskList.appendChild(evDiv);
       });
     }
     
@@ -3463,9 +3815,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
     function animate(){
       var allDone=true;
       reels.forEach(function(reelId,i){
+        var reel=document.getElementById(reelId);
         if(counts[i]<maxCounts[i]){
           allDone=false;
-          var reel=document.getElementById(reelId);
           reel.classList.add('spinning');
           positions[i]+=speeds[i];
           counts[i]++;
@@ -3481,7 +3833,6 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
           strips[i].style.transform='translateY(-'+positions[i]+'px)';
           if(reelId==='reel3')reel.classList.add('spinning');
         }else{
-          var reel=document.getElementById(reelId);
           reel.classList.remove('spinning');
           if(i===2)reel.classList.add('winning');
           strips[i].style.transform='translateY(-'+finalPositions[i]+'px)';
@@ -3521,12 +3872,9 @@ window.stopActionVideo=function(){ if(window.actionVideoEl){ window.actionVideoE
         resultTimer.textContent='✓';
         resultTimer.style.background='linear-gradient(135deg,#22d3a0 0%,#4fd1ff 100%)';
         resultTimer.style.webkitBackgroundClip='text';
-        resultTimer.style.webkitTextFillColor='transparent';
         setTimeout(function(){
           resultDiv.classList.remove('visible');
           resultTimer.style.background='';
-          resultTimer.style.webkitBackgroundClip='';
-          resultTimer.style.webkitTextFillColor='';
           initSlotMachine();
         },2000);
       }
@@ -3849,227 +4197,189 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   </div>
 </div>
 
-<!-- ══════════════ BEAST MODE / ALL IN ONE ══════════════ -->
-<button class="beast-toggle" id="beastToggle" title="ALL IN ONE">🔥</button>
-
-<div class="beast-panel" id="beastPanel">
-  <div class="beast-panel-header">
-    <div class="beast-panel-icon">🔥</div>
-    <span class="beast-panel-title">All In One</span>
-    <button class="beast-close-btn" id="beastClose">✕</button>
+<!-- ══ SAĞ KALICI MOD PANELİ ══ -->
+<div id="modePanel">
+  <button class="mode-panel-close" id="modePanelClose" title="Modu kapat">✕</button>
+  <div class="mode-panel-eyebrow">AKTİF MOD</div>
+  <div class="mode-panel-icon" id="modePanelIcon">💼</div>
+  <div class="mode-panel-title" id="modePanelTitle">İş Modu</div>
+  <div class="mode-panel-status"><span class="dot"></span><span id="modePanelStatusText">Şu anda iş modundasın</span></div>
+  <div class="mode-panel-desc" id="modePanelDesc">Odaklan ve başla. Dağılma, hedefe kilitlen.</div>
+  <div class="mode-panel-switch">
+    <button class="mode-switch-btn" data-mode="is" title="İş Modu">💼</button>
+    <button class="mode-switch-btn" data-mode="sanat" title="Sanat Modu">🎨</button>
+    <button class="mode-switch-btn" data-mode="spor" title="Spor Modu">⚽</button>
   </div>
-  <div class="beast-status" id="beastStatus">BEAST MODE KAPALI</div>
-  <div class="beast-input-wrap">
-    <input class="beast-input" id="beastGoal1" placeholder="Bugün hedef #1 — neyi aşırı yapacaksın?" maxlength="60">
-    <input class="beast-input" id="beastGoal2" placeholder="Bugün hedef #2 — neyi aşırı yapacaksın?" maxlength="60">
-    <input class="beast-input" id="beastGoal3" placeholder="Bugün hedef #3 — neyi aşırı yapacaksın?" maxlength="60">
-  </div>
-  <div class="beast-timer-wrap" id="beastTimerWrap">
-    <div class="beast-timer-label">DÜŞÜNME SÜRESİ — 5 DAKİKA</div>
-    <div class="beast-timer-num" id="beastTimer">05:00</div>
-    <div class="beast-timer-sub" id="beastTimerSub">Hedeflerini yaz — kafanı toparla</div>
-  </div>
-  <div class="beast-actions">
-    <button class="beast-btn primary" id="beastActivate">🔥 AÇ</button>
-    <button class="beast-btn" id="beastReset">↻ Sıfırla</button>
-  </div>
-  <div class="beast-sync">
-    <div class="beast-sync-dot"></div>
-    <span id="beastSyncText">Senkronize — Tüm cihazlarda aktif</span>
-  </div>
+  <div class="mode-panel-timer">Süre: <b id="modePanelTimer">00:00</b></div>
 </div>
-<!-- ══════════════ BEAST MODE END ══════════════ -->
+<!-- Panel kapalıyken görünen küçük rozet -->
+<div id="modeMiniBadge"><span class="dot"></span><span id="modeMiniIcon">💼</span><span id="modeMiniText">İş Modu</span></div>
+
 <script>
-/* ══════════════ BEAST MODE JS ══════════════ */
+/* ══ KALICI MOD PANELİ MANTIĞI (İş / Sanat / Spor) ══ */
 (function(){
-  'use strict';
-  
-  var beastActive=false;
-  var beastTimerInterval=null;
-  var beastSecondsLeft=300;
-  var beastGoals=['','',''];
-  
-  var beastToggle=document.getElementById('beastToggle');
-  var beastPanel=document.getElementById('beastPanel');
-  var beastClose=document.getElementById('beastClose');
-  var beastActivate=document.getElementById('beastActivate');
-  var beastReset=document.getElementById('beastReset');
-  var beastStatus=document.getElementById('beastStatus');
-  var beastTimer=document.getElementById('beastTimer');
-  var beastTimerWrap=document.getElementById('beastTimerWrap');
-  var beastTimerSub=document.getElementById('beastTimerSub');
-  var beastGoalInputs=[document.getElementById('beastGoal1'),document.getElementById('beastGoal2'),document.getElementById('beastGoal3')];
-  var beastSyncText=document.getElementById('beastSyncText');
-  
-  function fmtTime(sec){
-    var m=Math.floor(sec/60),s=sec%60;
-    return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-  }
-  
-  function setSyncStatus(txt,color){
-    if(beastSyncText){
-      beastSyncText.textContent=txt||'Senkronize';
-      if(color)beastSyncText.style.color=color;
-    }
-  }
-  
-  function saveBeastState(){
-    if(!window.userDoc)return;
-    var data={
-      beastMode:{
-        active:beastActive,
-        goals:beastGoals,
-        secondsLeft:beastSecondsLeft,
-        updatedAt:Date.now()
-      }
-    };
-    window.userDoc.set(data,{merge:true}).then(function(){
-      setSyncStatus('Senkronize ✓','var(--ok)');
-    }).catch(function(){
-      setSyncStatus('Senkronizasyon hatası','var(--err)');
+  var MODES={
+    is:   {icon:'💼',title:'İş Modu',   status:'Şu anda iş modundasın',   desc:'Odaklan ve başla. Dağılma, hedefe kilitlen.',
+           accent:'linear-gradient(135deg,rgba(124,106,255,.18),rgba(196,109,255,.1))', accent2:'rgba(124,106,255,.22)', border:'#7c6aff', glow:'rgba(124,106,255,.55)'},
+    sanat:{icon:'🎨',title:'Sanat Modu',status:'Şu anda sanat modundasın',desc:'Yarat, dene, ruhunu besle. Sınır yok.',
+           accent:'linear-gradient(135deg,rgba(255,107,138,.18),rgba(196,109,255,.1))', accent2:'rgba(255,107,138,.22)', border:'#ff6b8a', glow:'rgba(255,107,138,.55)'},
+    spor: {icon:'⚽',title:'Spor Modu', status:'Şu anda spor modundasın', desc:'Hareket et, terle, güçlen. Kendine dikkat et.',
+           accent:'linear-gradient(135deg,rgba(255,85,102,.18),rgba(255,140,66,.1))', accent2:'rgba(255,85,102,.22)', border:'#ff5566', glow:'rgba(255,85,102,.55)'}
+  };
+
+  var panel=document.getElementById('modePanel');
+  var miniBadge=document.getElementById('modeMiniBadge');
+  var iconEl=document.getElementById('modePanelIcon');
+  var titleEl=document.getElementById('modePanelTitle');
+  var statusEl=document.getElementById('modePanelStatusText');
+  var descEl=document.getElementById('modePanelDesc');
+  var timerEl=document.getElementById('modePanelTimer');
+  var miniIcon=document.getElementById('modeMiniIcon');
+  var miniText=document.getElementById('modeMiniText');
+
+  var currentMode=null;
+  var startTs=null;
+  var tickInt=null;
+
+  function applyStyleVars(m){
+    var def=MODES[m];
+    [panel,miniBadge].forEach(function(el){
+      el.style.setProperty('--mode-accent',def.accent);
+      el.style.setProperty('--mode-accent2',def.accent2);
+      el.style.setProperty('--mode-border',def.border);
+      el.style.setProperty('--mode-glow',def.glow);
     });
   }
-  
-  function updateBeastUI(){
-    if(beastActivate){
-      beastActivate.textContent=beastActive?'✕ KAPAT':'🔥 AÇ';
-      beastActivate.classList.toggle('primary',!beastActive);
-    }
-    if(beastStatus)beastStatus.textContent=beastActive?'BEAST MODE AKTİF — GOD MODE ON':'BEAST MODE KAPALI';
-    if(beastTimer)beastTimer.textContent=fmtTime(beastSecondsLeft);
-    if(beastTimerSub)beastTimerSub.textContent=beastActive?(beastSecondsLeft>0?'Hedeflerini yaz — kalan düşünme süresi':'✅ HAZIRSIN — GOD MODE ON!'):'Hedeflerini yaz ve 🔥 AÇ’a bas';
-    if(beastTimerWrap)beastTimerWrap.classList.toggle('ticking',beastActive && beastSecondsLeft>0);
-    if(beastToggle)beastToggle.classList.toggle('on',beastActive);
-    beastGoalInputs.forEach(function(inp,idx){if(inp)inp.value=beastGoals[idx]||'';});
+
+  function renderSwitch(){
+    document.querySelectorAll('.mode-switch-btn').forEach(function(b){
+      b.classList.toggle('active',b.getAttribute('data-mode')===currentMode);
+    });
   }
-  
-  function activateBeastMode(){
-    if(beastActive){deactivateBeastMode();return;}
-    if(window.initAudio)window.initAudio();
-    beastActive=true;
-    beastSecondsLeft=300;
-    document.body.classList.add('beast-mode');
-    updateBeastUI();
-    saveBeastState();
-    clearInterval(beastTimerInterval);
-    beastTimerInterval=setInterval(tickBeastTimer,1000);
+
+  function fmtElapsed(ms){
+    var s=Math.floor(ms/1000);
+    var h=Math.floor(s/3600); s-=h*3600;
+    var m=Math.floor(s/60); s-=m*60;
+    function p(n){return String(n).padStart(2,'0');}
+    return h>0?(p(h)+':'+p(m)+':'+p(s)):(p(m)+':'+p(s));
   }
-  
-  function deactivateBeastMode(){
-    beastActive=false;
-    clearInterval(beastTimerInterval);
-    beastTimerInterval=null;
-    beastSecondsLeft=300;
-    document.body.classList.remove('beast-mode');
-    updateBeastUI();
-    saveBeastState();
+
+  function tick(){
+    if(startTs)timerEl.textContent=fmtElapsed(Date.now()-startTs);
   }
-  
-  function tickBeastTimer(){
-    if(!beastActive)return;
-    beastSecondsLeft--;
-    if(beastSecondsLeft<0)beastSecondsLeft=0;
-    if(beastTimer)beastTimer.textContent=fmtTime(beastSecondsLeft);
-    if(beastSecondsLeft<=5 && beastSecondsLeft>0){
-      if(window.playTick)window.playTick(beastSecondsLeft);
-      if(beastTimer)beastTimer.classList.add('tick');
-      setTimeout(function(){if(beastTimer)beastTimer.classList.remove('tick');},160);
-    }
-    if(beastSecondsLeft===0){
-      clearInterval(beastTimerInterval);
-      beastTimerInterval=null;
-      if(window.playFinish)window.playFinish();
-      if(beastTimerSub)beastTimerSub.textContent='✅ HAZIRSIN — GOD MODE ON! Kapatana kadar kas 🔥';
-      if(beastTimerWrap)beastTimerWrap.classList.remove('ticking');
-    }
-    saveBeastState();
+
+  function save(){
+    // 1) Yerel (anında, çevrimdışı için)
+    try{ localStorage.setItem('activeMode',JSON.stringify({mode:currentMode,startTs:startTs})); }catch(e){}
+    // 2) Buluta yaz (cihazlar arası senkron)
+    try{ if(window.userDoc&&window.userDoc.set)window.userDoc.set({activeMode:{mode:currentMode,startTs:startTs}},{merge:true}).catch(function(){}); }catch(e){}
   }
-  
-  function resetBeast(){
-    beastActive=false;
-    clearInterval(beastTimerInterval);
-    beastTimerInterval=null;
-    beastSecondsLeft=300;
-    beastGoals=['','',''];
-    document.body.classList.remove('beast-mode');
-    updateBeastUI();
-    saveBeastState();
+
+  // Sadece arayüzü çiz — kaydetmez (uzaktan gelen güncellemelerde kullanılır)
+  function applyMode(mode,ts){
+    if(!MODES[mode])return;
+    currentMode=mode;
+    startTs=ts||Date.now();
+    var def=MODES[mode];
+    iconEl.textContent=def.icon;
+    titleEl.textContent=def.title;
+    statusEl.textContent=def.status;
+    descEl.textContent=def.desc;
+    miniIcon.textContent=def.icon;
+    miniText.textContent=def.title;
+    applyStyleVars(mode);
+    renderSwitch();
+    panel.classList.add('visible');
+    miniBadge.classList.remove('visible');
+    if(tickInt)clearInterval(tickInt);
+    tick(); tickInt=setInterval(tick,1000);
   }
-  
-  function togglePanel(){
-    if(beastPanel)beastPanel.classList.toggle('open');
+
+  // Arayüzü tamamen temizle (kaydetmez)
+  function clearModeUI(){
+    panel.classList.remove('visible');
+    miniBadge.classList.remove('visible');
+    currentMode=null;startTs=null;
+    if(tickInt){clearInterval(tickInt);tickInt=null;}
   }
-  
-  if(beastToggle)beastToggle.addEventListener('click',function(){togglePanel();});
-  if(beastClose)beastClose.addEventListener('click',function(){if(beastPanel)beastPanel.classList.remove('open');});
-  if(beastActivate)beastActivate.addEventListener('click',function(){if(window.initAudio)window.initAudio();if(beastActive)deactivateBeastMode();else activateBeastMode();});
-  if(beastReset)beastReset.addEventListener('click',function(){if(window.initAudio)window.initAudio();resetBeast();});
-  
-  beastGoalInputs.forEach(function(inp,idx){
-    if(!inp)return;
-    inp.addEventListener('input',function(){
-      beastGoals[idx]=this.value.trim();
-      saveBeastState();
+
+  // Global: launcher'lar bunu çağırır
+  window.setActiveMode=function(mode){
+    if(!MODES[mode])return;
+    var changed=(mode!==currentMode);
+    applyMode(mode,(changed||!startTs)?Date.now():startTs);
+    save();
+  };
+
+  window.closeActiveMode=function(){
+    clearModeUI();
+    try{ localStorage.removeItem('activeMode'); }catch(e){}
+    // Bulutta da temizle ki diğer cihazlarda da kapansın
+    try{ if(window.userDoc&&window.userDoc.set)window.userDoc.set({activeMode:null},{merge:true}).catch(function(){}); }catch(e){}
+  };
+
+  // Paneli küçült (rozet kalır, mod devam eder)
+  function minimize(){
+    panel.classList.remove('visible');
+    if(currentMode)miniBadge.classList.add('visible');
+  }
+  function expand(){
+    if(!currentMode)return;
+    miniBadge.classList.remove('visible');
+    panel.classList.add('visible');
+  }
+
+  // X butonu = modu tamamen kapat (kullanıcı kapatabilsin)
+  document.getElementById('modePanelClose').addEventListener('click',function(e){
+    e.stopPropagation();
+    window.closeActiveMode();
+    if(typeof botSay==='function')botSay('Mod kapatıldı 👋',2200);
+  });
+  // Rozete tıkla = paneli geri aç
+  miniBadge.addEventListener('click',expand);
+  // Panel içindeki mod değiştirme butonları
+  document.querySelectorAll('.mode-switch-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      window.setActiveMode(b.getAttribute('data-mode'));
     });
   });
-  
-  function loadBeastState(){
-    if(!window.userDoc)return;
-    window.userDoc.get().then(function(doc){
-      if(!doc.exists)return;
-      var d=doc.data();
-      if(d.beastMode){
-        var bm=d.beastMode;
-        beastGoals=Array.isArray(bm.goals)?bm.goals.slice(0,3):['','',''];
-        if(!beastActive && bm.active){
-          beastActive=true;
-          beastSecondsLeft=(typeof bm.secondsLeft==='number')?bm.secondsLeft:300;
-          document.body.classList.add('beast-mode');
-          clearInterval(beastTimerInterval);
-          if(beastSecondsLeft>0)beastTimerInterval=setInterval(tickBeastTimer,1000);
-          updateBeastUI();
-        }else if(beastActive && !bm.active){
-          deactivateBeastMode();
-        }else{
-          if(typeof bm.secondsLeft==='number')beastSecondsLeft=bm.secondsLeft;
-          updateBeastUI();
-        }
-      }
-    }).catch(function(){});
-  }
-  
-  if(window.userDoc){
-    window.userDoc.onSnapshot(function(doc){
-      if(!doc.exists)return;
-      var d=doc.data();
-      if(!d||!d.beastMode)return;
-      var bm=d.beastMode;
-      beastGoals=Array.isArray(bm.goals)?bm.goals.slice(0,3):beastGoals;
-      if(bm.active && !beastActive){
-        beastActive=true;
-        beastSecondsLeft=(typeof bm.secondsLeft==='number')?bm.secondsLeft:300;
-        document.body.classList.add('beast-mode');
-        clearInterval(beastTimerInterval);
-        if(beastSecondsLeft>0)beastTimerInterval=setInterval(tickBeastTimer,1000);
-        updateBeastUI();
-      }else if(!bm.active && beastActive){
-        deactivateBeastMode();
-      }else{
-        if(typeof bm.secondsLeft==='number')beastSecondsLeft=bm.secondsLeft;
-        updateBeastUI();
-      }
-    });
-  }
-  
-  loadBeastState();
-  
-  window.activateBeastMode=activateBeastMode;
-  window.deactivateBeastMode=deactivateBeastMode;
-  window.resetBeast=resetBeast;
-  window.toggleBeastPanel=togglePanel;
-})();
-/* ══════════════ BEAST MODE JS END ══════════════ */
-</script>
 
-</body>
+  // 1) Sayfa açılışında ÖNCE yerel kayıttan hızlı geri yükle (anında görünsün)
+  try{
+    var saved=JSON.parse(localStorage.getItem('activeMode'));
+    if(saved&&saved.mode&&MODES[saved.mode]){
+      applyMode(saved.mode,saved.startTs);
+    }
+  }catch(e){}
+
+  // 2) Buluttan GERÇEK ZAMANLI dinle — telefonda başlatınca PC'de (ve tersi) anında görünür
+  function startModeSync(){
+    try{
+      if(!window.userDoc||!window.userDoc.onSnapshot)return;
+      window.userDoc.onSnapshot(function(doc){
+        var data=doc&&doc.exists?doc.data():null;
+        var am=data?data.activeMode:undefined;
+        if(am&&am.mode&&MODES[am.mode]){
+          // Başka cihazdan gelen mod farklıysa arayüzü güncelle (kaydetme, döngü olmasın)
+          if(am.mode!==currentMode||am.startTs!==startTs){
+            applyMode(am.mode,am.startTs);
+            try{ localStorage.setItem('activeMode',JSON.stringify({mode:am.mode,startTs:am.startTs})); }catch(e){}
+          }
+        }else if(am===null){
+          // Başka cihazda kapatılmışsa burada da kapat
+          if(currentMode){
+            clearModeUI();
+            try{ localStorage.removeItem('activeMode'); }catch(e){}
+          }
+        }
+      },function(err){/* sessiz geç */});
+    }catch(e){}
+  }
+  // userDoc Firebase ile hazırsa hemen başlat, değilse kısa bekleyip dene
+  if(window.userDoc&&window.userDoc.onSnapshot){ startModeSync(); }
+  else{ setTimeout(startModeSync,1200); }
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0626fb04e2cd2a3',t:'MTc4MDUyODkwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
