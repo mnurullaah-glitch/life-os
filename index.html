@@ -3842,9 +3842,9 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     <input class="beast-input" id="beastGoal3" placeholder="Bugün hedef #3 — neyi aşırı yapacaksın?" maxlength="60">
   </div>
   <div class="beast-timer-wrap" id="beastTimerWrap">
-    <div class="beast-timer-label">GERİ SAYIM</div>
+    <div class="beast-timer-label">DÜŞÜNME SÜRESİ — 5 DAKİKA</div>
     <div class="beast-timer-num" id="beastTimer">05:00</div>
-    <div class="beast-timer-sub" id="beastTimerSub">Başlamak için aşağıdaki butona bas</div>
+    <div class="beast-timer-sub" id="beastTimerSub">Hedeflerini yaz — kafanı toparla</div>
   </div>
   <div class="beast-actions">
     <button class="beast-btn primary" id="beastActivate">🔥 AÇ</button>
@@ -3914,7 +3914,7 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
     }
     if(beastStatus)beastStatus.textContent=beastActive?'BEAST MODE AKTİF — GOD MODE ON':'BEAST MODE KAPALI';
     if(beastTimer)beastTimer.textContent=fmtTime(beastSecondsLeft);
-    if(beastTimerSub)beastTimerSub.textContent=beastActive?(beastSecondsLeft>0?'Hedefine odaklan — kalan süre':'Süre doldu! Tüm gün kas!'):'Başlamak için yukarıdaki butona bas';
+    if(beastTimerSub)beastTimerSub.textContent=beastActive?(beastSecondsLeft>0?'Hedeflerini yaz — kalan düşünme süresi':'✅ HAZIRSIN — GOD MODE ON!'):'Hedeflerini yaz ve 🔥 AÇ’a bas';
     if(beastTimerWrap)beastTimerWrap.classList.toggle('ticking',beastActive && beastSecondsLeft>0);
     if(beastToggle)beastToggle.classList.toggle('on',beastActive);
     beastGoalInputs.forEach(function(inp,idx){if(inp)inp.value=beastGoals[idx]||'';});
@@ -3956,7 +3956,7 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
       clearInterval(beastTimerInterval);
       beastTimerInterval=null;
       if(window.playFinish)window.playFinish();
-      if(beastTimerSub)beastTimerSub.textContent='🔥 SÜRE DOLDU — GOD MODE ON!';
+      if(beastTimerSub)beastTimerSub.textContent='✅ HAZIRSIN — GOD MODE ON! Kapatana kadar kas 🔥';
       if(beastTimerWrap)beastTimerWrap.classList.remove('ticking');
     }
     saveBeastState();
