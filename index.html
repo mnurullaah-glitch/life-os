@@ -1612,6 +1612,45 @@ textarea::placeholder{color:var(--muted);}
   .res-log{max-height:240px;}
 }
 
+
+
+/* ══════════════ DİRENÇ: SEZON / SANDIK / BOSS / QUEST / PRESTİJ ══════════════ */
+.res-system-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+.res-system-card{position:relative;overflow:hidden;padding:14px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.025);min-height:126px;}
+.res-system-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0,rgba(79,209,255,.12),transparent 45%);opacity:.8;pointer-events:none;}
+.res-system-top{position:relative;display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.res-system-icon{width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:1.05rem;}
+.res-system-title{font-size:.7rem;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.52);}
+.res-system-main{position:relative;font-size:1.35rem;font-weight:850;color:#fff;line-height:1.1;margin-bottom:5px;}
+.res-system-sub{position:relative;font-size:.68rem;color:var(--muted);line-height:1.4;min-height:28px;}
+.res-system-bar{position:relative;height:6px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-top:10px;}
+.res-system-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#4fd1ff,#7c6aff,#c46dff);box-shadow:0 0 14px rgba(79,209,255,.35);transition:width .7s cubic-bezier(.23,1,.32,1);}
+.res-system-btn{position:relative;margin-top:10px;width:100%;padding:8px 10px;border-radius:11px;border:1px solid rgba(79,209,255,.3);background:rgba(79,209,255,.075);color:#91efff;font-family:inherit;font-size:.68rem;font-weight:900;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .22s ease;}
+.res-system-btn:hover{background:rgba(79,209,255,.15);transform:translateY(-1px)}
+.res-system-btn:disabled{opacity:.38;cursor:not-allowed;transform:none;background:rgba(255,255,255,.035);}
+.res-boss-panel{display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:center;}
+.res-boss-name{font-size:1.25rem;font-weight:900;color:#fff;margin-bottom:5px;}
+.res-boss-desc{font-size:.78rem;color:var(--muted);line-height:1.55;}
+.res-boss-hp-wrap{margin-top:13px;}
+.res-boss-hp-label{display:flex;justify-content:space-between;font-size:.68rem;font-weight:850;color:rgba(255,255,255,.58);margin-bottom:6px;}
+.res-boss-hp{height:16px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--border);overflow:hidden;}
+.res-boss-hp-fill{height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#ff5566,#ff8c42,#ffb432);box-shadow:0 0 18px rgba(255,85,102,.25);transition:width .65s cubic-bezier(.23,1,.32,1);}
+.res-boss-actions{display:flex;flex-direction:column;gap:8px;}
+.res-quest-box{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.024);}
+.res-quest-title{font-size:.9rem;font-weight:850;color:#fff;margin-bottom:4px;}.res-quest-meta{font-size:.68rem;color:var(--muted);}
+.res-prestige-btn{border-color:rgba(196,109,255,.34);background:rgba(196,109,255,.09);color:#e0b6ff;}
+.res-flash{position:fixed;inset:0;z-index:100002;pointer-events:none;background:radial-gradient(circle at center,rgba(79,209,255,.22),transparent 48%);opacity:0;transition:opacity .35s ease;}
+.res-flash.show{opacity:1;}
+.res-levelup-overlay{position:fixed;inset:0;z-index:100003;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .45s ease;}
+.res-levelup-overlay.show{opacity:1;pointer-events:auto;}
+.res-levelup-card{text-align:center;padding:38px 44px;border-radius:28px;border:1px solid rgba(79,209,255,.35);background:linear-gradient(145deg,rgba(8,14,34,.96),rgba(20,10,42,.96));box-shadow:0 0 80px rgba(79,209,255,.22),0 20px 80px rgba(0,0,0,.65);transform:scale(.86) translateY(20px);transition:transform .45s cubic-bezier(.23,1,.32,1);max-width:480px;width:calc(100% - 32px);}
+.res-levelup-overlay.show .res-levelup-card{transform:scale(1) translateY(0);}
+.res-levelup-icon{font-size:4rem;margin-bottom:12px;filter:drop-shadow(0 0 22px rgba(79,209,255,.55));}
+.res-levelup-kicker{font-size:.72rem;font-weight:950;letter-spacing:4px;text-transform:uppercase;color:#7ee8ff;margin-bottom:10px;}
+.res-levelup-title{font-size:2rem;font-weight:950;color:#fff;margin-bottom:8px;}.res-levelup-sub{font-size:.86rem;color:rgba(255,255,255,.62);line-height:1.55;margin-bottom:20px;}.res-levelup-close{padding:11px 24px;border-radius:999px;border:1px solid rgba(79,209,255,.35);background:rgba(79,209,255,.1);color:#9af2ff;font-family:inherit;font-weight:900;cursor:pointer;}
+@media(max-width:1050px){.res-system-grid{grid-template-columns:repeat(2,1fr)}.res-boss-panel{grid-template-columns:1fr}}
+@media(max-width:768px){.res-system-grid{grid-template-columns:1fr;gap:10px}.res-system-card{min-height:auto}.res-boss-actions{display:grid;grid-template-columns:1fr}.res-quest-box{grid-template-columns:1fr}.res-levelup-card{padding:30px 22px}.res-levelup-title{font-size:1.55rem}}
+
 </style>
 </head>
 <body>
@@ -1861,6 +1900,59 @@ textarea::placeholder{color:var(--muted);}
       <div class="res-next-row">
         <span id="resCurrentRank">Kademe I · Başlangıç</span>
         <span id="resNextRank">Sonraki: Kademe II</span>
+      </div>
+      <div class="res-system-grid">
+        <div class="res-system-card">
+          <div class="res-system-top"><div class="res-system-icon">🔥</div><div class="res-system-title">Streak</div></div>
+          <div class="res-system-main"><span id="resStreak">0</span> gün</div>
+          <div class="res-system-sub">Günde en az 1 görev tamamla.</div>
+        </div>
+        <div class="res-system-card">
+          <div class="res-system-top"><div class="res-system-icon">📅</div><div class="res-system-title">Haftalık Sezon</div></div>
+          <div class="res-system-main"><span id="resSeasonXP">0</span> XP</div>
+          <div class="res-system-sub" id="resSeasonLabel">Bu hafta</div>
+          <div class="res-system-bar"><div class="res-system-fill" id="resSeasonFill"></div></div>
+        </div>
+        <div class="res-system-card">
+          <div class="res-system-top"><div class="res-system-icon">🎁</div><div class="res-system-title">Günlük Sandık</div></div>
+          <div class="res-system-main" id="resChestState">Kilitli</div>
+          <div class="res-system-sub">Bugün 3 görev tamamla, sandığı aç.</div>
+          <button class="res-system-btn" id="resChestBtn" type="button">Sandığı Aç</button>
+        </div>
+        <div class="res-system-card">
+          <div class="res-system-top"><div class="res-system-icon">👑</div><div class="res-system-title">Prestij</div></div>
+          <div class="res-system-main"><span id="resPrestige">0</span></div>
+          <div class="res-system-sub">Kademe XII sonrası haritayı sıfırla, prestij kazan.</div>
+          <button class="res-system-btn res-prestige-btn" id="resPrestigeBtn" type="button">Prestij Reset</button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="glass-panel res-game-card">
+      <div class="panel-header"><div class="panel-icon">🐉</div><span class="panel-title">Sarmal Boss'u</span><span class="panel-badge" id="resBossBadge">Aktif</span></div>
+      <div class="res-boss-panel">
+        <div>
+          <div class="res-boss-name" id="resBossName">Sarmal Boss'u</div>
+          <div class="res-boss-desc" id="resBossDesc">Boss görevleri normal görev listene eklenir. Tamamlanan her boss görevi HP düşürür.</div>
+          <div class="res-boss-hp-wrap">
+            <div class="res-boss-hp-label"><span>HP</span><span id="resBossHpText">100 / 100</span></div>
+            <div class="res-boss-hp"><div class="res-boss-hp-fill" id="resBossHpFill"></div></div>
+          </div>
+        </div>
+        <div class="res-boss-actions">
+          <button class="res-system-btn" id="resBossTaskBtn" type="button">Boss Görevi Üret</button>
+          <button class="res-system-btn" id="resBossResetBtn" type="button">Boss'u Yenile</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-panel res-game-card">
+      <div class="panel-header"><div class="panel-icon">🎲</div><span class="panel-title">Mini Quest Üretici</span><span class="panel-badge">+XP</span></div>
+      <div class="res-quest-box">
+        <div><div class="res-quest-title" id="resQuestTitle">Quest bekleniyor</div><div class="res-quest-meta" id="resQuestMeta">Rastgele kısa görev üret.</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;"><button class="res-system-btn" style="width:auto;margin:0;" id="resQuestRollBtn" type="button">Üret</button><button class="res-system-btn" style="width:auto;margin:0;" id="resQuestAcceptBtn" type="button">Göreve Ekle</button></div>
       </div>
     </div>
 
@@ -2496,7 +2588,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 
 /* ══ DİRENÇ OYUNLAŞTIRMA SİSTEMİ ══ */
 var RES_LEVELS=[
-  {name:'Kademe I',tag:'Başlangıç',req:0,icon:'💧',desc:'Sistem açıldı. İlk XP havuzu.',unlocks:['Görev tamamlayınca +12 XP','XP havuzu görünür olur']},
+  {name:'Kademe I',tag:'Başlangıç',req:0,icon:'💧',desc:'Sistem açıldı. İlk XP havuzu.',unlocks:['Görev zorluğuna göre XP','XP havuzu görünür olur']},
   {name:'Kademe II',tag:'Kıvılcım',req:100,icon:'🔹',desc:'İlk eşik. Artık haritada ilerleme başlar.',unlocks:['Seviye kartı kalıcı açılır','Başarımlar görünür']},
   {name:'Kademe III',tag:'Ritim',req:220,icon:'🌊',desc:'Tek görevlerden küçük serilere geçiş.',unlocks:['Günlük XP takibi anlamlı hale gelir','3 görev/gün rozeti hedeflenir']},
   {name:'Kademe IV',tag:'Akış',req:380,icon:'🌀',desc:'Bar sadece dolmaz; rutin hissi üretir.',unlocks:['XP günlüğü dolmaya başlar','Harita ilerlemesi belirginleşir']},
@@ -2519,12 +2611,21 @@ var RES_ACH=[
   {id:'xp500',icon:'💠',title:'500 XP',desc:'Toplam 500 XP kazan',need:function(s){return s.total||0},goal:500},
   {id:'lvl5',icon:'🛡️',title:'Kademe V',desc:'Kademe V seviyesine ulaş',need:function(s){return getResistanceLevelIndex(s.total||0)+1},goal:5}
 ];
-function resTodayKey(){return new Date().toISOString().slice(0,10);}
+function resTodayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function normalizeResistance(){
   if(!state.resistance)state.resistance={total:0,today:0,lastDate:resTodayKey(),completedCount:0,todayCompleted:0,log:[]};
   state.resistance.completedCount=Number(state.resistance.completedCount||0);
   state.resistance.todayCompleted=Number(state.resistance.todayCompleted||0);
   state.resistance.log=Array.isArray(state.resistance.log)?state.resistance.log:[];
+  state.resistance.earnedAchievements=Array.isArray(state.resistance.earnedAchievements)?state.resistance.earnedAchievements:[];
+  state.resistance.streak=Number(state.resistance.streak||0);
+  state.resistance.prestige=Number(state.resistance.prestige||0);
+  state.resistance.lifetimeXP=Number(state.resistance.lifetimeXP||state.resistance.total||0);
+  state.resistance.seasonXP=Number(state.resistance.seasonXP||0);
+  state.resistance.seasonKey=state.resistance.seasonKey||getSeasonKey();
+  state.resistance.chestDate=state.resistance.chestDate||'';
+  state.resistance.boss=state.resistance.boss||{hp:100,maxHp:100,defeated:0,week:getSeasonKey()};
+  if(state.resistance.seasonKey!==getSeasonKey()){state.resistance.seasonKey=getSeasonKey();state.resistance.seasonXP=0;state.resistance.boss={hp:100,maxHp:100,defeated:state.resistance.boss.defeated||0,week:getSeasonKey()};}
   if(state.resistance.lastDate!==resTodayKey()){
     state.resistance.today=0;
     state.resistance.todayCompleted=0;
@@ -2535,6 +2636,57 @@ function getResistanceLevelIndex(total){
   var idx=0;
   for(var i=0;i<RES_LEVELS.length;i++){if(total>=RES_LEVELS[i].req)idx=i;}
   return idx;
+}
+function getSeasonKey(){
+  var d=new Date();
+  var first=new Date(d.getFullYear(),0,1);
+  var day=Math.floor((d-first)/86400000)+1;
+  var week=Math.ceil((day+first.getDay())/7);
+  return d.getFullYear()+'-W'+String(week).padStart(2,'0');
+}
+function getTodoXp(t){
+  var p=(t&&t.priority)||'none';
+  var base=p==='high'?24:p==='med'?18:p==='low'?14:10;
+  if(t&&t.starred)base+=4;
+  if(t&&t.dueDate===resTodayKey())base+=2;
+  if(t&&t.bossDamage)base+=6;
+  return base;
+}
+function markStreakOnAward(){
+  var today=resTodayKey();
+  var last=state.resistance.lastActiveDate||'';
+  if(last===today)return;
+  var y=new Date();y.setDate(y.getDate()-1);
+  var ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+  state.resistance.streak=(last===ys)?(Number(state.resistance.streak||0)+1):1;
+  state.resistance.lastActiveDate=today;
+}
+function addResistanceXP(points,label,opts){
+  normalizeResistance();opts=opts||{};points=Number(points||0);
+  var before=getResistanceLevelIndex(state.resistance.total||0);
+  state.resistance.total=(Number(state.resistance.total)||0)+points;
+  state.resistance.lifetimeXP=(Number(state.resistance.lifetimeXP)||0)+points;
+  state.resistance.today=(Number(state.resistance.today)||0)+points;
+  state.resistance.seasonXP=(Number(state.resistance.seasonXP)||0)+points;
+  if(opts.countTask){state.resistance.completedCount=(Number(state.resistance.completedCount)||0)+1;state.resistance.todayCompleted=(Number(state.resistance.todayCompleted)||0)+1;markStreakOnAward();}
+  state.resistance.lastDate=resTodayKey();
+  state.resistance.log=state.resistance.log||[];
+  state.resistance.log.unshift({text:label||'XP',points:points,date:new Date().toLocaleString('tr-TR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})});
+  state.resistance.log=state.resistance.log.slice(0,30);
+  var after=getResistanceLevelIndex(state.resistance.total||0);
+  renderResistance();playResFx(after>before?'level':'xp');resFlash();checkResistanceAchievements();renderResistance();saveResistance();
+  var panel=document.getElementById('resistancePanel'); if(panel){panel.classList.remove('pulse');void panel.offsetWidth;panel.classList.add('pulse');}
+  if(after>before){showLevelUpOverlay(RES_LEVELS[after]);showResistanceToast('💧 <b>SEVİYE ATLADI</b><br>'+RES_LEVELS[after].name+' · '+RES_LEVELS[after].tag);}else{showResistanceToast('💧 <b>+'+points+' XP</b><br>'+escapeHTML(label||'Kayıt'));}
+}
+function resFlash(){var f=document.getElementById('resFlash');if(!f){f=document.createElement('div');f.id='resFlash';f.className='res-flash';document.body.appendChild(f);}f.classList.add('show');setTimeout(function(){f.classList.remove('show');},180);}
+function playResFx(type){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var ctx=window._resAudioCtx||(window._resAudioCtx=new C());if(ctx.state==='suspended')ctx.resume();var now=ctx.currentTime;var notes=type==='level'?[523,659,784,1047]:[740,980];notes.forEach(function(fr,i){var o=ctx.createOscillator(),g=ctx.createGain();o.type=type==='level'?'triangle':'sine';o.frequency.value=fr;o.connect(g);g.connect(ctx.destination);g.gain.setValueAtTime(0,now+i*.08);g.gain.linearRampToValueAtTime(.14,now+i*.08+.015);g.gain.exponentialRampToValueAtTime(.001,now+i*.08+.22);o.start(now+i*.08);o.stop(now+i*.08+.25);});}catch(e){}}
+function showLevelUpOverlay(level){
+  var ov=document.getElementById('resLevelUpOverlay');
+  if(!ov){ov=document.createElement('div');ov.id='resLevelUpOverlay';ov.className='res-levelup-overlay';ov.innerHTML='<div class="res-levelup-card"><div class="res-levelup-icon" id="resLvlIcon"></div><div class="res-levelup-kicker">LEVEL UP</div><div class="res-levelup-title" id="resLvlTitle"></div><div class="res-levelup-sub" id="resLvlSub"></div><button class="res-levelup-close" id="resLvlClose">Devam</button></div>';document.body.appendChild(ov);document.getElementById('resLvlClose').addEventListener('click',function(){ov.classList.remove('show');});}
+  document.getElementById('resLvlIcon').textContent=level.icon;
+  document.getElementById('resLvlTitle').textContent=level.name+' · '+level.tag;
+  document.getElementById('resLvlSub').textContent=level.desc;
+  ov.classList.add('show');setTimeout(function(){ov.classList.remove('show');},4200);
 }
 function renderResistance(){
   normalizeResistance();
@@ -2557,6 +2709,7 @@ function renderResistance(){
   if(mb)mb.textContent=(idx+1)+' / '+RES_LEVELS.length;
   renderResistanceMap(idx,total);
   renderResistanceAchievements();
+  renderResistanceSystems();
   renderResistanceLog();
 }
 function renderResistanceMap(currentIdx,total){
@@ -2580,6 +2733,90 @@ function renderResistanceAchievements(){
     wrap.appendChild(div);
   });
   var b=document.getElementById('resAchBadge'); if(b)b.textContent=doneCount+' / '+RES_ACH.length;
+}
+function renderResistanceSystems(){
+  normalizeResistance();var s=state.resistance;
+  var st=document.getElementById('resStreak');if(st)st.textContent=s.streak||0;
+  var sx=document.getElementById('resSeasonXP');if(sx)sx.textContent=s.seasonXP||0;
+  var sl=document.getElementById('resSeasonLabel');if(sl)sl.textContent=s.seasonKey+' · hedef 500 XP';
+  var sf=document.getElementById('resSeasonFill');if(sf)sf.style.width=Math.min(100,Math.round((s.seasonXP||0)/500*100))+'%';
+  var pr=document.getElementById('resPrestige');if(pr)pr.textContent=s.prestige||0;
+  var pb=document.getElementById('resPrestigeBtn');if(pb)pb.disabled=(getResistanceLevelIndex(s.total||0)<RES_LEVELS.length-1);
+  var chest=document.getElementById('resChestState'),cb=document.getElementById('resChestBtn');
+  var opened=s.chestDate===resTodayKey();
+  if(chest)chest.textContent=opened?'Açıldı':((s.todayCompleted||0)>=3?'Hazır':'Kilitli');
+  if(cb)cb.disabled=opened||((s.todayCompleted||0)<3);
+  renderBoss();
+}
+function renderBoss(){
+  var b=(state.resistance&&state.resistance.boss)||{hp:100,maxHp:100,defeated:0};
+  var hp=Math.max(0,Number(b.hp||0)),max=Math.max(1,Number(b.maxHp||100));
+  var t=document.getElementById('resBossHpText'),f=document.getElementById('resBossHpFill'),badge=document.getElementById('resBossBadge');
+  if(t)t.textContent=hp+' / '+max;
+  if(f)f.style.width=Math.round(hp/max*100)+'%';
+  if(badge)badge.textContent=hp<=0?'Yenildi':'Aktif';
+}
+function checkResistanceAchievements(){
+  normalizeResistance();var earned=state.resistance.earnedAchievements||[];
+  RES_ACH.forEach(function(a){var val=a.need(state.resistance);if(val>=a.goal&&earned.indexOf(a.id)===-1){earned.push(a.id);showResistanceToast('🏆 <b>Başarım Açıldı</b><br>'+escapeHTML(a.title));playResFx('level');}});
+  state.resistance.earnedAchievements=earned;
+}
+function openDailyChest(){
+  normalizeResistance();
+  if(state.resistance.chestDate===resTodayKey())return;
+  if((state.resistance.todayCompleted||0)<3){showResistanceToast('🎁 Sandık için bugün 3 görev gerekli.');return;}
+  var reward=[25,30,35,40,50,60][Math.floor(Math.random()*6)];
+  state.resistance.chestDate=resTodayKey();
+  addResistanceXP(reward,'Günlük sandık',{});
+  renderResistance();saveResistance();
+}
+var RES_MINI_QUESTS=[
+  {t:'5 dakika oda/masa düzenle',p:'low',cat:'personal'},
+  {t:'Bir bardak su iç ve 2 dakika ayağa kalk',p:'none',cat:'health'},
+  {t:'10 dakika tek bir işe başla',p:'med',cat:'work'},
+  {t:'Dışarı çıkıp 7 dakika yürü',p:'low',cat:'health'},
+  {t:'Bir kişiye kısa mesaj at',p:'low',cat:'personal'},
+  {t:'Günlüğe 3 satır yaz',p:'none',cat:'personal'},
+  {t:'Ertelediğin küçük bir dosyayı aç',p:'med',cat:'work'},
+  {t:'Bugünün en küçük işini bitir',p:'med',cat:'work'}
+];
+var currentMiniQuest=null;
+function rollMiniQuest(){
+  currentMiniQuest=RES_MINI_QUESTS[Math.floor(Math.random()*RES_MINI_QUESTS.length)];
+  var title=document.getElementById('resQuestTitle'),meta=document.getElementById('resQuestMeta');
+  if(title)title.textContent=currentMiniQuest.t;
+  if(meta)meta.textContent='Öncelik: '+currentMiniQuest.p+' · tamamlayınca zorluk XP alır';
+}
+function acceptMiniQuest(){
+  if(!currentMiniQuest)rollMiniQuest();
+  if(typeof addTodo==='function'){
+    var td=addTodo('🎲 Mini Quest: '+currentMiniQuest.t,resTodayKey());
+    if(td){td.priority=currentMiniQuest.p;td.category=currentMiniQuest.cat;td.isMiniQuest=true;renderTodos();renderDashTodos();saveTodos();showResistanceToast('🎲 Mini quest görev listesine eklendi.');}
+  }
+}
+function addBossTask(){
+  normalizeResistance();var tasks=['🐉 Boss: 10 dakika sarmalı kır ve işe başla','🐉 Boss: ayakkabını giyip dışarı 7 dakika çık','🐉 Boss: masadan/odadan 10 şeyi kaldır','🐉 Boss: ertelediğin bir konuşma/mesajı başlat','🐉 Boss: duş/yüz yıkama ile reset at'];
+  var txt=tasks[Math.floor(Math.random()*tasks.length)];
+  if(typeof addTodo==='function'){
+    var td=addTodo(txt,resTodayKey());
+    if(td){td.priority='high';td.category='health';td.bossDamage=25;renderTodos();renderDashTodos();saveTodos();showResistanceToast('🐉 Boss görevi eklendi.');}
+  }
+}
+function damageBoss(dmg){
+  normalizeResistance();var b=state.resistance.boss||{hp:100,maxHp:100,defeated:0,week:getSeasonKey()};
+  if(b.hp<=0)return;
+  b.hp=Math.max(0,(Number(b.hp)||100)-Number(dmg||25));
+  if(b.hp<=0){b.defeated=(Number(b.defeated)||0)+1;addResistanceXP(75,'Sarmal Boss yenildi',{});showLevelUpOverlay({icon:'🐉',name:'Boss Yenildi',tag:'+75 XP',desc:'Sarmal Boss sıfır HP oldu. Yeni boss haftalık sezonda devam eder.',unlocks:[]});}
+  state.resistance.boss=b;renderResistance();saveResistance();
+}
+function resetBoss(){normalizeResistance();state.resistance.boss={hp:100,maxHp:100,defeated:(state.resistance.boss&&state.resistance.boss.defeated)||0,week:getSeasonKey()};renderResistance();saveResistance();}
+function doPrestigeReset(){
+  normalizeResistance();
+  if(getResistanceLevelIndex(state.resistance.total||0)<RES_LEVELS.length-1){showResistanceToast('👑 Prestij için Kademe XII gerekli.');return;}
+  if(!confirm('Prestij reset: seviye haritası sıfırlanacak, prestij +1 olacak. Emin misin?'))return;
+  state.resistance.prestige=(Number(state.resistance.prestige)||0)+1;
+  state.resistance.total=0;state.resistance.today=0;state.resistance.todayCompleted=0;state.resistance.chestDate='';state.resistance.boss={hp:100,maxHp:100,defeated:0,week:getSeasonKey()};
+  addResistanceXP(0,'Prestij reset',{});renderResistance();saveResistance();showLevelUpOverlay({icon:'👑',name:'Prestij '+state.resistance.prestige,tag:'Reset',desc:'Harita sıfırlandı. Prestij sayacı arttı.',unlocks:[]});
 }
 function renderResistanceLog(){
   var log=document.getElementById('resLog'); if(!log)return; log.innerHTML='';
@@ -2636,21 +2873,10 @@ function saveResistance(){
     }
   }catch(e){setResSyncStatus('Yerel',true);}
 }
-function awardResistance(points,reason,taskText){
-  normalizeResistance();points=points||12;
-  var before=getResistanceLevelIndex(state.resistance.total||0);
-  state.resistance.total=(Number(state.resistance.total)||0)+points;
-  state.resistance.today=(Number(state.resistance.today)||0)+points;
-  state.resistance.completedCount=(Number(state.resistance.completedCount)||0)+1;
-  state.resistance.todayCompleted=(Number(state.resistance.todayCompleted)||0)+1;
-  state.resistance.lastDate=resTodayKey();
-  state.resistance.log=state.resistance.log||[];
-  state.resistance.log.unshift({text:taskText||'Görev tamamlandı',points:points,date:new Date().toLocaleString('tr-TR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})});
-  state.resistance.log=state.resistance.log.slice(0,30);
-  renderResistance();saveResistance();
-  var panel=document.getElementById('resistancePanel'); if(panel){panel.classList.remove('pulse');void panel.offsetWidth;panel.classList.add('pulse');}
-  var after=getResistanceLevelIndex(state.resistance.total||0);
-  showResistanceToast(after>before?'💧 <b>SEVİYE ATLADI</b><br>'+RES_LEVELS[after].name+' · '+RES_LEVELS[after].tag:'💧 <b>+'+points+' XP</b><br>Görev tamamlandı');
+function awardResistance(points,reason,taskText,todo){
+  points=points||12;
+  addResistanceXP(points,taskText||'Görev tamamlandı',{countTask:true});
+  if(todo&&todo.bossDamage)damageBoss(todo.bossDamage);
   if(typeof botSay==='function')botSay(reason||('+'+points+' XP'),2200);
 }
 function loadResistanceFromLocal(){
@@ -2690,10 +2916,18 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
     document.body.classList.toggle('res-tab-open',this.getAttribute('data-tab')==='resistance');
   });
 });
+var chestBtn=document.getElementById('resChestBtn');if(chestBtn)chestBtn.addEventListener('click',openDailyChest);
+var qRoll=document.getElementById('resQuestRollBtn');if(qRoll)qRoll.addEventListener('click',rollMiniQuest);
+var qAcc=document.getElementById('resQuestAcceptBtn');if(qAcc)qAcc.addEventListener('click',acceptMiniQuest);
+var bossBtn=document.getElementById('resBossTaskBtn');if(bossBtn)bossBtn.addEventListener('click',addBossTask);
+var bossReset=document.getElementById('resBossResetBtn');if(bossReset)bossReset.addEventListener('click',resetBoss);
+var prestigeBtn=document.getElementById('resPrestigeBtn');if(prestigeBtn)prestigeBtn.addEventListener('click',doPrestigeReset);
+setTimeout(function(){if(!currentMiniQuest)rollMiniQuest();},500);
+window.getTodoXp=getTodoXp;window.openDailyChest=openDailyChest;window.rollMiniQuest=rollMiniQuest;window.addBossTask=addBossTask;
 window.awardResistance=awardResistance;window.renderResistance=renderResistance;window.openResistanceLevel=openResistanceLevel;
 setTimeout(loadResistanceFromLocal,0);
 var resBtn=document.getElementById('resPulseBtn');
-if(resBtn){resBtn.addEventListener('click',function(){showResistanceToast('<b>XP kuralı:</b> Görev tamamla → +12 XP. Aynı görev ikinci kez XP vermez.');if(typeof botSay==='function')botSay('Görev tamamla → +12 XP 💧',2600);});}
+if(resBtn){resBtn.addEventListener('click',function(){showResistanceToast('<b>XP kuralı:</b> Öncelik arttıkça XP artar. Boss/bugün/star bonus verir. Aynı görev ikinci kez XP vermez.');if(typeof botSay==='function')botSay('Zorluğa göre XP 💧',2600);});}
 
 /* ══ WIDGETS ══ */
 var filmInput=document.getElementById('filmCountInput'),filmDisplay=document.getElementById('filmCountDisplay');
@@ -2929,7 +3163,7 @@ function addTodo(txt,dueDate){
   window.state.todos.unshift(t);renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();
   selectTodo(t.id);saveTodos();return t;
 }
-function toggleTodoById(id){var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;t.completed=!t.completed;if(t.completed&&!t.rewarded){t.rewarded=true;awardResistance(12,'+12 XP 💧',t.text);}if(t.completed&&state.activeTodoId===id){closeTodoDetail();state.activeTodoId=null;}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
+function toggleTodoById(id){var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;t.completed=!t.completed;if(t.completed&&!t.rewarded){t.rewarded=true;awardResistance(getTodoXp(t),'+'+getTodoXp(t)+' XP 💧',t.text,t);}if(t.completed&&state.activeTodoId===id){closeTodoDetail();state.activeTodoId=null;}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
 function toggleStarById(id){var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;t.starred=!t.starred;renderTodos();if(state.activeTodoId===id)populateDetail(t);saveTodos();}
 function deleteTodoById(id){window.state.todos=window.state.todos.filter(function(x){return x.id!==id;});if(state.activeTodoId===id){state.activeTodoId=null;closeTodoDetail();}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
 function selectTodo(id){state.activeTodoId=id;var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;document.getElementById('todoDetailEmpty').style.display='none';document.getElementById('todoDetail').style.display='flex';populateDetail(t);renderTodos();}
@@ -2949,7 +3183,7 @@ function populateDetail(t){
 }
 function getActiveTodo(){return state.activeTodoId?window.state.todos.find(function(x){return x.id===state.activeTodoId;})||null:null;}
 document.getElementById('detailTitle').addEventListener('input',function(){var t=getActiveTodo();if(!t)return;t.text=this.value;var r=document.querySelector('.todo-item-row[data-id="'+t.id+'"] .todo-row-text');if(r)r.textContent=t.text;saveTodos();});
-document.getElementById('detailCheck').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.completed=this.checked;if(t.completed&&!t.rewarded){t.rewarded=true;awardResistance(12,'+12 XP 💧',t.text);}document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');renderTodos();renderDashTodos();saveTodos();});
+document.getElementById('detailCheck').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.completed=this.checked;if(t.completed&&!t.rewarded){t.rewarded=true;awardResistance(getTodoXp(t),'+'+getTodoXp(t)+' XP 💧',t.text,t);}document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');renderTodos();renderDashTodos();saveTodos();});
 document.getElementById('detailStar').addEventListener('click',function(){var t=getActiveTodo();if(!t)return;toggleStarById(t.id);});
 document.querySelectorAll('.prio-pill').forEach(function(p){p.addEventListener('click',function(){var t=getActiveTodo();if(!t)return;t.priority=this.dataset.prio;document.querySelectorAll('.prio-pill').forEach(function(x){x.classList.remove('active');});this.classList.add('active');renderTodos();saveTodos();});});
 document.getElementById('detailDueDate').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.dueDate=this.value;renderTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();});
@@ -4843,5 +5077,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0626fb04e2cd2a3',t:'MTc4MDUyODkwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06ea23ebd14e341',t:'MTc4MDY1NjgwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0626fb04e2cd2a3',t:'MTc4MDUyODkwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06eaab57d16d5f3',t:'MTc4MDY1NzE1NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
