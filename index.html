@@ -1410,6 +1410,100 @@ textarea::placeholder{color:var(--muted);}
   .mood-calendar-box{padding:16px 18px;margin-top:20px;}
   .mood-action-btn{margin-top:18px;padding:12px 26px;}
 }
+
+
+/* ══════════════ DİRENÇ BARI / İRADE AKIŞI ══════════════ */
+.resistance-panel{
+  margin-bottom:18px;
+  padding:22px 24px;
+  border-color:rgba(79,209,255,.18);
+  background:linear-gradient(135deg,rgba(79,209,255,.04),rgba(124,106,255,.035),rgba(196,109,255,.025));
+}
+.resistance-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.resistance-orb{
+  width:46px;height:46px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;flex-shrink:0;
+  background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.45),rgba(79,209,255,.22) 35%,rgba(124,106,255,.18) 100%);
+  border:1px solid rgba(79,209,255,.35);
+  box-shadow:0 0 28px rgba(79,209,255,.22),inset 0 1px 0 rgba(255,255,255,.18);
+  animation:resOrbFloat 3s ease-in-out infinite;
+}
+@keyframes resOrbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.resistance-title-wrap{flex:1;min-width:0;}
+.resistance-kicker{font-size:.62rem;font-weight:800;letter-spacing:2.6px;text-transform:uppercase;color:rgba(79,209,255,.62);margin-bottom:5px;}
+.resistance-title{font-size:1.05rem;font-weight:650;color:#fff;letter-spacing:.3px;}
+.resistance-sub{font-size:.75rem;color:var(--muted);margin-top:4px;line-height:1.45;}
+.resistance-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+.resistance-chip{
+  padding:7px 10px;border-radius:999px;
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--border);
+  font-size:.68rem;font-weight:700;color:rgba(255,255,255,.68);
+  white-space:nowrap;
+}
+.resistance-chip b{color:#7ee8ff;font-weight:800;}
+.resistance-tank{
+  position:relative;height:34px;border-radius:999px;overflow:hidden;
+  border:1px solid rgba(79,209,255,.28);
+  background:linear-gradient(180deg,rgba(1,8,18,.75),rgba(8,8,26,.88));
+  box-shadow:inset 0 0 22px rgba(0,0,0,.75),0 0 22px rgba(79,209,255,.08);
+}
+.resistance-liquid{
+  position:absolute;inset:0 auto 0 0;width:0%;border-radius:999px;overflow:hidden;
+  background:linear-gradient(90deg,#1ac8ff 0%,#4fd1ff 30%,#7c6aff 68%,#c46dff 100%);
+  box-shadow:0 0 28px rgba(79,209,255,.42),inset 0 1px 0 rgba(255,255,255,.32);
+  transition:width 1.05s cubic-bezier(.19,1,.22,1);
+}
+.resistance-liquid::before,
+.resistance-liquid::after{
+  content:'';position:absolute;left:-35%;right:-35%;height:220%;top:-75%;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.55) 0%,rgba(255,255,255,.18) 35%,transparent 70%);
+  opacity:.42;mix-blend-mode:screen;
+  animation:resWave 3.1s linear infinite;
+}
+.resistance-liquid::after{top:-95%;opacity:.26;animation-duration:4.4s;animation-direction:reverse;}
+@keyframes resWave{from{transform:translateX(-8%) rotate(0deg)}to{transform:translateX(8%) rotate(360deg)}}
+.resistance-shine{
+  position:absolute;inset:0;border-radius:999px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),transparent 46%,rgba(255,255,255,.05));
+}
+.resistance-percent{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:800;letter-spacing:1.8px;color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.85);
+}
+.resistance-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;}
+.resistance-mantra{font-size:.78rem;color:rgba(255,255,255,.62);line-height:1.45;}
+.resistance-mantra b{color:#c8f6ff;font-weight:750;}
+.resistance-mini-btn{
+  padding:8px 13px;border-radius:999px;border:1px solid rgba(79,209,255,.32);
+  background:rgba(79,209,255,.08);color:#7ee8ff;
+  font-family:inherit;font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .25s ease;white-space:nowrap;
+}
+.resistance-mini-btn:hover{background:rgba(79,209,255,.16);transform:translateY(-1px);}
+.resistance-panel.pulse{animation:resPanelPulse .9s cubic-bezier(.23,1,.32,1);}
+@keyframes resPanelPulse{0%{box-shadow:0 0 0 rgba(79,209,255,0)}35%{box-shadow:0 0 55px rgba(79,209,255,.28),0 0 90px rgba(124,106,255,.12)}100%{box-shadow:0 4px 32px rgba(0,0,0,.45)}}
+.resistance-toast{
+  position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(18px) scale(.96);
+  z-index:100000;opacity:0;pointer-events:none;
+  padding:14px 20px;border-radius:18px;
+  background:rgba(6,12,28,.92);border:1px solid rgba(79,209,255,.38);
+  color:#e8fbff;font-size:.85rem;font-weight:700;letter-spacing:.3px;text-align:center;
+  box-shadow:0 0 38px rgba(79,209,255,.22),0 12px 40px rgba(0,0,0,.55);
+  backdrop-filter:blur(16px);transition:all .35s cubic-bezier(.23,1,.32,1);
+}
+.resistance-toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
+@media(max-width:768px){
+  .resistance-panel{padding:18px 14px;}
+  .resistance-head{align-items:flex-start;}
+  .resistance-stats{width:100%;justify-content:flex-start;margin-top:8px;}
+  .resistance-head{flex-wrap:wrap;}
+  .resistance-footer{flex-direction:column;align-items:flex-start;}
+  .resistance-mini-btn{width:100%;}
+}
+
 </style>
 </head>
 <body>
@@ -1523,6 +1617,32 @@ textarea::placeholder{color:var(--muted);}
 <main id="mainContent">
 
 <section id="dashboard" class="tab-content active">
+
+  <div class="glass-panel resistance-panel" id="resistancePanel">
+    <div class="resistance-head">
+      <div class="resistance-orb">💧</div>
+      <div class="resistance-title-wrap">
+        <div class="resistance-kicker">DİRENÇ BARI</div>
+        <div class="resistance-title">İraden güçleniyor, Nurullah.</div>
+        <div class="resistance-sub">Her tamamlanan görev bu akışı doldurur. Heves beklemiyoruz; direnç biriktiriyoruz.</div>
+      </div>
+      <div class="resistance-stats">
+        <div class="resistance-chip">Seviye <b id="resLevel">1</b></div>
+        <div class="resistance-chip">Toplam <b id="resTotal">0</b></div>
+        <div class="resistance-chip">Bugün <b id="resToday">0</b></div>
+      </div>
+    </div>
+    <div class="resistance-tank" aria-label="Direnç barı">
+      <div class="resistance-liquid" id="resLiquid"></div>
+      <div class="resistance-shine"></div>
+      <div class="resistance-percent" id="resPercent">0%</div>
+    </div>
+    <div class="resistance-footer">
+      <div class="resistance-mantra" id="resMantra"><b>Artık iradem daha güçlü.</b> Küçük görevler, gerçek dönüşüm.</div>
+      <button class="resistance-mini-btn" id="resPulseBtn" type="button">Bugün bir damla daha</button>
+    </div>
+  </div>
+
   <div class="dashboard-grid">
     <div>
       <div class="glass-panel">
@@ -2096,7 +2216,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
 });
 
 /* ══ FIREBASE ══ */
-window.state={todos:[],journals:[],notes:[],calEvents:[],activeJournalId:null,activeNoteId:null,activeTodoId:null};
+window.state={todos:[],journals:[],notes:[],calEvents:[],resistance:{total:0,today:0,lastDate:null},activeJournalId:null,activeNoteId:null,activeTodoId:null};
 var firebaseReady=typeof firebase!=='undefined'&&firebase.initializeApp&&firebase.firestore&&firebase.auth;
 if(firebaseReady){
   firebase.initializeApp({apiKey:"AIzaSyClvQeFzVSBNp8hRMz44GF8mxwhKq0XWHQ",authDomain:"dashboard-ab880.firebaseapp.com",projectId:"dashboard-ab880",storageBucket:"dashboard-ab880.firebasestorage.app",messagingSenderId:"1014186585487",appId:"1:1014186585487:web:fc3e7ebf4ad83bd3fd6ffa"});
@@ -2238,6 +2358,87 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
   },{passive:false});
 })();
 
+
+
+/* ══ DİRENÇ BARI / İRADE AKIŞI ══ */
+function resTodayKey(){return new Date().toISOString().slice(0,10);}
+function normalizeResistance(){
+  if(!state.resistance)state.resistance={total:0,today:0,lastDate:resTodayKey()};
+  if(state.resistance.lastDate!==resTodayKey()){
+    state.resistance.today=0;
+    state.resistance.lastDate=resTodayKey();
+  }
+}
+function renderResistance(){
+  normalizeResistance();
+  var total=Number(state.resistance.total||0);
+  var today=Number(state.resistance.today||0);
+  var level=Math.floor(total/100)+1;
+  var pct=total%100;
+  var liquid=document.getElementById('resLiquid');
+  var percent=document.getElementById('resPercent');
+  var lvl=document.getElementById('resLevel');
+  var tot=document.getElementById('resTotal');
+  var tod=document.getElementById('resToday');
+  if(liquid)liquid.style.width=pct+'%';
+  if(percent)percent.textContent=pct+'%';
+  if(lvl)lvl.textContent=level;
+  if(tot)tot.textContent=total;
+  if(tod)tod.textContent=today;
+}
+function showResistanceToast(msg){
+  var t=document.getElementById('resistanceToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='resistanceToast';
+    t.className='resistance-toast';
+    document.body.appendChild(t);
+  }
+  t.innerHTML=msg;
+  t.classList.add('show');
+  clearTimeout(window._resToastTimer);
+  window._resToastTimer=setTimeout(function(){t.classList.remove('show');},2600);
+}
+function saveResistance(){
+  normalizeResistance();
+  try{localStorage.setItem('resistanceData',JSON.stringify(state.resistance));}catch(e){}
+  try{if(window.userDoc&&window.userDoc.set)window.userDoc.set({resistanceData:state.resistance},{merge:true}).catch(function(){});}catch(e){}
+}
+function awardResistance(points,reason){
+  normalizeResistance();
+  points=points||12;
+  var beforeLevel=Math.floor((state.resistance.total||0)/100)+1;
+  state.resistance.total=(Number(state.resistance.total)||0)+points;
+  state.resistance.today=(Number(state.resistance.today)||0)+points;
+  state.resistance.lastDate=resTodayKey();
+  renderResistance();
+  saveResistance();
+  var panel=document.getElementById('resistancePanel');
+  if(panel){panel.classList.remove('pulse');void panel.offsetWidth;panel.classList.add('pulse');}
+  var afterLevel=Math.floor((state.resistance.total||0)/100)+1;
+  var msg= afterLevel>beforeLevel ? '💧 <b>Seviye atladın.</b><br>Artık iraden daha güçlü.' : '💧 +'+points+' direnç<br><b>Artık iradem daha güçlü.</b>';
+  showResistanceToast(msg);
+  if(typeof botSay==='function')botSay(reason||'Direncin arttı! 💧',2600);
+}
+function loadResistanceFromLocal(){
+  try{
+    var saved=JSON.parse(localStorage.getItem('resistanceData')||'null');
+    if(saved&&typeof saved==='object')state.resistance=Object.assign({total:0,today:0,lastDate:null},saved);
+  }catch(e){}
+  normalizeResistance();
+  renderResistance();
+}
+window.awardResistance=awardResistance;
+window.renderResistance=renderResistance;
+setTimeout(loadResistanceFromLocal,0);
+var resBtn=document.getElementById('resPulseBtn');
+if(resBtn){
+  resBtn.addEventListener('click',function(){
+    showResistanceToast('Bugünün damlası: <b>bir küçük görev seç ve tamamla.</b>');
+    if(typeof botSay==='function')botSay('Bir küçük görev tamamla, bar aksın 💧',2800);
+  });
+}
+
 /* ══ WIDGETS ══ */
 var filmInput=document.getElementById('filmCountInput'),filmDisplay=document.getElementById('filmCountDisplay');
 filmInput.addEventListener('input',function(){filmDisplay.textContent=this.value||'0';saveWidgets();});
@@ -2278,8 +2479,10 @@ window.loadFromCloud = function(){
   userDoc.get().then(function(doc){
     if(!doc.exists){renderTodos();renderJournalList();renderNotesList();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();return;}
     var d=doc.data();
-    if(Array.isArray(d.todos)){window.state.todos=d.todos.map(function(t){if(!t.id)t.id=Date.now().toString()+Math.random().toString(36).slice(2);t.priority=t.priority||'none';t.category=t.category||'';t.note=t.note||'';t.repeat=t.repeat||'none';t.dueDate=t.dueDate||'';t.dueTime=t.dueTime||'';t.starred=t.starred||false;t.createdAt=t.createdAt||Date.now();return t;});}
+    if(Array.isArray(d.todos)){window.state.todos=d.todos.map(function(t){if(!t.id)t.id=Date.now().toString()+Math.random().toString(36).slice(2);t.priority=t.priority||'none';t.category=t.category||'';t.note=t.note||'';t.repeat=t.repeat||'none';t.dueDate=t.dueDate||'';t.dueTime=t.dueTime||'';t.starred=t.starred||false;t.rewarded=t.rewarded||false;t.createdAt=t.createdAt||Date.now();return t;});}
     if(Array.isArray(d.calEvents)){state.calEvents=d.calEvents;}
+    if(d.resistanceData){state.resistance=Object.assign({total:0,today:0,lastDate:null},d.resistanceData);}
+    renderResistance();
     renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();renderDashMiniCal();
     if(Array.isArray(d.journals))state.journals=d.journals;else if(d.journal&&typeof d.journal==='string'&&d.journal.trim())state.journals=[{id:Date.now().toString(),title:'Aktarılan Günlük',content:d.journal}];
     renderJournalList();
@@ -2466,11 +2669,11 @@ function renderTodos(){
 function saveTodos(){saveToCloud('todos',window.state.todos,'todoStatus');}
 function addTodo(txt,dueDate){
   if(!txt||!txt.trim())return;
-  var t={id:Date.now().toString()+Math.random().toString(36).slice(2),text:txt.trim(),completed:false,starred:false,priority:'none',dueDate:dueDate||'',dueTime:'',note:'',category:'',repeat:'none',createdAt:Date.now()};
+  var t={id:Date.now().toString()+Math.random().toString(36).slice(2),text:txt.trim(),completed:false,starred:false,priority:'none',dueDate:dueDate||'',dueTime:'',note:'',category:'',repeat:'none',rewarded:false,createdAt:Date.now()};
   window.state.todos.unshift(t);renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();
   selectTodo(t.id);saveTodos();return t;
 }
-function toggleTodoById(id){var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;t.completed=!t.completed;if(t.completed&&state.activeTodoId===id){closeTodoDetail();state.activeTodoId=null;}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
+function toggleTodoById(id){var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;t.completed=!t.completed;if(t.completed&&!t.rewarded){t.rewarded=true;awardResistance(12,'Görev tamamlandı. Direncin arttı! 💧');}if(t.completed&&state.activeTodoId===id){closeTodoDetail();state.activeTodoId=null;}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
 function toggleStarById(id){var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;t.starred=!t.starred;renderTodos();if(state.activeTodoId===id)populateDetail(t);saveTodos();}
 function deleteTodoById(id){window.state.todos=window.state.todos.filter(function(x){return x.id!==id;});if(state.activeTodoId===id){state.activeTodoId=null;closeTodoDetail();}renderTodos();renderDashTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();}
 function selectTodo(id){state.activeTodoId=id;var t=window.state.todos.find(function(x){return x.id===id;});if(!t)return;document.getElementById('todoDetailEmpty').style.display='none';document.getElementById('todoDetail').style.display='flex';populateDetail(t);renderTodos();}
@@ -2490,7 +2693,7 @@ function populateDetail(t){
 }
 function getActiveTodo(){return state.activeTodoId?window.state.todos.find(function(x){return x.id===state.activeTodoId;})||null:null;}
 document.getElementById('detailTitle').addEventListener('input',function(){var t=getActiveTodo();if(!t)return;t.text=this.value;var r=document.querySelector('.todo-item-row[data-id="'+t.id+'"] .todo-row-text');if(r)r.textContent=t.text;saveTodos();});
-document.getElementById('detailCheck').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.completed=this.checked;document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');renderTodos();renderDashTodos();saveTodos();});
+document.getElementById('detailCheck').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.completed=this.checked;if(t.completed&&!t.rewarded){t.rewarded=true;awardResistance(12,'Görev tamamlandı. Direncin arttı! 💧');}document.getElementById('detailTitle').className='detail-title-input'+(t.completed?' done-text':'');renderTodos();renderDashTodos();saveTodos();});
 document.getElementById('detailStar').addEventListener('click',function(){var t=getActiveTodo();if(!t)return;toggleStarById(t.id);});
 document.querySelectorAll('.prio-pill').forEach(function(p){p.addEventListener('click',function(){var t=getActiveTodo();if(!t)return;t.priority=this.dataset.prio;document.querySelectorAll('.prio-pill').forEach(function(x){x.classList.remove('active');});this.classList.add('active');renderTodos();saveTodos();});});
 document.getElementById('detailDueDate').addEventListener('change',function(){var t=getActiveTodo();if(!t)return;t.dueDate=this.value;renderTodos();renderCalendar();renderMiniCal();renderUpcoming();saveTodos();});
