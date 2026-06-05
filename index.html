@@ -1651,6 +1651,32 @@ textarea::placeholder{color:var(--muted);}
 @media(max-width:1050px){.res-system-grid{grid-template-columns:repeat(2,1fr)}.res-boss-panel{grid-template-columns:1fr}}
 @media(max-width:768px){.res-system-grid{grid-template-columns:1fr;gap:10px}.res-system-card{min-height:auto}.res-boss-actions{display:grid;grid-template-columns:1fr}.res-quest-box{grid-template-columns:1fr}.res-levelup-card{padding:30px 22px}.res-levelup-title{font-size:1.55rem}}
 
+
+
+/* ══════════════ GÖREV PANELİ KOMPAKT XP BARI ══════════════ */
+.task-res-compact{
+  margin:-6px 0 16px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(79,209,255,.18);
+  background:linear-gradient(135deg,rgba(79,209,255,.045),rgba(124,106,255,.032));
+  cursor:pointer;
+  transition:all .22s ease;
+}
+.task-res-compact:hover{border-color:rgba(79,209,255,.34);background:linear-gradient(135deg,rgba(79,209,255,.07),rgba(124,106,255,.045));transform:translateY(-1px);}
+.task-res-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.task-res-label{display:flex;align-items:center;gap:9px;font-size:.76rem;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.7);}
+.task-res-label span:first-child{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(79,209,255,.11);border:1px solid rgba(79,209,255,.24);}
+.task-res-stats{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+.task-res-chip{font-size:.62rem;font-weight:850;color:rgba(255,255,255,.58);padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.035);border:1px solid var(--border);white-space:nowrap;}
+.task-res-chip b{color:#7ee8ff;}
+.task-res-bar{position:relative;height:20px;border-radius:999px;overflow:hidden;border:1px solid rgba(79,209,255,.22);background:rgba(0,0,0,.26);box-shadow:inset 0 0 14px rgba(0,0,0,.55);}
+.task-res-fill{position:absolute;left:0;top:0;bottom:0;width:0%;border-radius:999px;background:linear-gradient(90deg,#00d5ff,#4fd1ff,#7c6aff,#c46dff);box-shadow:0 0 18px rgba(79,209,255,.36);transition:width .9s cubic-bezier(.19,1,.22,1);overflow:hidden;}
+.task-res-fill::before{content:'';position:absolute;left:-30%;right:-30%;top:-90%;height:260%;background:radial-gradient(ellipse at center,rgba(255,255,255,.45),rgba(255,255,255,.16) 35%,transparent 70%);opacity:.34;animation:resWave 3.2s linear infinite;}
+.task-res-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:900;letter-spacing:1px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.85);}
+.task-res-compact.pulse{animation:resPanelPulse .9s cubic-bezier(.23,1,.32,1);}
+@media(max-width:768px){.task-res-compact{padding:12px;margin:0 0 14px}.task-res-top{align-items:flex-start;flex-direction:column}.task-res-stats{justify-content:flex-start}.task-res-bar{height:22px}}
+
 </style>
 </head>
 <body>
@@ -1982,6 +2008,22 @@ textarea::placeholder{color:var(--muted);}
       <span class="panel-title">Aksiyon Planı & Görevler</span>
       <span class="panel-badge" id="todoBadge2">0 Görev</span>
     </div>
+
+    <div class="task-res-compact" id="taskResCompact" title="Direnç sekmesini aç">
+      <div class="task-res-top">
+        <div class="task-res-label"><span>💧</span><span>XP Havuzu</span></div>
+        <div class="task-res-stats">
+          <div class="task-res-chip">Lv <b id="taskResLevel">1</b></div>
+          <div class="task-res-chip">Toplam <b id="taskResTotal">0</b></div>
+          <div class="task-res-chip">Bugün <b id="taskResToday">0</b></div>
+        </div>
+      </div>
+      <div class="task-res-bar">
+        <div class="task-res-fill" id="taskResFill"></div>
+        <div class="task-res-text" id="taskResText">0 / 100 XP</div>
+      </div>
+    </div>
+
     <div class="todo-layout">
       <div class="todo-left">
         <div class="todo-filters">
@@ -2676,6 +2718,7 @@ function addResistanceXP(points,label,opts){
   var after=getResistanceLevelIndex(state.resistance.total||0);
   renderResistance();playResFx(after>before?'level':'xp');resFlash();checkResistanceAchievements();renderResistance();saveResistance();
   var panel=document.getElementById('resistancePanel'); if(panel){panel.classList.remove('pulse');void panel.offsetWidth;panel.classList.add('pulse');}
+  var cp=document.getElementById('taskResCompact'); if(cp){cp.classList.remove('pulse');void cp.offsetWidth;cp.classList.add('pulse');}
   if(after>before){showLevelUpOverlay(RES_LEVELS[after]);showResistanceToast('💧 <b>SEVİYE ATLADI</b><br>'+RES_LEVELS[after].name+' · '+RES_LEVELS[after].tag);}else{showResistanceToast('💧 <b>+'+points+' XP</b><br>'+escapeHTML(label||'Kayıt'));}
 }
 function resFlash(){var f=document.getElementById('resFlash');if(!f){f=document.createElement('div');f.id='resFlash';f.className='res-flash';document.body.appendChild(f);}f.classList.add('show');setTimeout(function(){f.classList.remove('show');},180);}
@@ -2703,6 +2746,12 @@ function renderResistance(){
   if(tot)tot.textContent=total;
   if(tod)tod.textContent=today;
   if(cc)cc.textContent=s.completedCount||0;
+  var tf=document.getElementById('taskResFill'),tt=document.getElementById('taskResText'),tl=document.getElementById('taskResLevel'),tto=document.getElementById('taskResTotal'),tty=document.getElementById('taskResToday');
+  if(tf)tf.style.width=pct+'%';
+  if(tt)tt.textContent=inLevel+' / '+levelSpan+' XP';
+  if(tl)tl.textContent=(idx+1);
+  if(tto)tto.textContent=total;
+  if(tty)tty.textContent=today;
   var cr=document.getElementById('resCurrentRank'),nr=document.getElementById('resNextRank'),mb=document.getElementById('resMapBadge');
   if(cr)cr.textContent=cur.name+' · '+cur.tag;
   if(nr)nr.textContent=next?('Sonraki: '+next.name+' · '+(next.req-total)+' XP kaldı'):'Harita tamamlandı';
@@ -2916,6 +2965,7 @@ document.querySelectorAll('.tab-btn').forEach(function(b){
     document.body.classList.toggle('res-tab-open',this.getAttribute('data-tab')==='resistance');
   });
 });
+var taskResCompact=document.getElementById('taskResCompact');if(taskResCompact)taskResCompact.addEventListener('click',function(){var b=document.querySelector('.tab-btn[data-tab="resistance"]');if(b)b.click();});
 var chestBtn=document.getElementById('resChestBtn');if(chestBtn)chestBtn.addEventListener('click',openDailyChest);
 var qRoll=document.getElementById('resQuestRollBtn');if(qRoll)qRoll.addEventListener('click',rollMiniQuest);
 var qAcc=document.getElementById('resQuestAcceptBtn');if(qAcc)qAcc.addEventListener('click',acceptMiniQuest);
@@ -5077,5 +5127,5 @@ wrap.style.cssText='display:flex;justify-content:center;padding:8px 0 2px;';
   else{ setTimeout(startModeSync,1200); }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0626fb04e2cd2a3',t:'MTc4MDUyODkwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06eaab57d16d5f3',t:'MTc4MDY1NzE1NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0626fb04e2cd2a3',t:'MTc4MDUyODkwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06eb7948dab0d37',t:'MTc4MDY1NzY4Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
